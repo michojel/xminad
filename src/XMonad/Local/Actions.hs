@@ -1,13 +1,16 @@
+{-# LANGUAGE DoAndIfThenElse #-}
+
 module XMonad.Local.Actions where
 
 import XMonad
 import qualified XMonad.Actions.TopicSpace as TS
 
-myExplorer :: String
-myExplorer = "caja"
+-- local modules **************************************************************
+import qualified XMonad.Local.Config as Local
 
+-- launch applications ********************************************************
 spawnExplorer :: MonadIO m => m ()
-spawnExplorer = spawn myExplorer
+spawnExplorer = spawn Local.explorer
 
 spawnShell :: Maybe String -> X()
 spawnShell = spawnShellIn ""
@@ -22,3 +25,15 @@ spawnShellIn dir command = do
 
     cmd' t | dir == "" = t ++ run command
            | otherwise = "cd " ++ dir ++ " && " ++ t ++ run command
+
+mateRun :: X ()
+mateRun = withDisplay $ \dpy -> do
+    rw <- asks theRoot
+    mate_panel <- getAtom "_MATE_PANEL_ACTION"
+    panel_run   <- getAtom "_MATE_PANEL_ACTION_RUN_DIALOG"
+
+    io $ allocaXEvent $ \e -> do
+        setEventType e clientMessage
+        setClientMessageEvent e rw mate_panel 32 panel_run 0
+        sendEvent dpy rw False structureNotifyMask e
+        sync dpy False

@@ -13,8 +13,13 @@ Library
     Exposed-Modules: 
         XMonad.Layout.TopicDir
         XMonad.Local.Actions
+        XMonad.Local.Config
+        XMonad.Local.GridSelect
+        XMonad.Local.Keys
         XMonad.Local.Layout
+        XMonad.Local.NamedScratchpad
         XMonad.Local.TopicSpace
+        XMonad.Local.Workspaces
 
     HS-Source-Dirs: src
     GHC-Options: -Wall -Werror
@@ -26,14 +31,15 @@ Library
        -- , cairo          >= 0.13 && < 0.14
        , containers
        , directory      >= 1.1  && < 1.3
+       , MissingH       >= 1.0  && < 1.3
        --, filepath       >= 1.3  && < 1.4
-       --, libmpd         >= 0.8  && < 1.0
+       , libmpd         >= 0.8  && < 1.0
        --, parsec         >= 3.1  && < 3.2
        --, regex-compat   >= 0.90 && < 1.0
        --, text           >= 0.11 && < 1.3
        , xmonad         >= 0.11 && < 0.12
        , xmonad-contrib >= 0.11
-       --, xmonad-extras  >= 0.11 && < 0.12
+       , xmonad-extras  >= 0.11 && < 0.12
 
 Executable xminad
     Main-Is: xminad.hs
