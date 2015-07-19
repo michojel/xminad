@@ -25,7 +25,6 @@ import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
 import qualified XMonad.StackSet as W
 import qualified XMonad.Util.EZConfig as EZ
 import XMonad.Util.NamedScratchpad as NS
@@ -36,9 +35,8 @@ import XMonad.Util.WorkspaceCompare (getSortByIndex)
 import qualified XMonad.Local.Config as Local
 import qualified XMonad.Local.Keys as Local
 import qualified XMonad.Local.Layout as Local
-import qualified XMonad.Local.NamedScratchpad as Local
+import qualified XMonad.Local.ManageHook as Local
 import qualified XMonad.Local.TopicSpace as Local
-import qualified XMonad.Local.Workspaces as Local
 
 doNotFadeOutWindows :: Query Bool
 doNotFadeOutWindows =
@@ -79,109 +77,6 @@ myMouseBindings (XConfig {XMonad.modMask = mm}) = M.fromList
     ]
 
 
-{- note: earlier hooks override later ones -}
-myManageHook :: ManageHook
-myManageHook = composeOne (concat
-        [ --[manageHook myBaseConfig]
-          [checkDock -?> doIgnore]
-        , [className =? c -?> doIgnore | c <- myCIgnores]
-        , [isFullscreen -?> doMaster <+> doFullFloat]
-        , [transience]
-        , [isDialog -?> doMaster <+> doCenterFloat]
-
-        , [fmap ("Preferences" `isInfixOf`) title -?> doMaster <+> doCenterFloat]
-        , [(className =? "Gimp" <&&> c) -?> h | (c, h) <- gimpManage]
-        , [(    className =? "Qjackctl"
-           <&&> fmap ("JACK Audio Connection Kit" `isPrefixOf`) title)
-            -?> doMaster <+> doFloat]
-        , [(className =? "Dia" <&&> role =? "toolbox_window")
-            -?> doMaster <+> doFloat]
-
-        , [ className =? c <&&> title =? t -?> doMaster <+> doFloat
-          | (c, t) <- myCTFloats ]
-        , [className =? c -?> doMaster <+> doCenterFloat | c <- myCCenterFloats]
-        , [className =? "Virt-manager" <&&> title =? "New VM"
-          -?> doMaster <+> doCenterFloat]
-        , [className =? c -?> doMaster <+> doFloat | c <- myCFloats ]
-        , [title =? t -?> doMaster <+> doFloat | t <- myTFloats ]
-        , [ className =? "BaldursGate" -?> doMyShift "BG" <+> doMaster]
-        , [query c -?> hook c | c <- Local.namedScratchpads]])
-        --, [className =? "dzen" -?> transparency 0.4]])
-    <+>
-    composeOne (concat
-        [ [className =? "Dia"          -?> doMyShift "dia"]
-        , [className =? c              -?> doMyShift "chat" | c <- myChatClients ]
-        , [(className =? "Google-chrome" <&&> title =? "Hangouts") -?> doMyShift "chat"]
-        , [className =? c              -?> doMyShift "web"  | c <- myWebBrowsers ]
-        , [title =? "ncmpcpp"          -?> doMyShift "music" ]
-        , [className =? c              -?> doMyShift "music" | c <- myMusicPlayers ]
-        , [className =? c              -?> doMyShift "video" | c <- myVideoPlayers ]
-        , [className =? "Evince"       -?> doMyShift "pdf" ]
-        , [className =? "Atril"        -?> doMyShift "pdf" ]
-        , [className =? "Thunderbird"  -?> doMyShift "mail"]
-        , [className =? "Gimp"         -?> doMyShift "gimp"]
-        , [className =? "Virt-manager" -?> doMyShift "virt"]
-        , [className =? "VirtualBox"   -?> doMyShift "vbox"]
-        , [className =? "Deluge"       -?> doMyShift "p2p"]
-        , [className =? "Calibre"      -?> doMyShift "ebook"]
-        , [className =? "Squeak"       -?> doMyShift "squeak"]
-        , [className =? "Civ5XP"       -?> doMyShift "ciV"]
-        , [className =? "Googleearth-bin" -?> doMyShift "earth"]
-        -- see http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Hooks-XPropManage.html#xPropManageHook
-        ])
-  where
-    doMaster = doF W.shiftMaster
-    doMyShift :: WorkspaceId -> ManageHook
-    doMyShift wsp = do
-        liftX (Local.newWorkspace wsp)
-        doF $ W.greedyView wsp . W.shift wsp
-    myTFloats = [ "VLC (XVideo output)"
-              , "DownThemAll! - Make Your Selection"
-              , "Add Downloads"
-              , "Add URL(s)"
-              , "Run Application"
-              ]
-    myCIgnores = [ "Xfce4-notifyd"
-                 ]
-    myCFloats = [ -- "Gnome-panel"
-                  "Close session"
-                , "MPlayer"
-                , "Wine"
-                , "Galculator"
-                ]
-    myCTFloats = [ ("Skype", "Information")
-                 , ("Firefox", "Certificate Manager")
-                 , ("processing-app-Base", "Preferences")
-                 , ("Thunar", "File Operation Progress")
-                 ]
-    myCCenterFloats = [ -- "Gnome-tweak-tool"
-                        "Xfce4-notes"
-                      , "Gcolor2"
-                      , "Gcr-prompter"
-                      , "Xfce4-appfinder"
-                      , "Xmessage"
-                      , "Pavucontrol"
-                      , "Xfrun4"
-                      , "Xfce4-settings-manager"
-                      , "Xfce4-panel"
-                      , "Alarm-clock-applet"
-                      ]
-    myChatClients  = ["Pidgin", "Xchat", "Skype", "Empathy", "Hexchat"]
-    myWebBrowsers  = [ -- "Firefox"
-          "Chromium-browser"
-        , "Google-chrome"
-        ]
-    myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
-    myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
-    gimpManage = [ ( role =? "gimp-toolbox" <||> role =? "gimp-image-window"
-                   , ask >>= doF . W.sink)
-                 , (role =? "gimp-image-merge-layers", doCenterFloat)
-                 , (title =? "Scale Image", doCenterFloat)
-                 , (title =? "Export File", doCenterFloat)
-                 , (fmap ("Save as" `isPrefixOf`) title, doCenterFloat)
-                 ]
-
-    role = stringProperty "WM_WINDOW_ROLE"
 
 myFadeHook :: FadeHook
 myFadeHook = composeAll [ opaque
@@ -314,7 +209,7 @@ myConfig dbus = myBaseConfig
     , keys = Local.keyBindings
     , logHook = myLogHook dbus
     , handleEventHook = myEventHook
-    , manageHook = myManageHook
+    , manageHook = Local.manageHook
     , startupHook = myStartupHook
     , mouseBindings = myMouseBindings
     }
