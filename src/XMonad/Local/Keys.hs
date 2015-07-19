@@ -10,7 +10,7 @@ import qualified Data.Map as M
 import Data.Maybe
 import qualified Network.MPD as MPD
 import qualified Network.MPD.Commands.Extensions as MPD
-import qualified XMonad as X
+import XMonad hiding (modMask, keys)
 import XMonad.Actions.CycleWS
 import qualified XMonad.Actions.DynamicWorkspaces as DW
 import qualified XMonad.Actions.DwmPromote as DwmP
@@ -43,21 +43,21 @@ import XMonad.Local.NamedScratchpad
 import XMonad.Local.TopicSpace
 import XMonad.Local.Workspaces as Local
 
-modMask :: X.KeyMask
-modMask = X.mod4Mask
+modMask :: KeyMask
+modMask = mod4Mask
 modm :: String
 modm = "M4"
 
-keyBindings :: X.XConfig l -> M.Map (X.KeyMask, X.KeySym) (X.X())
+keyBindings :: XConfig l -> M.Map (KeyMask, KeySym) (X())
 keyBindings conf = EZ.mkKeymap conf $ emacsKeys conf
 
-emacsKeys :: X.XConfig l -> [(String, X.X())]
+emacsKeys :: XConfig l -> [(String, X())]
 emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys
   where
     prefix :: (String, a) -> (String, a)
     prefix (k, a) = (modm ++ "-" ++ k, a)
 
-    emacsKeys' :: X.XConfig l -> [(String, X.X())]
+    emacsKeys' :: XConfig l -> [(String, X())]
     emacsKeys' conf = [
                -- Applications
               (";", Local.spawnShell Nothing)
@@ -67,64 +67,64 @@ emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys
             , ("S-p", Local.mateRun)
 
               -- Layouts
-            , ("<Space>", X.sendMessage X.NextLayout)
+            , ("<Space>", sendMessage NextLayout)
             , ("C-<Space>", SUB.submap $ EZ.mkKeymap conf $ concat
                 [ [(k, a), (modm ++ "-C-" ++ k, a)]
-                | (k, a) <- [ ("3", X.sendMessage (Toggle "ThreeCol"))
-                            , ("x", X.sendMessage (MT.Toggle REFLECTX))
-                            , ("y", X.sendMessage (MT.Toggle REFLECTY))
+                | (k, a) <- [ ("3", sendMessage (Toggle "ThreeCol"))
+                            , ("x", sendMessage (MT.Toggle REFLECTX))
+                            , ("y", sendMessage (MT.Toggle REFLECTY))
                             ]
                 ])
-            , ("<F5>", X.refresh)
-            , ("C-j", X.sendMessage $ Go D)
-            , ("C-k", X.sendMessage $ Go U)
-            , ("C-h", X.sendMessage $ Go L)
-            , ("C-l", X.sendMessage $ Go R)
+            , ("<F5>", refresh)
+            , ("C-j", sendMessage $ Go D)
+            , ("C-k", sendMessage $ Go U)
+            , ("C-h", sendMessage $ Go L)
+            , ("C-l", sendMessage $ Go R)
             , ("j", BW.focusDown)
             , ("k", BW.focusUp)
-            , ("m", X.windows W.focusMaster)
-            , ("S-j", X.windows W.swapDown)
-            , ("S-k", X.windows W.swapUp)
+            , ("m", windows W.focusMaster)
+            , ("S-j", windows W.swapDown)
+            , ("S-k", windows W.swapUp)
             , ("C-.", onGroup W.focusUp')
             , ("C-,", onGroup W.focusDown')
-            , ("h", X.sendMessage X.Shrink)
-            , ("l", X.sendMessage X.Expand)
-            , ("<Return>", X.windows W.focusMaster)
+            , ("h", sendMessage Shrink)
+            , ("l", sendMessage Expand)
+            , ("<Return>", windows W.focusMaster)
             , ("S-<Return>", DwmP.dwmpromote)
-            , ("t", X.withFocused $ X.windows . W.sink)
-            , (",", X.sendMessage (X.IncMasterN 1))
-            , (".", X.sendMessage (X.IncMasterN (-1)))
+            , ("t", withFocused $ windows . W.sink)
+            , (",", sendMessage (IncMasterN 1))
+            , (".", sendMessage (IncMasterN (-1)))
 
             -- keybindings for sublayouts
             , ("g", SUB.submap $ defaultSublMap conf)
-            , ("<Left>", X.sendMessage $ pullGroup L)
-            , ("<Right>", X.sendMessage $ pullGroup R)
-            , ("<Up>", X.sendMessage $ pullGroup U)
-            , ("<Down>", X.sendMessage $ pullGroup D)
-            , ("C-m", X.withFocused (X.sendMessage . MergeAll))
-            , ("C-u", X.withFocused (X.sendMessage . UnMerge))
+            , ("<Left>", sendMessage $ pullGroup L)
+            , ("<Right>", sendMessage $ pullGroup R)
+            , ("<Up>", sendMessage $ pullGroup U)
+            , ("<Down>", sendMessage $ pullGroup D)
+            , ("C-m", withFocused (sendMessage . MergeAll))
+            , ("C-u", withFocused (sendMessage . UnMerge))
 
-            -- boring X.windows
+            -- boring windows
             , ("b", BW.markBoring)
             , ("S-b", BW.clearBoring)
 
             -- minimized widnows
-            , ("z", X.withFocused minimizeWindow)
-            , ("S-z", X.sendMessage RestoreNextMinimizedWin)
+            , ("z", withFocused minimizeWindow)
+            , ("S-z", sendMessage RestoreNextMinimizedWin)
 
               -- Toggle full screen
-            , ("<F12>", X.sendMessage ToggleStruts >> X.refresh)
+            , ("<F12>", sendMessage ToggleStruts >> refresh)
 
               -- Windows
-            , ("S-c", X.kill)
+            , ("S-c", kill)
             , ("C-S-c", WithAll.killAll)
-            , ("x", X.spawn "xkill")
+            , ("x", spawn "xkill")
 
             -- Compositing
             , ("S-x", SUB.submap $ EZ.mkKeymap conf $ concat
                 [ [(k, a), (modm ++ "-S-" ++ k, a)]
-                | (k, a) <- [ ("r", X.spawn "systemctl --user restart compositing")
-                            , ("s", X.spawn "systemctl --user stop compositing")]
+                | (k, a) <- [ ("r", spawn "systemctl --user restart compositing")
+                            , ("s", spawn "systemctl --user stop compositing")]
                 ])
 
               -- Workspaces
@@ -165,17 +165,17 @@ emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys
               -- xmonad
             , ("q", SUB.submap $ EZ.mkKeymap conf $ concat
                 [ [(k, a), (modm ++ "-" ++ k, a)]
-                | (k, a) <- [ ("c", X.spawn "xmonad --recompile; xmonad --restart")
-                            , ("r", X.spawn "xmonad --restart")
-                            , ("u", X.spawn "undock")
-                            , ("S-u", X.spawn "undock -s")
-                            , ("e", X.spawn "monitor-hotplug")
-                            , ("s", X.spawn "mate-session-save --shutdown-dialog")
-                            , ("q", X.spawn "mate-session-save --logout")
-                            , ("l", X.spawn "mate-screensaver-command --lock")
+                | (k, a) <- [ ("c", spawn "xmonad --recompile; xmonad --restart")
+                            , ("r", spawn "xmonad --restart")
+                            , ("u", spawn "undock")
+                            , ("S-u", spawn "undock -s")
+                            , ("e", spawn "monitor-hotplug")
+                            , ("s", spawn "mate-session-save --shutdown-dialog")
+                            , ("q", spawn "mate-session-save --logout")
+                            , ("l", spawn "mate-screensaver-command --lock")
                             ]
                 ])
-            , ("C-q", X.spawn "mate-screensaver-command --lock")
+            , ("C-q", spawn "mate-screensaver-command --lock")
 
             -- namedScratchpads
             , ("C-S-t", namedScratchpadAction namedScratchpads "htop")
@@ -187,19 +187,19 @@ emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys
 
             -- misc
             , ("S-h", PSsh.sshPrompt xpConfig)
-            --, ("<Print>", X.spawn "xfce4-screenshooter")
-            , ("y", X.spawn "xfce4-popup-clipman")
-            , ("<Print>", X.spawn "mate-screenshot")
-            , ("C-<Print>", X.spawn "mate-screenshot -w")
-            , ("S-<Print>", X.spawn "mate-screenshot -a")
+            --, ("<Print>", spawn "xfce4-screenshooter")
+            , ("y", spawn "xfce4-popup-clipman")
+            , ("<Print>", spawn "mate-screenshot")
+            , ("C-<Print>", spawn "mate-screenshot -w")
+            , ("S-<Print>", spawn "mate-screenshot -a")
 
             -- MPD
             -- mov current playing song in mpd to thrash
-            , ("<Delete>", X.spawn "mpcrm")
+            , ("<Delete>", spawn "mpcrm")
             , ("<XF86Forward>",
-                    X.io $ return . fromRight =<< MPD.withMPD MPD.next)
+                    io $ return . fromRight =<< MPD.withMPD MPD.next)
             , ("<XF86Back>",
-                    X.io $ return . fromRight =<< MPD.withMPD MPD.previous)
+                    io $ return . fromRight =<< MPD.withMPD MPD.previous)
             ]
          ++ [ (m ++ show i, _withNthWorkspace f ((i + 9) `mod` 10))
             | i <- [1..9] ++ [0]
@@ -208,30 +208,30 @@ emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys
                         , (\ws -> W.greedyView ws . W.shift ws, "S-")
                         ]
             ]
-         ++ [ (m ++ k, X.screenWorkspace sc >>= flip X.whenJust (X.windows . f))
+         ++ [ (m ++ k, screenWorkspace sc >>= flip whenJust (windows . f))
             | (k, sc) <- zip ["w", "e"] [0..]
             , (f, m)  <- [(W.view, ""), (W.shift, "S-")]
             ]
 
     -- no prefix
-    keys :: [(String, X.X())]
+    keys :: [(String, X())]
     keys = [
           ("<XF86Calculator>",
              namedScratchpadAction namedScratchpads "calculator")
         , ("<XF86Mail>", TS.switchTopic topicConfig "mail")
         , ("<XF86Terminal>", Local.spawnShell Nothing)
-        , ("<XF86Explorer>", X.spawn "Terminal")
+        , ("<XF86Explorer>", spawn "Terminal")
         , ("<XF86HomePage>", TS.switchTopic topicConfig "web")
 
         -- mpc
         , ("<XF86AudioPlay>",
-                X.io $ return . fromRight =<< MPD.withMPD MPD.toggle)
+                io $ return . fromRight =<< MPD.withMPD MPD.toggle)
         , ("<XF86AudioStop>",
-                X.io $ return . fromRight =<< MPD.withMPD MPD.stop)
+                io $ return . fromRight =<< MPD.withMPD MPD.stop)
         , ("<XF86AudioNext>",
-                X.io $ return . fromRight =<< MPD.withMPD MPD.next)
+                io $ return . fromRight =<< MPD.withMPD MPD.next)
         , ("<XF86AudioPrev>",
-                X.io $ return . fromRight =<< MPD.withMPD MPD.previous)
+                io $ return . fromRight =<< MPD.withMPD MPD.previous)
 
         -- volume
         , ("<XF86AudioMute>",        void toggleMute)
@@ -239,27 +239,27 @@ emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys
         , ("<XF86AudioLowerVolume>", void (lowerVolume 4))
 
         -- brightness
-        , ("<XF86MonBrightnessUp>",     X.spawn "xbacklight +10")
-        , ("<XF86MonBrightnessDown>",   X.spawn "xbacklight -10")
-        , ("S-<XF86MonBrightnessUp>",   X.spawn "xbacklight +20")
-        , ("S-<XF86MonBrightnessDown>", X.spawn "xbacklight -20")
-        , ("C-<XF86MonBrightnessUp>",   X.spawn "xbacklight -set 100")
-        , ("C-<XF86MonBrightnessDown>", X.spawn "xbacklight -set 0")
+        , ("<XF86MonBrightnessUp>",     spawn "xbacklight +10")
+        , ("<XF86MonBrightnessDown>",   spawn "xbacklight -10")
+        , ("S-<XF86MonBrightnessUp>",   spawn "xbacklight +20")
+        , ("S-<XF86MonBrightnessDown>", spawn "xbacklight -20")
+        , ("C-<XF86MonBrightnessUp>",   spawn "xbacklight -set 100")
+        , ("C-<XF86MonBrightnessDown>", spawn "xbacklight -set 0")
         ]
 
-    _withNthWorkspace :: (String -> X.WindowSet -> X.WindowSet) -> Int -> X.X ()
+    _withNthWorkspace :: (String -> WindowSet -> WindowSet) -> Int -> X ()
     _withNthWorkspace job wnum = do
         sortfunc <- getSortByIndex
-        ws <- X.gets ( map W.tag . sortfunc . namedScratchpadFilterOutWorkspace
-                   . W.workspaces . X.windowset )
+        ws <- gets ( map W.tag . sortfunc . namedScratchpadFilterOutWorkspace
+                   . W.workspaces . windowset )
         case drop wnum ws of
-             (w:_) -> X.windows $ job w
+             (w:_) -> windows $ job w
              [] -> return ()
 
-nonEmptyWsPred :: X.X (X.WindowSpace -> Bool)
+nonEmptyWsPred :: X (WindowSpace -> Bool)
 nonEmptyWsPred = do
     let ne = isJust . W.stack
-    hs <- X.gets (map W.tag . W.hidden . X.windowset)
+    hs <- gets (map W.tag . W.hidden . windowset)
     let hi w = W.tag w `elem` hs
     return $ \w -> hi w && ne w && W.tag w /= "NSP"
 
