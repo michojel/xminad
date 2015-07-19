@@ -9,7 +9,6 @@ import qualified Data.Map as M
 import Data.List
 import Data.Maybe
 import Data.Monoid
-import Data.Ratio ((%))
 import Data.String.Utils (startswith)
 import qualified Data.Set as S
 import qualified DBus as D
@@ -40,29 +39,15 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
-import XMonad.Layout.Accordion
-import qualified XMonad.Layout.BoringWindows as BW
-import XMonad.Layout.Column
-import qualified XMonad.Layout.ComboP as CP
-import qualified XMonad.Layout.IM as IM
-import XMonad.Layout.Minimize
-import qualified XMonad.Layout.MouseResizableTile as MRT
-import qualified XMonad.Layout.MultiToggle as MT
-import qualified XMonad.Layout.Named as LN
-import XMonad.Layout.NoBorders
-import qualified XMonad.Layout.PerWorkspace as PW
-import XMonad.Layout.Reflect
-import XMonad.Layout.SimpleFloat
-import XMonad.Layout.Simplest (Simplest(..))
-import XMonad.Layout.StackTile
-import XMonad.Layout.SubLayouts
-import qualified XMonad.Layout.Tabbed as Tab
-import XMonad.Layout.ThreeColumns
-import XMonad.Layout.ToggleLayouts
-import XMonad.Layout.TwoPane
-import XMonad.Layout.WindowNavigation
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import qualified XMonad.Layout.BoringWindows as BW
+import XMonad.Layout.Minimize
+import qualified XMonad.Layout.MultiToggle as MT
+import XMonad.Layout.Reflect
+import XMonad.Layout.SubLayouts
+import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.WindowNavigation
 import qualified XMonad.Prompt as P
 import qualified XMonad.Prompt.Shell as Shell
 import qualified XMonad.Prompt.Input as PI
@@ -73,8 +58,11 @@ import XMonad.Util.NamedScratchpad as NS
 --import XMonad.Util.Run
 import XMonad.Util.WorkspaceCompare (getSortByIndex)
 
--- my modules *****************************************************************
+-- local modules **************************************************************
 import qualified XMonad.Layout.TopicDir as TD
+import qualified XMonad.Local.Actions as Local
+import qualified XMonad.Local.Layout as Local
+import qualified XMonad.Local.TopicSpace as Local
 
 myModMask :: KeyMask
 myModMask = mod4Mask
@@ -82,25 +70,6 @@ modm :: String
 modm = "M4"
 myTerminal :: String
 myTerminal = "mate-terminal"
-myExplorer :: String
-myExplorer = "caja"
-
-spawnShell :: Maybe String -> X()
-spawnShell = spawnShellIn ""
-
-spawnShellIn :: TS.Dir -> Maybe String -> X()
-spawnShellIn dir command = do
-    t <- asks (terminal . config)
-    spawn $ cmd' t
-  where
-    run (Just c) = " -e '" ++ c ++ "'"
-    run Nothing    = ""
-
-    cmd' t | dir == "" = t ++ run command
-           | otherwise = "cd " ++ dir ++ " && " ++ t ++ run command
-
-spawnExplorer :: MonadIO m => m ()
-spawnExplorer = spawn myExplorer
 
 doNotFadeOutWindows :: Query Bool
 doNotFadeOutWindows =
@@ -151,103 +120,6 @@ myXPConfig = P.defaultXPConfig
     , P.bgHLight = "#3c3c3c"
     , P.font    = "-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*"
     , P.height  = 24
-    }
-
-myTabTheme :: Tab.Theme
-myTabTheme = Tab.defaultTheme
-    { Tab.activeTextColor = "#ffffff"
-    , Tab.activeBorderColor = "#FBAB2E"
-    , Tab.activeColor = "#3c3c3c"
-    , Tab.inactiveTextColor = "#c0c0c0"
-    , Tab.inactiveBorderColor = "#c0c0c0"
-    , Tab.inactiveColor = "#3c3c3c"
-    , Tab.urgentTextColor = "#ff0000"
-    , Tab.urgentBorderColor = "#ff0000"
-    , Tab.urgentColor = "#000000"
-    , Tab.fontName = "-*-terminus-*-*-*-*-12-*-*-*-*-*-*-*"
-    , Tab.decoHeight = 24
-    }
-
-myTopicDirs :: M.Map WorkspaceId String
-myTopicDirs = M.fromList $
-    [ ("dashboard"   , "~")
-    , ("xmonad"      , "~/.xmonad")
-    , ("video"       , "~/Documents/movies")
-    , ("docs"        , "~/Documents/doc")
-    , ("pdf"         , "~/Documents")
-    , ("graphics"    , "~")
-    , ("gimp"        , "~")
-    , ("eclipse"     , "~/workspace")
-    , ("yawn"        , "~/workspace/rh/pywbem-yawn")
-    , ("openlmi"     , "~/workspace/rh/openlmi-providers")
-    , ("cim"         , "/usr/share/mof/cim-current")
-    , ("hwdata"      , "~/workspace/rh/hwdata")
-    , ("hdparm"      , "~/fedora-scm/hdparm")
-    , ("providers"   , "~/workspace/rh/openlmi-providers")
-    , ("scripts"     , "~/workspace/rh/openlmi-scripts")
-    , ("tools"       , "~/workspace/rh/openlmi-tools")
-    , ("rhel"        , "~/rhel-scm")
-    , ("fedora"      , "~/fedora-scm")
-    , ("docker"      , "~/workspace/rh/docker")
-    , ("distribution", "~/workspace/rh/distribution")
-    , ("ae"          , "~/workspace/rh/atomic-enterprise")
-    , ("aet"         , "~/workspace/rh/atomic-enterprise-training")
-    , ("aea"         , "~/workspace/rh/atomic-enterprise-ansible")
-    , ("aes"         , "~/workspace/rh/ae-scripts")
-    ] ++ map (\w -> (w, "~"))
-    [ "music", "p2p", "gimp", "graphics"
-    , "web", "remote", "earth", "bank", "admin", "ebook"
-    , "ciV", "scrum", "BG"]
-
-myTopicConfig :: TS.TopicConfig
-myTopicConfig = TS.defaultTopicConfig
-    { TS.topicDirs = myTopicDirs
-    , TS.topicActions = M.fromList $
-        [ ("music", spawn "gmpc")
-        -- ("music", spawn $ myTerminal ++ " -depth 32 -bg rgba:0000/0000/0000/7777 -fg white -e ncmpcpp")
-        , ("mail", spawn "thunderbird")
-        , ("web", spawn "google-chrome")
-        , ("firefox", spawn "firefox")
-        , ("opera", spawn "opera")
-        , ("pdf", spawn "atril")
-        , ("chat", spawn "xchat" >> spawn "pidgin")
-        , ("admin", spawnShell Nothing >> spawnShell Nothing)
-        , ("virt", spawn "virt-manager")
-        , ("vbox", spawn "VirtualBox")
-        , ("gimp", spawn "gimp")
-        , ("eclipse", spawn "eclipse")
-        , ("ebook", spawn "calibre")
-        , ("video", spawn "vlc")
-        , ("xmonad", spawnShell (Just "vim -S xmonad.vim") >>
-              spawnShell Nothing)
-        , ("remote", spawnShell Nothing >> spawnShell Nothing)
-        , ("devel", spawnShell Nothing >> spawnShell Nothing)
-        , ("openlmi",   spawnShell Nothing >> spawnShell Nothing)
-        , ("providers", spawnShell Nothing >> spawnShell Nothing)
-        , ("cim", spawnShell Nothing >>
-              spawnShellIn "/usr/lib/python2.7/site-packages/pywbem" Nothing)
-        , ("bank", spawn "google-chrome https://www.mojebanka.cz/InternetBanking/")
-        , ("p2p", spawn "deluge-gtk")
-        , ("hwdata",
-              spawnShell Nothing >>
-              spawnShellIn "~/fedora-scm/hwdata" Nothing >>
-              spawnShellIn "~/rhel-scm/hwdata" Nothing)
-        , ("hdparm", spawnShell Nothing >>
-              spawnShellIn "~/fedora-scm/hdparm" Nothing >>
-              spawnShellIn "~/rhel-scm/hdparm" Nothing)
-        , ("docker", spawnShell Nothing >> spawnShell Nothing >>
-                spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc"))
-        , ("distribution", spawnShell Nothing >> spawnShell Nothing >>
-                spawnShellIn "~/workspace/go/distribution" (Just "bash --rcfile .bashrc"))
-        , ("scripts", spawnShell Nothing >> spawnShell Nothing)
-        , ("ciV", spawn "launch-ciV.sh -m -b")
-        , ("scrum", spawn "firefox https://bluejeans.com/3046463974/")
-        , ("BG", spawn "steam steam://rungameid/228280" >>
-              spawn "firefox http://slovnik.seznam.cz/de-cz/")
-        ] ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
-        [ "ae", "aet", "aes", "aea" ]
-    , TS.defaultTopicAction = const $ return ()
-    , TS.defaultTopic = "dashboard"
     }
 
 myWorkspaces :: [WorkspaceId]
@@ -331,8 +203,8 @@ emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys'
     emacsKeys' :: XConfig l -> [(String, X())]
     emacsKeys' conf = [
                -- Applications
-              (";", spawnShell Nothing)
-            , ("S-;", spawnExplorer)
+              (";", Local.spawnShell Nothing)
+            , ("S-;", Local.spawnExplorer)
             , ("S-.", namedScratchpadAction myNamedScratchpads  "guake")
             , ("p", Shell.shellPrompt myXPConfig)
             , ("S-p", mateRun)
@@ -426,7 +298,7 @@ emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys'
 
             , ("r", swapScreens)
 
-            , ("a", TS.currentTopicAction myTopicConfig)
+            , ("a", TS.currentTopicAction Local.topicConfig)
 
             -- Grid Select workspace
             , ("i", goToSelected myGSConfig)
@@ -489,10 +361,10 @@ emacsKeys = \conf -> map prefix (emacsKeys' conf) ++ keys'
     keys' = [
           ("<XF86Calculator>",
              namedScratchpadAction myNamedScratchpads "calculator")
-        , ("<XF86Mail>", TS.switchTopic myTopicConfig "mail")
-        , ("<XF86Terminal>", spawnShell Nothing)
+        , ("<XF86Mail>", TS.switchTopic Local.topicConfig "mail")
+        , ("<XF86Terminal>", Local.spawnShell Nothing)
         , ("<XF86Explorer>", spawn "Terminal")
-        , ("<XF86HomePage>", TS.switchTopic myTopicConfig "web")
+        , ("<XF86HomePage>", TS.switchTopic Local.topicConfig "web")
 
         -- mpc
         , ("<XF86AudioPlay>",
@@ -554,7 +426,7 @@ promptedNewWorkspace shiftFocused = PI.inputPrompt myXPConfig "New Workspace"
 
 -- creates the workspace if needed
 goto :: TS.Topic -> X()
-goto t = newWorkspace t >> TS.switchTopic myTopicConfig t
+goto t = newWorkspace t >> TS.switchTopic Local.topicConfig t
 shiftto :: TS.Topic -> X()
 shiftto t = newWorkspace t >> windows (W.greedyView t . W.shift t)
 
@@ -575,7 +447,7 @@ newWorkspaceDir gotofunc w = do
   where
     doNotAskForDir :: S.Set WorkspaceId
     doNotAskForDir = S.fromList $
-         ["mail", "chat", "virt", "vbox", "web"] ++ M.keys myTopicDirs
+         ["mail", "chat", "virt", "vbox", "web"] ++ M.keys Local.topicDirs
 
 widExists :: WorkspaceId -> X Bool
 widExists wid = do
@@ -590,7 +462,7 @@ switchTopic' :: (WorkspaceId -> WindowSet -> WindowSet)
 switchTopic' viewMethod topic = do
    windows $ viewMethod topic
    wins <- gets (W.integrate' . W.stack . W.workspace . W.current . windowset)
-   when (null wins) $ TS.topicAction myTopicConfig topic
+   when (null wins) $ TS.topicAction Local.topicConfig topic
 
 gsw :: X()
 gsw = gsw' W.greedyView
@@ -636,75 +508,6 @@ myMouseBindings (XConfig {XMonad.modMask = mm}) = M.fromList
     , ((mm, button5), const $ windows W.swapUp)
     ]
 
-myLayoutHook = avoidStruts
-             $ TD.topicDir myTopicDirs
-             $ PW.onWorkspace "chat" chatL
-             $ PW.onWorkspace "gimp" gimpL
-             $ PW.onWorkspace "BG" bgL
-             $ PW.onWorkspace "remote" remoteL
-             $ PW.onWorkspaces ["homam5", "civ4", "pst", "ciV"] wineGameL
-             $ _easyLay
-  where
-    -- basic layouts
-    _tiled = Tall nmaster delta ratio
-    _threecol = ThreeColMid nmaster delta (1/3)
-    _stack = StackTile nmaster delta ratio
-    nmaster = 1
-    ratio = 1/2
-    delta = 3/100
-    _mrt = MRT.mouseResizableTile
-             { MRT.draggerType = MRT.FixedDragger
-                { MRT.gapWidth = 2, MRT.draggerWidth = 2 }
-             }
-    _mrt2 = MRT.mouseResizableTile
-             { MRT.masterFrac = 0.8
-             , MRT.fracIncrement = delta
-             , MRT.draggerType = MRT.BordersDragger
-             }
-
-    -- common layouts
-    _easyLay = windowNavigation _baseLay 
-    _baseLay = smartBorders $ (mySubTabbed $ BW.boringWindows $ toggleLayouts _threecol
-                     (   MT.mkToggle (MT.single REFLECTX) _tiled
-                     ||| MT.mkToggle (MT.single REFLECTY) (Mirror _tiled)))
-             ||| (BW.boringWindows $ Tab.tabbed Tab.shrinkText myTabTheme)
-
-    -- workspace layouts
-    chatL = IM.withIM (1%5) (IM.ClassName "Skype"
-                 `IM.And`   (        IM.Title "minarmc - Skype™ (Beta)"
-                            `IM.Or`  IM.Title "Skype™ 2.2 (Beta) for Linux"
-                            `IM.Or`  IM.Title "minarmc - Skype™"))
-          $ IM.withIM (1%5) (        IM.ClassName "Empathy"
-                            `IM.And` (IM.Title "Contact List" `IM.Or` IM.Role "contact_list"))
-          {--
-          $ IM.withIM (1%5) (        IM.ClassName "Pidgin"
-                            `IM.And` IM.Role "buddy_list")
-          --}
-          {--
-          $ IM.withIM (1%5) (        IM.ClassName "Google-chrome"
-                            `IM.And` IM.Title "Hangouts")
-          --}
-          $ _easyLay
-
-    gimpL = LN.named "GIMP"
-          -- $ configurableNavigation noNavigateBorders $ BW.boringWindows
-          $ windowNavigation
-          $ smartBorders
-          $ IM.withIM (11/64) (IM.Role "gimp-toolbox")
-          $ CP.combineTwoP
-                (reflectHoriz $ TwoPane delta 0.2)
-                (Column 0)
-                (mySubTabbed $ BW.boringWindows Accordion)
-                (        CP.ClassName "Gimp"
-                `CP.And` CP.Not (CP.Role "gimp-image-window"))
-
-    bgL = windowNavigation $ BW.boringWindows $ smartBorders $ reflectHoriz $ Tall nmaster delta (7/9)
-
-    remoteL = windowNavigation $ BW.boringWindows $ smartBorders $ Tab.tabbed Tab.shrinkText myTabTheme
-
-    wineGameL = smartBorders $ simpleFloat ||| Full
-
-    mySubTabbed x = Tab.addTabs Tab.shrinkText myTabTheme $ subLayout [] Simplest x
 
 {- note: earlier hooks override later ones -}
 myManageHook :: ManageHook
@@ -937,7 +740,7 @@ myConfig dbus = myBaseConfig
     , focusedBorderColor = "#FF511F"
     , terminal = myTerminal
     , workspaces = myWorkspaces
-    , layoutHook = desktopLayoutModifiers myLayoutHook
+    , layoutHook = desktopLayoutModifiers Local.layoutHook
     , keys = myKeys
     , logHook = myLogHook dbus
     , handleEventHook = myEventHook

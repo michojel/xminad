@@ -3,7 +3,7 @@ ARCH             := $(shell uname -m)
 OS               := $(shell uname -s | tr '[A-Z]' '[a-z]')
 TARGET           := $(HOME)/.xmonad/xmonad-$(ARCH)-$(OS)
 SRC              := $(shell find . -type f -name '*.hs')
-CABAL_BIN        ?= $(shell which $(CABAL_BIN))
+CABAL_BIN        ?= $(shell which cabal)
 SANDBOX          := cabal.sandbox.config
 XMINAD           := dist/build/xminad/xminad
 CABAL_FLAGS      := --enable-optimization=2
@@ -13,13 +13,16 @@ XMONAD           ?= $(shell which xmonad)
 DISPLAY          ?= :0
 
 ################################################################################
-.PHONEY: all install restart clean realclean
+.PHONY: all build install restart clean realclean
 
 ################################################################################
-all: $(XMINAD)
+all: build
 
 ################################################################################
 install: $(TARGET)
+
+################################################################################
+build: $(XMINAD)
 
 ################################################################################
 restart: install
@@ -42,6 +45,9 @@ else
 endif
 
 ################################################################################
+build: $(XMINAD)
+
+################################################################################
 $(XMINAD): $(SRC) $(SANDBOX)
 	ghc -V
 	$(CABAL_BIN) build
@@ -60,5 +66,5 @@ $(SANDBOX):
 $(TARGET): $(XMINAD)
 	mkdir -p $(dir $@)
 	if [ -r $@ ]; then mv $@ $@.prev; fi
-	cp -p $< $@
+	cp -p $? $@
 	cd $(dir $@) && ln -nfs $(notdir $@) xminad
