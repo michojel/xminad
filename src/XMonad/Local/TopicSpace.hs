@@ -14,7 +14,7 @@ import XMonad.Local.Actions
 topicDirs :: M.Map WorkspaceId String
 topicDirs = M.fromList $
     [ ("dashboard"   , "~")
-    , ("xmonad"      , "~/.xmonad")
+    , ("xmonad"      , "~/workspace/private/xminad")
     , ("video"       , "~/Documents/movies")
     , ("docs"        , "~/Documents/doc")
     , ("pdf"         , "~/Documents")
@@ -61,8 +61,7 @@ topicConfig = TS.defaultTopicConfig
         , ("eclipse", spawn "eclipse")
         , ("ebook", spawn "calibre")
         , ("video", spawn "vlc")
-        , ("xmonad", spawnShell (Just "vim -S xmonad.vim") >>
-              spawnShell Nothing)
+        , ("xmonad", spawnShell Nothing >> spawnShell Nothing)
         , ("remote", spawnShell Nothing >> spawnShell Nothing)
         , ("devel", spawnShell Nothing >> spawnShell Nothing)
         , ("openlmi",   spawnShell Nothing >> spawnShell Nothing)
