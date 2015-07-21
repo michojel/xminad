@@ -47,7 +47,6 @@ topicConfig = TS.defaultTopicConfig
     { TS.topicDirs = topicDirs
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
-        -- ("music", spawn $ myTerminal ++ " -depth 32 -bg rgba:0000/0000/0000/7777 -fg white -e ncmpcpp")
         , ("mail", spawn "thunderbird")
         , ("web", spawn "google-chrome")
         , ("firefox", spawn "firefox")
@@ -77,7 +76,9 @@ topicConfig = TS.defaultTopicConfig
         , ("hdparm", spawnShell Nothing >>
               spawnShellIn "~/fedora-scm/hdparm" Nothing >>
               spawnShellIn "~/rhel-scm/hdparm" Nothing)
-        , ("docker", spawnShell Nothing >> spawnShell Nothing >>
+        , ("docker",
+                spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc"))
         , ("distribution", spawnShell Nothing >> spawnShell Nothing >>
                 spawnShellIn "~/workspace/go/distribution" (Just "bash --rcfile .bashrc"))
