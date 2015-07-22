@@ -37,6 +37,7 @@ topicDirs = M.fromList $
     , ("aet"         , "~/workspace/rh/atomic-enterprise-training")
     , ("aea"         , "~/workspace/rh/atomic-enterprise-ansible")
     , ("aes"         , "~/workspace/rh/ae-scripts")
+    , ("openshift"   , "~/workspace/rh/openshift-origin")
     ] ++ map (\w -> (w, "~"))
     [ "music", "p2p", "gimp", "graphics"
     , "web", "remote", "earth", "bank", "admin", "ebook"
@@ -80,6 +81,10 @@ topicConfig = TS.defaultTopicConfig
                 spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc"))
+        , ("openshift",
+                spawnShellIn "~/workspace/go/openshift" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/workspace/go/openshift" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/workspace/go/openshift" (Just "bash --rcfile .bashrc"))
         , ("distribution", spawnShell Nothing >> spawnShell Nothing >>
                 spawnShellIn "~/workspace/go/distribution" (Just "bash --rcfile .bashrc"))
         , ("scripts", spawnShell Nothing >> spawnShell Nothing)
