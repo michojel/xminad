@@ -63,7 +63,6 @@ chatL = IM.withIM (1%5) (IM.ClassName "Skype"
       $ easyLay
 
 gimpL = LN.named "GIMP"
-      -- $ configurableNavigation noNavigateBorders $ BW.boringWindows
       $ windowNavigation
       $ smartBorders
       $ IM.withIM (11/64) (IM.Role "gimp-toolbox")
@@ -98,4 +97,3 @@ myTabTheme = Tab.defaultTheme
     , Tab.fontName            = "-*-terminus-*-*-*-*-12-*-*-*-*-*-*-*"
     , Tab.decoHeight          = 24
     }
-

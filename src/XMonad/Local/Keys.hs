@@ -89,14 +89,14 @@ genericKeys conf = [
     , ("C-l", sendMessage $ Go R)
     , ("j", BW.focusDown)
     , ("k", BW.focusUp)
-    , ("m", windows W.focusMaster)
+    , ("m", BW.focusMaster)
     , ("S-j", windows W.swapDown)
     , ("S-k", windows W.swapUp)
     , ("C-.", onGroup W.focusUp')
     , ("C-,", onGroup W.focusDown')
     , ("h", sendMessage Shrink)
     , ("l", sendMessage Expand)
-    , ("<Return>", windows W.focusMaster)
+    , ("<Return>", BW.focusMaster)
     , ("S-<Return>", DwmP.dwmpromote)
     , ("t", withFocused $ windows . W.sink)
     , (",", sendMessage (IncMasterN 1))
@@ -110,10 +110,6 @@ genericKeys conf = [
     , ("<Down>", sendMessage $ pullGroup D)
     , ("C-m", withFocused (sendMessage . MergeAll))
     , ("C-u", withFocused (sendMessage . UnMerge))
-
-    -- boring windows
-    , ("b", BW.markBoring)
-    , ("S-b", BW.clearBoring)
 
     -- minimized widnows
     , ("z", withFocused minimizeWindow)
