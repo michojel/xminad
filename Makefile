@@ -8,12 +8,12 @@ SANDBOX          := cabal.sandbox.config
 XMINAD           := dist/build/xminad/xminad
 CABAL_FLAGS      := --enable-optimization=2
 CABAL_ADD_SOURCE ?=
-DO_CHECK         ?= NO
+DO_CHECK         ?= YES
 XMONAD           ?= $(shell which xmonad)
 DISPLAY          ?= :0
 
 ################################################################################
-.PHONY: all build install restart clean realclean
+.PHONY: all build install restart clean realclean check
 
 ################################################################################
 all: build
@@ -36,6 +36,10 @@ clean:
 ################################################################################
 realclean:
 	rm -rf .cabal-sandbox
+
+################################################################################
+check: build
+	$(CHECK)
 
 ################################################################################
 ifeq ($(DO_CHECK),YES)

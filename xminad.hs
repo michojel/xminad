@@ -19,15 +19,13 @@ import qualified XMonad.Util.EZConfig as EZ
 
 -- local modules **************************************************************
 import qualified XMonad.Local.Config as Local
+import qualified XMonad.Local.XConfig as Local
 import qualified XMonad.Local.LogHook as Local
 import qualified XMonad.Local.Keys as Local
 import qualified XMonad.Local.Layout as Local
 import qualified XMonad.Local.ManageHook as Local
 import qualified XMonad.Local.TopicSpace as Local
 
-myBaseConfig = desktopConfig
-    { XMonad.modMask = Local.modMask
-    }
 
 -- Mouse bindings: default actions bound to mouse events
 myMouseBindings :: XConfig Layout
@@ -67,7 +65,7 @@ myEventHook = mconcat
     , fullscreenEventHook
     ]
 
-myConfig dbus = myBaseConfig
+myConfig dbus = Local.xConfig
     { modMask = Local.modMask
     , borderWidth = 1
     , normalBorderColor = "#FFD12B"
@@ -86,7 +84,7 @@ myConfig dbus = myBaseConfig
     mc = myConfig dbus
     myStartupHook = do
         return () >> EZ.checkKeymap mc (Local.emacsKeys mc)
-        startupHook myBaseConfig
+        startupHook Local.xConfig
         -- adjustEventInput
         setWMName "LG3D"
 

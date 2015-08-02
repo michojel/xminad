@@ -2,42 +2,42 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 -- The name of the package.
-name:                xminad
+name:                   xminad
 
 -- The package version.  See the Haskell package versioning policy (PVP) 
 -- for standards guiding when and how versions should be incremented.
 -- http://www.haskell.org/haskellwiki/Package_versioning_policy
--- PVP summary:      +-+------- breaking API changes
---                   | | +----- non-breaking API additions
---                   | | | +--- code changes with no API change
-version:             0.1.0.0
+-- PVP summary:         +-+------- breaking API changes
+--                      | | +----- non-breaking API additions
+--                      | | | +--- code changes with no API change
+version:                0.1.0.0
 
 -- A short (one-line) description of the package.
-synopsis:            Minar's XMonad window manager
+synopsis:               Minar's XMonad window manager
 
 -- A longer description of the package.
-description:         XMonad window manager for and by Michal Minar.
+description:            XMonad window manager for and by Michal Minar.
     Designed to be used with Mate Desktop Environment and MPD player.
 
 -- The license under which the package is released.
-license:             BSD3
+license:                BSD3
 
 -- The file containing the license text.
-license-file:        LICENSE
+license-file:           LICENSE
 
 -- The package author(s).
-author:              Michal Minar
+author:                 Michal Minar
 
 -- An email address to which users can send suggestions, bug reports, and 
 -- patches.
-maintainer:          mic.liamg@gmail.com
+maintainer:             mic.liamg@gmail.com
 
 -- A copyright notice.
 -- copyright:           
 
-category:            Graphics
+category:               Graphics
 
-build-type:          Simple
+build-type:             Simple
 
 -- Extra files to be distributed with the package, such as examples or a 
 -- README.
@@ -51,6 +51,7 @@ Library
     XMonad.Layout.TopicDir
     XMonad.Local.Actions
     XMonad.Local.Config
+    XMonad.Local.XConfig
     XMonad.Local.GridSelect
     XMonad.Local.LogHook
     XMonad.Local.Keys
@@ -61,9 +62,9 @@ Library
     XMonad.Local.Workspaces
 
   -- Directories containing source files.
-  hs-source-dirs:      src
+  hs-source-dirs:       src
 
-  ghc-options:         -Wall
+  ghc-options:          -Wall
 
   build-depends:
       base           >=4.6  && <4.7
@@ -80,13 +81,13 @@ Library
     , xmonad-extras  >=0.11 && <0.12
 
   -- Base language which the package is written in.
-  default-language:    Haskell2010
+  default-language:     Haskell2010
 
 executable xminad
   -- .hs or .lhs file containing the Main module.
-  main-is:             xminad.hs
+  main-is:              xminad.hs
 
-  ghc-options:         -Wall
+  ghc-options:          -Wall
   
   -- Modules included in this executable, other than Main.
   -- other-modules:       
@@ -119,4 +120,16 @@ executable xminad
     , xmonad-extras  >=0.11 && <0.12
   
   -- Base language which the package is written in.
-  default-language:    Haskell2010
+  default-language:     Haskell2010
+
+executable checkrc
+  main-is:              checkrc.hs
+
+  ghc-options:          -Wall
+
+  build-depends:
+      base
+    , containers
+    , xminad
+    , xmonad
+    , xmonad-contrib

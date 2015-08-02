@@ -21,3 +21,4 @@ xpConfig = P.defaultXPConfig
     , P.font    = "-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*"
     , P.height  = 24
     }
+
