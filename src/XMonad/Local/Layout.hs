@@ -21,6 +21,7 @@ import XMonad.Layout.SubLayouts
 import qualified XMonad.Layout.Tabbed as Tab
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.TrackFloating
 import XMonad.Layout.TwoPane
 import XMonad.Layout.WindowNavigation
 
@@ -41,15 +42,16 @@ nmaster = 1
 ratio = 1/2
 delta = 3/100
 
-tiled = Tall nmaster delta ratio
-threecol = ThreeColMid nmaster delta (1/3)
+tiled =  Tall nmaster delta ratio
+threecol =  ThreeColMid nmaster delta (1/3)
 
 -- common layouts
 easyLay = windowNavigation baseLay 
-baseLay = smartBorders $ (mySubTabbed $ BW.boringWindows $ toggleLayouts threecol
+baseLay = smartBorders $ (mySubTabbed $ BW.boringWindows $
+          toggleLayouts threecol
                  (   MT.mkToggle (MT.single REFLECTX) tiled
                  ||| MT.mkToggle (MT.single REFLECTY) (Mirror tiled)))
-         ||| (BW.boringWindows $ Tab.tabbed Tab.shrinkText myTabTheme)
+         ||| (BW.boringWindows $ trackFloating $ Tab.tabbed Tab.shrinkText myTabTheme)
 
 -- workspace layouts
 chatL = IM.withIM (1%5) (IM.ClassName "Skype"
@@ -78,22 +80,22 @@ bgL = windowNavigation $ BW.boringWindows $ smartBorders
 remoteL = windowNavigation $ BW.boringWindows $ smartBorders
         $ Tab.tabbed Tab.shrinkText myTabTheme
 
-wineGameL = smartBorders $ simpleFloat ||| Full
+wineGameL = smartBorders $ simpleFloat ||| trackFloating Full
 
-mySubTabbed x = Tab.addTabs Tab.shrinkText myTabTheme $ subLayout [] Simplest x
+mySubTabbed x = trackFloating $ Tab.addTabs Tab.shrinkText myTabTheme $ subLayout [] Simplest x
 
 myTabTheme :: Tab.Theme
 myTabTheme = Tab.defaultTheme
-    { Tab.activeTextColor = "#ffffff"
-    , Tab.activeBorderColor = "#FBAB2E"
-    , Tab.activeColor = "#3c3c3c"
-    , Tab.inactiveTextColor = "#c0c0c0"
+    { Tab.activeTextColor     = "#ffffff"
+    , Tab.activeBorderColor   = "#FBAB2E"
+    , Tab.activeColor         = "#3c3c3c"
+    , Tab.inactiveTextColor   = "#c0c0c0"
     , Tab.inactiveBorderColor = "#c0c0c0"
-    , Tab.inactiveColor = "#3c3c3c"
-    , Tab.urgentTextColor = "#ff0000"
-    , Tab.urgentBorderColor = "#ff0000"
-    , Tab.urgentColor = "#000000"
-    , Tab.fontName = "-*-terminus-*-*-*-*-12-*-*-*-*-*-*-*"
-    , Tab.decoHeight = 24
+    , Tab.inactiveColor       = "#3c3c3c"
+    , Tab.urgentTextColor     = "#ff0000"
+    , Tab.urgentBorderColor   = "#ff0000"
+    , Tab.urgentColor         = "#000000"
+    , Tab.fontName            = "-*-terminus-*-*-*-*-12-*-*-*-*-*-*-*"
+    , Tab.decoHeight          = 24
     }
 

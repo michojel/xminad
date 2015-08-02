@@ -1,16 +1,14 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# OPTIONS -fno-warn-missing-signatures #-}
 
-import qualified Data.Map as M
 import qualified DBus as D
 import qualified DBus.Client as D
 
 import XMonad
-import qualified XMonad.Actions.FlexibleResize as FlexR
+import XMonad.Actions.UpdateFocus
 import XMonad.Config.Desktop
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
-import qualified XMonad.StackSet as W
 
 -- local modules **************************************************************
 import qualified XMonad.Local.Config as Local
@@ -19,6 +17,7 @@ import qualified XMonad.Local.LogHook as Local
 import qualified XMonad.Local.Keys as Local
 import qualified XMonad.Local.Layout as Local
 import qualified XMonad.Local.ManageHook as Local
+import qualified XMonad.Local.Mouse as Local
 import qualified XMonad.Local.TopicSpace as Local
 import qualified XMonad.Local.XConfig as Local
 
@@ -35,13 +34,12 @@ myConfig dbus = Local.xConfig
     , handleEventHook = Local.eventHook
     , manageHook = Local.manageHook
     , startupHook = myStartupHook
-    , mouseBindings = mouseBindings
+    , mouseBindings = Local.mouseBindings
     }
   where
-    mc = myConfig dbus
     myStartupHook = do
         startupHook Local.xConfig
-        -- adjustEventInput
+        adjustEventInput
         setWMName "LG3D"
 
 getWellKnownName :: D.Client -> IO ()
