@@ -14,7 +14,7 @@ import XMonad hiding (modMask, keys)
 import XMonad.Actions.CycleWS
 import qualified XMonad.Actions.DynamicWorkspaces as DW
 import qualified XMonad.Actions.DwmPromote as DwmP
-import XMonad.Actions.GridSelect
+import XMonad.Actions.GridSelect as GS
 import qualified XMonad.Actions.Submap as SUB
 import qualified XMonad.Actions.TopicSpace as TS
 import XMonad.Actions.Volume
@@ -38,10 +38,10 @@ import XMonad.Util.WorkspaceCompare (getSortByIndex)
 -- local modules **************************************************************
 import qualified XMonad.Local.Actions as Local
 import XMonad.Local.Config
-import XMonad.Local.GridSelect as Local
+import qualified XMonad.Local.GridSelect as Local
 import XMonad.Local.NamedScratchpad
 import XMonad.Local.TopicSpace
-import XMonad.Local.Workspaces as Local
+import qualified XMonad.Local.Workspaces as Local
 
 modMask :: KeyMask
 modMask = mod4Mask
@@ -150,20 +150,20 @@ genericKeys conf = [
             ]
         ])
 
-    , ("n", promptedNewWorkspace False)
-    , ("S-n", promptedNewWorkspace True)
+    , ("n", Local.promptedNewWorkspace False)
+    , ("S-n", Local.promptedNewWorkspace True)
     , ("S-<Backspace>", WithAll.killAll >> DW.removeWorkspace)
     , ("S-r", DW.renameWorkspace xpConfig)
     , ("c", TD.changeDir xpConfig)
 
-    , ("r", swapScreens)
+    , ("r", Local.swapScreens)
 
     , ("a", TS.currentTopicAction topicConfig)
 
     -- Grid Select workspace
-    , ("i", goToSelected Local.gsConfig)
-    , ("s", gsw)
-    , ("S-s", gswShift)
+    , ("i", GS.goToSelected Local.gsConfig)
+    , ("s", Local.gsw)
+    , ("S-s", Local.gswShift)
 
       -- xmonad
     , ("q", SUB.submap $ EZ.mkKeymap conf $ concat
