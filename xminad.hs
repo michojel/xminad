@@ -11,7 +11,6 @@ import XMonad.Config.Desktop
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
 import qualified XMonad.StackSet as W
-import qualified XMonad.Util.EZConfig as EZ
 
 -- local modules **************************************************************
 import qualified XMonad.Local.Config as Local
@@ -22,23 +21,6 @@ import qualified XMonad.Local.Layout as Local
 import qualified XMonad.Local.ManageHook as Local
 import qualified XMonad.Local.TopicSpace as Local
 import qualified XMonad.Local.XConfig as Local
-
-
--- Mouse bindings: default actions bound to mouse events
-myMouseBindings :: XConfig Layout
-                -> M.Map (ButtonMask, Button) (Window -> X())
-myMouseBindings (XConfig {XMonad.modMask = mm}) = M.fromList
-    -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((mm, button1), \w -> focus w >> mouseMoveWindow w
-                                    >> windows W.shiftMaster)
-    -- mod-button2, Raise the window to the top of the stack
-    , ((mm, button2), windows . (W.shiftMaster .) . W.focusWindow)
-    -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((mm, button3), \w -> focus w >> FlexR.mouseResizeWindow w)
-    -- you may also bind events to the mouse scroll wheel (button4 and button5)
-    , ((mm, button4), const $ windows W.swapDown)
-    , ((mm, button5), const $ windows W.swapUp)
-    ]
 
 myConfig dbus = Local.xConfig
     { modMask = Local.modMask
@@ -53,12 +35,11 @@ myConfig dbus = Local.xConfig
     , handleEventHook = Local.eventHook
     , manageHook = Local.manageHook
     , startupHook = myStartupHook
-    , mouseBindings = myMouseBindings
+    , mouseBindings = mouseBindings
     }
   where
     mc = myConfig dbus
     myStartupHook = do
-        return () >> EZ.checkKeymap mc (Local.emacsKeys mc)
         startupHook Local.xConfig
         -- adjustEventInput
         setWMName "LG3D"
