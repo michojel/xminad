@@ -2,29 +2,26 @@
 {-# OPTIONS -fno-warn-missing-signatures #-}
 
 import qualified Data.Map as M
-import Data.Monoid
 import qualified DBus as D
 import qualified DBus.Client as D
 
 import XMonad
 import qualified XMonad.Actions.FlexibleResize as FlexR
 import XMonad.Config.Desktop
-import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
-import XMonad.Hooks.ManageDocks
 import qualified XMonad.StackSet as W
 import qualified XMonad.Util.EZConfig as EZ
 
 -- local modules **************************************************************
 import qualified XMonad.Local.Config as Local
-import qualified XMonad.Local.XConfig as Local
+import qualified XMonad.Local.EventHook as Local
 import qualified XMonad.Local.LogHook as Local
 import qualified XMonad.Local.Keys as Local
 import qualified XMonad.Local.Layout as Local
 import qualified XMonad.Local.ManageHook as Local
 import qualified XMonad.Local.TopicSpace as Local
+import qualified XMonad.Local.XConfig as Local
 
 
 -- Mouse bindings: default actions bound to mouse events
@@ -43,28 +40,6 @@ myMouseBindings (XConfig {XMonad.modMask = mm}) = M.fromList
     , ((mm, button5), const $ windows W.swapUp)
     ]
 
--- | Enables 'focusFollowsMouse' for tiled windows only.  For this to
--- work you need to turn off 'focusFollowsMouse' in your configuration
--- and then add this function to your 'handleEventHook'.
-focusFollowsTiledOnly :: Event -> X All
-focusFollowsTiledOnly e@(CrossingEvent {ev_window = w, ev_event_type = t})
-  | isNormalEnter = whenX bothTiled (focus w) >> mempty
-  where isNormalEnter   = t == enterNotify && ev_mode e == notifyNormal
-        bothTiled       = notFloating w <&&> currentIsTiled
-        currentIsTiled  = currentWindow >>= maybe (return True) notFloating
-        currentWindow   = gets $ W.peek . windowset
-        notFloating w'  = gets $ not . M.member w' . W.floating . windowset
-focusFollowsTiledOnly _ = mempty
-
-myEventHook :: Event -> X All
-myEventHook = mconcat
-    [ ewmhDesktopsEventHook
-    , docksEventHook
-    , fadeWindowsEventHook
-    , focusFollowsTiledOnly
-    , fullscreenEventHook
-    ]
-
 myConfig dbus = Local.xConfig
     { modMask = Local.modMask
     , borderWidth = 1
@@ -75,7 +50,7 @@ myConfig dbus = Local.xConfig
     , layoutHook = desktopLayoutModifiers Local.layoutHook
     , keys = Local.keyBindings
     , logHook = Local.logHook dbus
-    , handleEventHook = myEventHook
+    , handleEventHook = Local.eventHook
     , manageHook = Local.manageHook
     , startupHook = myStartupHook
     , mouseBindings = myMouseBindings
