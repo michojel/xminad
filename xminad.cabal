@@ -16,7 +16,8 @@ version:             0.1.0.0
 synopsis:            Minar's XMonad window manager
 
 -- A longer description of the package.
--- description:         
+description:         XMonad window manager for and by Michal Minar.
+    Designed to be used with Mate Desktop Environment and MPD player.
 
 -- The license under which the package is released.
 license:             BSD3
