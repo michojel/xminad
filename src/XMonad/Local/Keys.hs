@@ -175,10 +175,10 @@ genericKeys conf = [
                     , ("e", spawn "monitor-hotplug")
                     , ("s", spawn "mate-session-save --shutdown-dialog")
                     , ("q", spawn "mate-session-save --logout")
-                    , ("l", spawn "mate-screensaver-command --lock")
+                    , ("l", spawn "mate-screensaver-command --lock" >> spawn "xset dpms force off")
                     ]
         ])
-    , ("C-q", spawn "mate-screensaver-command --lock")
+    , ("C-q", spawn "mate-screensaver-command --lock" >> spawn "xset dpms force off")
 
     -- namedScratchpads
     , ("C-S-t", namedScratchpadAction namedScratchpads "htop")

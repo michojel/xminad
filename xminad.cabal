@@ -69,7 +69,7 @@ Library
   ghc-options:          -Wall
 
   build-depends:
-      base           >=4.6  && <4.7
+      base           >=4.6  && <4.9
     , containers     >=0.5  && <0.6
     , dbus           >=0.10 && < 0.12
     , directory      >=1.2  && <1.3
@@ -80,7 +80,7 @@ Library
     , utf8-string    >=0.3  && < 0.5
     , xmonad         >=0.11 && <0.12
     , xmonad-contrib >=0.11 && <0.12
-    , xmonad-extras  >=0.11 && <0.12
+    , xmonad-extras  >=0.11 && <0.13
 
   -- Base language which the package is written in.
   default-language:     Haskell2010
@@ -105,7 +105,7 @@ executable xminad
 
   -- Other library packages from which modules are imported.
   build-depends:
-      base           >=4.6  && <4.7
+      base           >=4.6  && <4.9
     , containers     >=0.5  && <0.6
     , dbus           >=0.10 && < 0.12
     , directory      >=1.2  && <1.3
@@ -119,7 +119,7 @@ executable xminad
     , xminad
     , xmonad         >=0.11 && <0.12
     , xmonad-contrib >=0.11 && <0.12
-    , xmonad-extras  >=0.11 && <0.12
+    , xmonad-extras  >=0.11 && <0.13
   
   -- Base language which the package is written in.
   default-language:     Haskell2010

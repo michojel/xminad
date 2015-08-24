@@ -1,4 +1,5 @@
 {-# OPTIONS -fno-warn-missing-signatures #-}
+{-# OPTIONS -XFlexibleContexts #-}
 
 module XMonad.Local.Layout (layoutHook) where
 
