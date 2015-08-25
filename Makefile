@@ -2,7 +2,6 @@
 ARCH             := $(shell uname -m)
 OS               := $(shell uname -s | tr '[A-Z]' '[a-z]')
 TARGET           := $(HOME)/.xmonad/xmonad-$(ARCH)-$(OS)
-TAFFY            := $(HOME)/.config/taffybar/taffybar.hs
 SRC              := $(shell find . -type f -name '*.hs')
 CABAL_BIN        ?= $(shell which cabal)
 SANDBOX          := cabal.sandbox.config
@@ -20,7 +19,7 @@ DISPLAY          ?= :0
 all: build
 
 ################################################################################
-install: $(TARGET) $(TAFFY)
+install: $(TARGET)
 
 ################################################################################
 build: $(XMINAD)
@@ -74,7 +73,3 @@ $(TARGET): $(XMINAD)
 	if [ -r $@ ]; then mv $@ $@.prev; fi
 	cp -p $? $@
 	cd $(dir $@) && ln -nfs $(notdir $@) xminad
-
-$(TAFFY): $(XMINAD)
-	mkdir -p $(dir $@)
-	ln -sf $(CURDIR)/taffybar.hs $@

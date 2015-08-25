@@ -1,27 +1,26 @@
 module XMonad.Local.LogHook (logHook) where
 
---import qualified Codec.Binary.UTF8.String as UTF8
---import qualified Data.Map as M
---import Data.List
---import qualified DBus as D
---import qualified DBus.Client as D
---import Text.Regex
---import Text.Regex.Posix
+import qualified Codec.Binary.UTF8.String as UTF8
+import qualified Data.Map as M
+import Data.List
+import qualified DBus as D
+import qualified DBus.Client as D
+import Text.Regex
+import Text.Regex.Posix
 
 -- local modules **************************************************************
 import XMonad hiding (logHook)
 import qualified XMonad.Actions.UpdatePointer as UP
 import XMonad.Hooks.CurrentWorkspaceOnTop
---import XMonad.Hooks.DynamicLog as DL
---import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.DynamicLog as DL
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeWindows
---import qualified XMonad.StackSet as W
---import XMonad.Util.NamedScratchpad as NS
---import XMonad.Util.WorkspaceCompare (getSortByIndex)
+import qualified XMonad.StackSet as W
+import XMonad.Util.NamedScratchpad as NS
+import XMonad.Util.WorkspaceCompare (getSortByIndex)
 
-logHook :: X()
-logHook = do
-    {-
+logHook :: D.Client -> X()
+logHook dbus = do
     sorted <- getSortByIndex
     ws <- gets ( map W.tag . sorted . namedScratchpadFilterOutWorkspace
                . W.workspaces . windowset
@@ -29,13 +28,11 @@ logHook = do
     DL.dynamicLogWithPP (myPP $ M.fromList $ zip ws ([1..] :: [Integer])) {
         ppOutput = dbusOutput dbus
     }
-    -}
     currentWorkspaceOnTop
-    --ewmhDesktopsLogHook
+    ewmhDesktopsLogHook
     fadeWindowsLogHook myFadeHook
     UP.updatePointer (UP.Relative 0.9 0.9)
 
-{-
 myPP :: Show a => M.Map WorkspaceId a -> PP
 myPP wmap = defaultPP
     { ppTitle    = pangoSpan [("foreground", "white"), ("font", "Cantarell 10")] . pangoSanitize
@@ -81,7 +78,6 @@ myPP wmap = defaultPP
     shortenLayout' [] s = s
     shortenLayout' ((reg, repl):xs) s = shortenLayout' xs
                                     $ subRegex (mkRegex reg) s repl
--}
 
 myFadeHook :: FadeHook
 myFadeHook = composeAll [ opaque
@@ -107,7 +103,6 @@ doNotFadeOutWindows =
     className =? "BaldursGate" <||>
     title     =? "VLC (XVideo output)"
 
-{-
 dbusOutput :: D.Client -> String -> IO ()
 dbusOutput dbus str = do
     let signal = (D.signal 
@@ -136,4 +131,3 @@ pangoSanitize = foldr sanitize ""
     sanitize '\"' xs = "&quot;" ++ xs
     sanitize '&'  xs = "&amp;" ++ xs
     sanitize x    xs = x:xs
--}
