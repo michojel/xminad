@@ -1,12 +1,14 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# OPTIONS -fno-warn-missing-signatures #-}
 
-import qualified DBus as D
-import qualified DBus.Client as D
+--import qualified DBus as D
+--import qualified DBus.Client as D
+import System.Taffybar.Hooks.PagerHints
 
 import XMonad
 import XMonad.Actions.UpdateFocus
 import XMonad.Config.Desktop
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
 
@@ -21,7 +23,7 @@ import qualified XMonad.Local.Mouse as Local
 import qualified XMonad.Local.TopicSpace as Local
 import qualified XMonad.Local.XConfig as Local
 
-myConfig dbus = Local.xConfig
+myConfig = Local.xConfig
     { modMask = Local.modMask
     , borderWidth = 1
     , normalBorderColor = "#FFD12B"
@@ -30,7 +32,7 @@ myConfig dbus = Local.xConfig
     , workspaces = Local.workspaces
     , layoutHook = desktopLayoutModifiers Local.layoutHook
     , keys = Local.keyBindings
-    , logHook = Local.logHook dbus
+    , logHook = Local.logHook
     , handleEventHook = Local.eventHook
     , manageHook = Local.manageHook
     , startupHook = myStartupHook
@@ -38,18 +40,22 @@ myConfig dbus = Local.xConfig
     }
   where
     myStartupHook = do
+        spawn "pkill taffybar"
+        spawn "taffybar"
         startupHook Local.xConfig
         adjustEventInput
         setWMName "LG3D"
 
+{-
 getWellKnownName :: D.Client -> IO ()
 getWellKnownName dbus = do
     D.requestName dbus (D.busName_ "org.xmonad.Log")
             [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
         >> return ()
+-}
 
 main :: IO ()
 main = do
-    dbus <- D.connectSession
-    getWellKnownName dbus
-    xmonad $ withUrgencyHook NoUrgencyHook $ myConfig dbus
+    --dbus <- D.connectSession
+    -- getWellKnownName dbus
+    xmonad $ withUrgencyHook NoUrgencyHook $ ewmh $ pagerHints myConfig
