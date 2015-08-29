@@ -39,6 +39,7 @@ import XMonad.Util.WorkspaceCompare (getSortByIndex)
 import qualified XMonad.Local.Actions as Local
 import XMonad.Local.Config
 import qualified XMonad.Local.GridSelect as Local
+import qualified XMonad.Local.Music as Local
 import XMonad.Local.NamedScratchpad
 import XMonad.Local.TopicSpace
 import qualified XMonad.Local.Workspaces as Local
@@ -57,7 +58,7 @@ emacsKeys = \conf -> map prefix (keysMissingPrefix conf) ++ unprefixedKeys
     prefix :: (String, a) -> (String, a)
     prefix (k, a) = (modm ++ "-" ++ k, a)
 
-    keysMissingPrefix conf = concat $
+    keysMissingPrefix conf = concat
         [ genericKeys conf
         , switchWorkspaceKeys
         , switchScreenKeys
@@ -139,7 +140,7 @@ genericKeys conf = [
     , ("[",         moveTo Prev $ WSIs nonEmptyWsPred)
     , ("-", SUB.submap $ EZ.mkKeymap conf
         [ (m ++ show k, withNthWorkspace f i)
-        | (k, i) <- (zip ([1..9] ++ [0]) [10..] :: [(Int, Int)])
+        | (k, i) <- zip ([1..9] ++ [0]) [10..] :: [(Int, Int)]
         , (f, m) <- concat
             [ [ -- switch to ith workspace
                 (W.greedyView, m)
@@ -191,7 +192,20 @@ genericKeys conf = [
     -- misc
     , ("S-h", PSsh.sshPrompt xpConfig)
     --, ("<Print>", spawn "xfce4-screenshooter")
-    , ("y", spawn "xfce4-popup-clipman")
+    , ("y", SUB.submap $ EZ.mkKeymap conf $ concat
+        [ [(k, a), (modm ++ "-" ++ k, a)]
+        | (k, a) <- [ ("n",       io $ return . fromRight =<< MPD.withMPD MPD.next)
+                    , ("p",       io $ return . fromRight =<< MPD.withMPD MPD.previous)
+                    , ("S-.",     io $ return . fromRight =<< MPD.withMPD MPD.next)
+                    , ("S-,",     io $ return . fromRight =<< MPD.withMPD MPD.previous)
+                    , ("y",       io $ return . fromRight =<< MPD.withMPD (MPD.play Nothing))
+                    , ("s",       io $ return . fromRight =<< MPD.withMPD MPD.stop)
+                    , ("r",       io $ return . fromRight =<< MPD.withMPD Local.toggleRepeat)
+                    , ("*",       io $ return . fromRight =<< MPD.withMPD Local.toggleRandom)
+                    , ("S-8",     io $ return . fromRight =<< MPD.withMPD Local.toggleRandom)
+                    , ("<Space>", io $ return . fromRight =<< MPD.withMPD MPD.toggle)
+                    ]
+        ])
     , ("<Print>", spawn "mate-screenshot")
     , ("C-<Print>", spawn "mate-screenshot -w")
     , ("S-<Print>", spawn "mate-screenshot -a")

@@ -58,6 +58,7 @@ Library
     XMonad.Local.Layout
     XMonad.Local.ManageHook
     XMonad.Local.Mouse
+    XMonad.Local.Music
     XMonad.Local.NamedScratchpad
     XMonad.Local.TopicSpace
     XMonad.Local.Workspaces
