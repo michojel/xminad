@@ -13,16 +13,22 @@ XMONAD           ?= $(shell which xmonad)
 DISPLAY          ?= :0
 
 ################################################################################
-.PHONY: all build install restart clean realclean check
+.PHONY: all build install restart clean realclean check pic
 
 ################################################################################
 all: build
 
 ################################################################################
 install: $(TARGET)
+	sed 's!{{DATA_DIR}}!$(HOME)/.local/share/xminad!' config/xmobar.config > $(HOME)/.xmobarrc
+	make -C pic install
 
 ################################################################################
 build: $(XMINAD)
+
+################################################################################
+pic:
+	make -C pic
 
 ################################################################################
 restart: install
@@ -32,6 +38,7 @@ restart: install
 ################################################################################
 clean:
 	rm -rf dist $(XMINAD) $(CHECK) $(SANDBOX)
+	make -C pic clean
 
 ################################################################################
 realclean:

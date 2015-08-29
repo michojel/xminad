@@ -1,10 +1,10 @@
 {-# OPTIONS -fno-warn-missing-signatures #-}
-{-# OPTIONS -XFlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module XMonad.Local.Layout (layoutHook) where
 
 import Data.Ratio ((%))
-import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageDocks (avoidStruts)
 import XMonad.Layout
 import XMonad.Layout.Accordion
 import qualified XMonad.Layout.BoringWindows as BW
@@ -31,13 +31,13 @@ import XMonad.Layout.TopicDir as TD
 import XMonad.Local.TopicSpace as Local
 
 layoutHook = avoidStruts
-             $ TD.topicDir Local.topicDirs
-             $ PW.onWorkspace "chat" chatL
-             $ PW.onWorkspace "gimp" gimpL
-             $ PW.onWorkspace "BG" bgL
-             $ PW.onWorkspace "remote" remoteL
-             $ PW.onWorkspaces ["homam5", "civ4", "pst", "ciV"] wineGameL
-             $ easyLay
+           $ TD.topicDir Local.topicDirs
+           $ PW.onWorkspace "chat" chatL
+           $ PW.onWorkspace "gimp" gimpL
+           $ PW.onWorkspace "BG" bgL
+           $ PW.onWorkspace "remote" remoteL
+           $ PW.onWorkspaces ["homam5", "civ4", "pst", "ciV"] wineGameL
+             easyLay
 
 nmaster = 1
 ratio = 1/2
@@ -48,11 +48,14 @@ threecol =  ThreeColMid nmaster delta (1/3)
 
 -- common layouts
 easyLay = windowNavigation baseLay 
-baseLay = smartBorders $ (mySubTabbed $ BW.boringWindows $
-          toggleLayouts threecol
-                 (   MT.mkToggle (MT.single REFLECTX) tiled
-                 ||| MT.mkToggle (MT.single REFLECTY) (Mirror tiled)))
-         ||| (BW.boringWindows $ trackFloating $ Tab.tabbed Tab.shrinkText myTabTheme)
+baseLay = smartBorders (tiled' ||| tabbed')
+    where
+        tiled' = mySubTabbed $ BW.boringWindows
+               $ toggleLayouts threecol
+               $       MT.mkToggle (MT.single REFLECTX) tiled
+                   ||| MT.mkToggle (MT.single REFLECTY) (Mirror tiled)
+        tabbed' = BW.boringWindows $ trackFloating $ Tab.tabbed Tab.shrinkText myTabTheme
+
 
 -- workspace layouts
 chatL = IM.withIM (1%5) (IM.ClassName "Skype"
@@ -61,7 +64,7 @@ chatL = IM.withIM (1%5) (IM.ClassName "Skype"
                         `IM.Or`  IM.Title "minarmc - Skype™"))
       $ IM.withIM (1%5) (        IM.ClassName "Empathy"
                         `IM.And` (IM.Title "Contact List" `IM.Or` IM.Role "contact_list"))
-      $ easyLay
+        easyLay
 
 gimpL = LN.named "GIMP"
       $ windowNavigation
