@@ -38,7 +38,7 @@ myPP wmap = xmobarPP
                     . indexWorkspace False
     , ppHidden   = hidden . noScratchPad
     , ppUrgent   = xmobarColor "red" "black" . indexWorkspace False
-    , ppLayout   = xmobarColor "lightblue" "" . xmobarSanitize . shortenLayout
+    , ppLayout   = xmobarColor "lightblue" "" . aWrap "space" . xmobarSanitize . shortenLayout
     , ppSep      = xmobarColor "brown" "" $ xmobarSanitize " : "
     , ppWsSep    = " "
     }
@@ -63,12 +63,12 @@ myPP wmap = xmobarPP
     toName False = id
 
     clickable :: Int -> String -> String
-    clickable index | index == 10 = aWrap 0
-                    | index < 10  = aWrap index
+    clickable index | index == 10 = aWrap "0"
+                    | index < 10  = aWrap (show index)
                     | otherwise   = xmobarSanitize
 
-    aWrap :: Int -> String -> String
-    aWrap index w = "<action=`xdotool key super+" ++ show index ++
+    aWrap :: String -> String -> String
+    aWrap key w = "<action=`xdotool key super+" ++ key ++
                     "` button=1>" ++ xmobarSanitize w ++ "</action>"
 
     noScratchPad ws | ws =~ "^NSP(:[0-9]+)?$" = ""
