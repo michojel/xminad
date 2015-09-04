@@ -49,7 +49,7 @@ topicConfig = TS.defaultTopicConfig
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
         , ("mail", spawn "thunderbird")
-        , ("web", spawn "google-chrome")
+        , ("web", spawn "firefox")
         , ("firefox", spawn "firefox")
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
