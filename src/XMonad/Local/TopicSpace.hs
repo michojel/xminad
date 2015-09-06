@@ -14,30 +14,30 @@ import XMonad.Local.Actions
 topicDirs :: M.Map WorkspaceId String
 topicDirs = M.fromList $
     [ ("dashboard"   , "~")
-    , ("xmonad"      , "~/workspace/private/xminad")
+    , ("xmonad"      , "~/my/private/xminad")
     , ("video"       , "~/Documents/movies")
     , ("docs"        , "~/Documents/doc")
     , ("pdf"         , "~/Documents")
     , ("graphics"    , "~")
     , ("gimp"        , "~")
-    , ("eclipse"     , "~/workspace")
-    , ("yawn"        , "~/workspace/rh/pywbem-yawn")
-    , ("openlmi"     , "~/workspace/rh/openlmi-providers")
+    , ("eclipse"     , "~/my")
+    , ("yawn"        , "~/my/rh/pywbem-yawn")
+    , ("openlmi"     , "~/my/rh/openlmi-providers")
     , ("cim"         , "/usr/share/mof/cim-current")
-    , ("hwdata"      , "~/workspace/rh/hwdata")
+    , ("hwdata"      , "~/my/rh/hwdata")
     , ("hdparm"      , "~/fedora-scm/hdparm")
-    , ("providers"   , "~/workspace/rh/openlmi-providers")
-    , ("scripts"     , "~/workspace/rh/openlmi-scripts")
-    , ("tools"       , "~/workspace/rh/openlmi-tools")
+    , ("providers"   , "~/my/rh/openlmi-providers")
+    , ("scripts"     , "~/my/rh/openlmi-scripts")
+    , ("tools"       , "~/my/rh/openlmi-tools")
     , ("rhel"        , "~/rhel-scm")
     , ("fedora"      , "~/fedora-scm")
-    , ("docker"      , "~/workspace/rh/docker")
-    , ("distribution", "~/workspace/rh/distribution")
-    , ("ae"          , "~/workspace/rh/atomic-enterprise")
-    , ("aet"         , "~/workspace/rh/atomic-enterprise-training")
-    , ("aea"         , "~/workspace/rh/atomic-enterprise-ansible")
-    , ("aes"         , "~/workspace/rh/ae-scripts")
-    , ("openshift"   , "~/workspace/rh/openshift-origin")
+    , ("docker"      , "~/my/rh/docker")
+    , ("distribution", "~/my/rh/distribution")
+    , ("ae"          , "~/my/rh/atomic-enterprise")
+    , ("aet"         , "~/my/rh/atomic-enterprise-training")
+    , ("aea"         , "~/my/rh/atomic-enterprise-ansible")
+    , ("aes"         , "~/my/rh/ae-scripts")
+    , ("openshift"   , "~/my/rh/openshift-origin")
     ] ++ map (\w -> (w, "~"))
     [ "music", "p2p", "gimp", "graphics"
     , "web", "remote", "earth", "bank", "admin", "ebook"
@@ -78,15 +78,15 @@ topicConfig = TS.defaultTopicConfig
               spawnShellIn "~/fedora-scm/hdparm" Nothing >>
               spawnShellIn "~/rhel-scm/hdparm" Nothing)
         , ("docker",
-                spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/workspace/go/docker" (Just "bash --rcfile .bashrc"))
+                spawnShellIn "~/my/go/docker" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/my/go/docker" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/my/go/docker" (Just "bash --rcfile .bashrc"))
         , ("openshift",
-                spawnShellIn "~/workspace/go/openshift" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/workspace/go/openshift" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/workspace/go/openshift" (Just "bash --rcfile .bashrc"))
+                spawnShellIn "~/my/go/openshift" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/my/go/openshift" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/my/go/openshift" (Just "bash --rcfile .bashrc"))
         , ("distribution", spawnShell Nothing >> spawnShell Nothing >>
-                spawnShellIn "~/workspace/go/distribution" (Just "bash --rcfile .bashrc"))
+                spawnShellIn "~/my/go/distribution" (Just "bash --rcfile .bashrc"))
         , ("scripts", spawnShell Nothing >> spawnShell Nothing)
         , ("ciV", spawn "launch-ciV.sh -m -b")
         , ("scrum", spawn "firefox https://bluejeans.com/3046463974/")
