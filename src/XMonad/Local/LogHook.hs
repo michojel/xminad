@@ -31,7 +31,7 @@ logHook xmobarHandle = do
 
 myPP :: M.Map WorkspaceId Int -> PP
 myPP wmap = xmobarPP
-    { ppTitle    = xmobarColor "white" "" . xmobarSanitize . shorten 60
+    { ppTitle    = xmobarColor "white" "" . xmobarSanitize . shorten 120
     , ppCurrent  = xmobarColor "white" "" . wrap "[" "]"
                     . indexWorkspace False
     , ppVisible  = xmobarColor "yellow" "" . wrap "(" ")"
