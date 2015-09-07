@@ -116,6 +116,4 @@ xmobarSanitize = foldr sanitize ""
   where
     sanitize '>'  xs = "&gt;" ++ xs
     sanitize '<'  xs = "&lt;" ++ xs
-    sanitize '\"' xs = "&quot;" ++ xs
-    sanitize '&'  xs = "&amp;" ++ xs
     sanitize x    xs = x:xs
