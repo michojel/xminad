@@ -3,16 +3,18 @@ OUT=$(addsuffix .xpm, $(basename $(filter-out bar-base.svg, $(wildcard *.svg))))
 DESTDIR=$(HOME)/.local/share/xminad
 DESTS=$(addprefix $(DESTDIR)/, $(OUT))
 
-.PHONY: all clean install
+.PHONY: all clean install datadir
 
 all: $(OUT)
 
 install: $(DESTS)
 
-$(DESTDIR):
-	mkdir $(HOME)/.local/share/xminad
+datadir: $(DESTDIR)
 
-$(DESTDIR)/%: $(DESTDIR) %
+$(DESTDIR):
+	-mkdir $(DESTDIR)
+
+$(DESTDIR)/%: datadir %
 	install -m 0644 $* $@ 
 
 %.xpm: %.svg
