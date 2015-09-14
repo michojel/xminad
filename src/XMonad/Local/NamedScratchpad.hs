@@ -12,7 +12,7 @@ namedScratchpads :: [NamedScratchpad]
 namedScratchpads =
         [ NS "htop" (terminal ++ " -t htop -e htop") (title =? "htop")
             cTopFloat
-        , NS "stardict" "stardict" (className =? "Stardict") cFloating
+        , NS "stardict" "qstardict" (className =? "Qstardict") cFloating
         , NS "notes" "gvim --role notes ~/notes.txt" (role =? "notes")
             cFloating
         , NS "charmap" "charmap" (className =? "Gucharmap") cFloating
