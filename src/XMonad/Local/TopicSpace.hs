@@ -85,7 +85,9 @@ topicConfig = TS.defaultTopicConfig
                 spawnShellIn "~/wsp/go/openshift" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/wsp/go/openshift" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/wsp/go/openshift" (Just "bash --rcfile .bashrc"))
-        , ("distribution", spawnShell Nothing >> spawnShell Nothing >>
+        , ("distribution",
+                spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc"))
         , ("scripts", spawnShell Nothing >> spawnShell Nothing)
         , ("ciV", spawn "launch-ciV.sh -m -b")
