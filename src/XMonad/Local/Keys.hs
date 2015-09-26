@@ -248,14 +248,10 @@ unprefixedKeys = [
     , ("<XF86HomePage>", TS.switchTopic topicConfig "web")
 
     -- mpc
-    , ("<XF86AudioPlay>",
-            io $ return . fromRight =<< MPD.withMPD MPD.toggle)
-    , ("<XF86AudioStop>",
-            io $ return . fromRight =<< MPD.withMPD MPD.stop)
-    , ("<XF86AudioNext>",
-            io $ return . fromRight =<< MPD.withMPD MPD.next)
-    , ("<XF86AudioPrev>",
-            io $ return . fromRight =<< MPD.withMPD MPD.previous)
+    , ("<XF86AudioPlay>", io $ return . fromRight =<< MPD.withMPD MPD.toggle)
+    , ("<XF86AudioStop>", io $ return . fromRight =<< MPD.withMPD MPD.stop)
+    , ("<XF86AudioNext>", io $ return . fromRight =<< MPD.withMPD MPD.next)
+    , ("<XF86AudioPrev>", io $ return . fromRight =<< MPD.withMPD MPD.previous)
 
     -- volume
     , ("<XF86AudioMute>",        void toggleMute)
