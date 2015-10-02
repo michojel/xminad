@@ -51,6 +51,7 @@ manageHook = composeOne (concat
         , [className =? "Evince"       -?> doMyShift "pdf" ]
         , [className =? "Atril"        -?> doMyShift "pdf" ]
         , [className =? "Thunderbird"  -?> doMyShift "mail"]
+        , [className =? "California"   -?> doMyShift "calendar"]
         , [className =? "Gimp"         -?> doMyShift "gimp"]
         , [className =? "Virt-manager" -?> doMyShift "virt"]
         , [className =? "VirtualBox"   -?> doMyShift "vbox"]
