@@ -26,7 +26,7 @@ spawnShellIn dir command = do
     spawn $ cmd' t
   where
     run (Just c) = " -e '" ++ c ++ "'"
-    run Nothing    = ""
+    run Nothing  = ""
 
     cmd' t | dir == "" = t ++ run command
            | otherwise = "cd " ++ dir ++ " && " ++ t ++ run command
@@ -43,7 +43,7 @@ mateRun :: X ()
 mateRun = withDisplay $ \dpy -> do
     rw <- asks theRoot
     mate_panel <- getAtom "_MATE_PANEL_ACTION"
-    panel_run   <- getAtom "_MATE_PANEL_ACTION_RUN_DIALOG"
+    panel_run  <- getAtom "_MATE_PANEL_ACTION_RUN_DIALOG"
 
     io $ allocaXEvent $ \e -> do
         setEventType e clientMessage
