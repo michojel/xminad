@@ -41,7 +41,7 @@ topicDirs = M.fromList $
     ] ++ map (\w -> (w, "~"))
     [ "music", "p2p", "gimp", "graphics"
     , "web", "remote", "earth", "bank", "admin", "ebook"
-    , "ciV", "scrum", "BG", "calendar"]
+    , "ciV", "scrum", "BG", "witcher", "calendar"]
 
 topicConfig :: TS.TopicConfig
 topicConfig = TS.defaultTopicConfig
@@ -94,6 +94,7 @@ topicConfig = TS.defaultTopicConfig
         , ("scrum", spawn "firefox https://bluejeans.com/3046463974/")
         , ("BG", spawn "steam steam://rungameid/228280" >>
               spawn "firefox http://slovnik.seznam.cz/de-cz/")
+        , ("witcher", spawn "wine C:\\windows\\command\\start.exe steam://rungameid/20900")
         , ("calendar", spawn "california")
         ] ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
         [ "ae", "aet", "aes", "aea" ]

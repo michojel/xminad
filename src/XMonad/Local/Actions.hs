@@ -2,8 +2,13 @@
 
 module XMonad.Local.Actions where
 
+import Control.Monad
+import Data.Maybe
+import System.Posix.Signals (Signal, signalProcess)
+
 import XMonad
 import qualified XMonad.Actions.TopicSpace as TS
+import qualified XMonad.Util.WindowProperties as WP
 
 -- local modules **************************************************************
 import qualified XMonad.Local.Config as Local
@@ -25,6 +30,14 @@ spawnShellIn dir command = do
 
     cmd' t | dir == "" = t ++ run command
            | otherwise = "cd " ++ dir ++ " && " ++ t ++ run command
+
+killWindowPID :: Signal -> Window -> X()
+killWindowPID s w = do
+    pid <- WP.getProp32s "_NET_WM_PID" w
+    when (isJust pid) (liftIO $ mapM_ (signalProcess s . fromIntegral) (fromJust pid))
+
+signalCurrentWindow :: Signal -> X()
+signalCurrentWindow s = withFocused (killWindowPID s)
 
 mateRun :: X ()
 mateRun = withDisplay $ \dpy -> do

@@ -36,7 +36,8 @@ manageHook = composeOne (concat
           -?> doMaster <+> doCenterFloat]
         , [className =? c -?> doMaster <+> doFloat | c <- myCFloats ]
         , [title =? t -?> doMaster <+> doFloat | t <- myTFloats ]
-        , [ className =? "BaldursGate" -?> doMyShift "BG" <+> doMaster]
+        , [className =? "BaldursGate" -?> doMyShift "BG" <+> doMaster]
+        , [className =? "witcher.exe" -?> doMyShift "witcher" <+> doMaster]
         , [NS.query c -?> hook c | c <- namedScratchpads]])
         --, [className =? "dzen" -?> transparency 0.4]])
     <+>

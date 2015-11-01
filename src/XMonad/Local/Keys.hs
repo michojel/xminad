@@ -10,6 +10,8 @@ import qualified Data.Map as M
 import Data.Maybe
 import qualified Network.MPD as MPD
 import qualified Network.MPD.Commands.Extensions as MPD
+import System.Posix.Signals (sigCONT, sigSTOP)
+
 import XMonad hiding (modMask, keys)
 import XMonad.Actions.CycleWS
 import qualified XMonad.Actions.DynamicWorkspaces as DW
@@ -122,7 +124,14 @@ genericKeys conf = [
       -- Windows
     , ("S-c", kill)
     , ("C-S-c", WithAll.killAll)
-    , ("x", spawn "xkill")
+
+    , ("x", SUB.submap $ EZ.mkKeymap conf $ concat
+        [ [(k, a), (modm ++ k, a)]
+        | (k, a) <- [ ("s", Local.signalCurrentWindow sigSTOP)
+                    , ("c", Local.signalCurrentWindow sigCONT)
+                    , ("x", spawn "xkill")
+                    ]
+        ])
 
     -- Compositing
     , ("S-x", SUB.submap $ EZ.mkKeymap conf $ concat
@@ -194,16 +203,16 @@ genericKeys conf = [
     --, ("<Print>", spawn "xfce4-screenshooter")
     , ("y", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
-        | (k, a) <- [ ("n",       io $ return . fromRight =<< MPD.withMPD MPD.next)
-                    , ("p",       io $ return . fromRight =<< MPD.withMPD MPD.previous)
-                    , ("S-.",     io $ return . fromRight =<< MPD.withMPD MPD.next)
-                    , ("S-,",     io $ return . fromRight =<< MPD.withMPD MPD.previous)
-                    , ("y",       io $ return . fromRight =<< MPD.withMPD (MPD.play Nothing))
-                    , ("s",       io $ return . fromRight =<< MPD.withMPD MPD.stop)
-                    , ("r",       io $ return . fromRight =<< MPD.withMPD Local.toggleRepeat)
-                    , ("*",       io $ return . fromRight =<< MPD.withMPD Local.toggleRandom)
-                    , ("S-8",     io $ return . fromRight =<< MPD.withMPD Local.toggleRandom)
-                    , ("<Space>", io $ return . fromRight =<< MPD.withMPD MPD.toggle)
+        | (k, a) <- [ ("n",       io $ liftM fromRight (MPD.withMPD MPD.next))
+                    , ("p",       io $ liftM fromRight (MPD.withMPD MPD.previous))
+                    , ("S-.",     io $ liftM fromRight (MPD.withMPD MPD.next))
+                    , ("S-,",     io $ liftM fromRight (MPD.withMPD MPD.previous))
+                    , ("y",       io $ liftM fromRight (MPD.withMPD (MPD.play Nothing)))
+                    , ("s",       io $ liftM fromRight (MPD.withMPD MPD.stop))
+                    , ("r",       io $ liftM fromRight (MPD.withMPD Local.toggleRepeat))
+                    , ("*",       io $ liftM fromRight (MPD.withMPD Local.toggleRandom))
+                    , ("S-8",     io $ liftM fromRight (MPD.withMPD Local.toggleRandom))
+                    , ("<Space>", io $ liftM fromRight (MPD.withMPD MPD.toggle))
                     ]
         ])
     , ("<Print>", spawn "mate-screenshot")
@@ -213,10 +222,8 @@ genericKeys conf = [
     -- MPD
     -- mov current playing song in mpd to thrash
     , ("<Delete>", spawn "mpcrm")
-    , ("<XF86Forward>",
-            io $ return . fromRight =<< MPD.withMPD MPD.next)
-    , ("<XF86Back>",
-            io $ return . fromRight =<< MPD.withMPD MPD.previous)
+    , ("<XF86Forward>", io $ liftM fromRight (MPD.withMPD MPD.next))
+    , ("<XF86Back>",    io $ liftM fromRight (MPD.withMPD MPD.previous))
     ]
 
 
@@ -248,10 +255,10 @@ unprefixedKeys = [
     , ("<XF86HomePage>", TS.switchTopic topicConfig "web")
 
     -- mpc
-    , ("<XF86AudioPlay>", io $ return . fromRight =<< MPD.withMPD MPD.toggle)
-    , ("<XF86AudioStop>", io $ return . fromRight =<< MPD.withMPD MPD.stop)
-    , ("<XF86AudioNext>", io $ return . fromRight =<< MPD.withMPD MPD.next)
-    , ("<XF86AudioPrev>", io $ return . fromRight =<< MPD.withMPD MPD.previous)
+    , ("<XF86AudioPlay>", io $ liftM fromRight (MPD.withMPD MPD.toggle))
+    , ("<XF86AudioStop>", io $ liftM fromRight (MPD.withMPD MPD.stop))
+    , ("<XF86AudioNext>", io $ liftM fromRight (MPD.withMPD MPD.next))
+    , ("<XF86AudioPrev>", io $ liftM fromRight (MPD.withMPD MPD.previous))
 
     -- volume
     , ("<XF86AudioMute>",        void toggleMute)
