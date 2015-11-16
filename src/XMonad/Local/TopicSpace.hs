@@ -15,6 +15,7 @@ topicDirs :: M.Map WorkspaceId String
 topicDirs = M.fromList $
     [ ("dashboard"   , "~")
     , ("xmonad"      , "~/wsp/my/xminad")
+    , ("xminad"      , "~/wsp/my/xminad")
     , ("video"       , "~/Documents/movies")
     , ("docs"        , "~/Documents/doc")
     , ("pdf"         , "~/Documents")
@@ -38,6 +39,7 @@ topicDirs = M.fromList $
     , ("aea"         , "~/wsp/rh/atomic-enterprise-ansible")
     , ("aes"         , "~/wsp/rh/ae-scripts")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
+    , ("k8s"         , "~/wsp/rh/kubernetes")
     ] ++ map (\w -> (w, "~"))
     [ "music", "p2p", "gimp", "graphics"
     , "web", "remote", "earth", "bank", "admin", "ebook"
@@ -62,6 +64,7 @@ topicConfig = TS.defaultTopicConfig
         , ("ebook", spawn "calibre")
         , ("video", spawn "vlc")
         , ("xmonad", spawnShell Nothing >> spawnShell Nothing)
+        , ("xminad", spawnShell Nothing >> spawnShell Nothing)
         , ("remote", spawnShell Nothing >> spawnShell Nothing)
         , ("devel", spawnShell Nothing >> spawnShell Nothing)
         , ("openlmi",   spawnShell Nothing >> spawnShell Nothing)
@@ -89,6 +92,10 @@ topicConfig = TS.defaultTopicConfig
                 spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc"))
+        , ("k8s",
+                spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc") >>
+                spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc"))
         , ("scripts", spawnShell Nothing >> spawnShell Nothing)
         , ("ciV", spawn "launch-ciV.sh -m -b")
         , ("scrum", spawn "firefox https://bluejeans.com/3046463974/")
