@@ -28,6 +28,6 @@ namedScratchpads =
         role = stringProperty "WM_WINDOW_ROLE"
         cFloating = customFloating $ W.RationalRect (1/3) (1/9) (1/3) (1/3)
         cTopFloat = customFloating $ W.RationalRect (1/5) (1/32) (3/5) (1/2)
-        cBottomFloat = customFloating $ W.RationalRect (1/5) (5/8) (3/5) (3/8)
+        cBottomFloat = customFloating $ W.RationalRect (1/5) (6/11) (3/5) (4/11)
         startsWith q x = fmap (startswith x) q
 
