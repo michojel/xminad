@@ -101,7 +101,8 @@ topicConfig = TS.defaultTopicConfig
         , ("scrum", spawn "firefox https://bluejeans.com/3046463974/")
         , ("BG", spawn "steam steam://rungameid/228280" >>
               spawn "firefox http://slovnik.seznam.cz/de-cz/")
-        , ("witcher", spawn "wine C:\\windows\\command\\start.exe steam://rungameid/20900")
+        , ("witcher", spawn "wine C:/Program\\ Files\\ (x86)/Steam/Steam.exe steam://rungameid/20900" >>
+                spawn "firefox --new-window http://slovnik.seznam.cz/de-cz/")
         , ("calendar", spawn "california")
         ] ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
         [ "ae", "aet", "aes", "aea" ]

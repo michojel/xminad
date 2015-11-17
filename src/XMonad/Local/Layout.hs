@@ -35,6 +35,7 @@ layoutHook = avoidStruts
            $ PW.onWorkspace "chat" chatL
            $ PW.onWorkspace "gimp" gimpL
            $ PW.onWorkspace "BG" bgL
+           $ PW.onWorkspace "witcher" witcherL
            $ PW.onWorkspace "remote" remoteL
            $ PW.onWorkspaces ["homam5", "civ4", "pst", "ciV"] wineGameL
              easyLay
@@ -79,6 +80,9 @@ gimpL = LN.named "GIMP"
 
 bgL = windowNavigation $ BW.boringWindows $ smartBorders
     $ reflectHoriz $ Tall nmaster delta (7/9)
+
+witcherL = windowNavigation $ BW.boringWindows $ noBorders
+    $ IM.withIM (2%7) (IM.ClassName "Firefox") tiled
 
 remoteL = windowNavigation $ BW.boringWindows $ smartBorders
         $ Tab.tabbed Tab.shrinkText myTabTheme

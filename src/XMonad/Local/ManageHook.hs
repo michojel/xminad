@@ -17,6 +17,7 @@ manageHook = composeOne (concat
         [ --[manageHook myBaseConfig]
           [checkDock -?> doIgnore]
         , [className =? c -?> doIgnore | c <- myCIgnores]
+        , [className =? "Wine" -?> doFloat ]
         , [isFullscreen -?> doMaster <+> doFullFloat]
         , [transience]
         , [isDialog -?> doMaster <+> doCenterFloat]
