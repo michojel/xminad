@@ -27,7 +27,7 @@ logHook xmobarHandle = do
     currentWorkspaceOnTop
     ewmhDesktopsLogHook
     fadeWindowsLogHook myFadeHook
-    UP.updatePointer (UP.Relative 0.9 0.9)
+    UP.updatePointer (0.9, 0.9) (0.1, 0.1)
 
 myPP :: M.Map WorkspaceId Int -> PP
 myPP wmap = xmobarPP

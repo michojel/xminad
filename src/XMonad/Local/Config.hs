@@ -13,7 +13,7 @@ terminal :: String
 terminal = "mate-terminal"
 
 xpConfig :: P.XPConfig
-xpConfig = P.defaultXPConfig
+xpConfig = P.def
     { P.fgColor = "#dfdfdf"
     , P.bgColor = "#3c3c3c"
     , P.fgHLight = "#ffffff"

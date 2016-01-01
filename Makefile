@@ -69,7 +69,6 @@ $(XMINAD): $(SRC) $(SANDBOX)
 $(SANDBOX):
 	$(CABAL_BIN) sandbox init
 	$(if $(CABAL_ADD_SOURCE),$(CABAL_BIN) sandbox add-source $(CABAL_ADD_SOURCE),)
-	$(CABAL_BIN) install $(CABAL_FLAGS) xmonad-extras -fwith_mpd -f-with_hint
 	$(CABAL_BIN) install --only-dependencies $(CABAL_FLAGS)
 	$(CABAL_BIN) configure $(CABAL_FLAGS)
 	touch $@

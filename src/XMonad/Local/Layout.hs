@@ -92,7 +92,7 @@ wineGameL = smartBorders $ simpleFloat ||| trackFloating Full
 mySubTabbed x = trackFloating $ Tab.addTabs Tab.shrinkText myTabTheme $ subLayout [] Simplest x
 
 myTabTheme :: Tab.Theme
-myTabTheme = Tab.defaultTheme
+myTabTheme = Tab.def
     { Tab.activeTextColor     = "#ffffff"
     , Tab.activeBorderColor   = "#FBAB2E"
     , Tab.activeColor         = "#3c3c3c"

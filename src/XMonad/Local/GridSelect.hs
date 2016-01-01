@@ -17,7 +17,7 @@ import qualified XMonad.Local.TopicSpace as Local
 
 
 gsConfig :: HasColorizer a => GSConfig a
-gsConfig = defaultGSConfig
+gsConfig = def
     { gs_cellheight = 40
     , gs_cellwidth = 100
     , gs_navigate = navigation'

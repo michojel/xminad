@@ -46,7 +46,7 @@ topicDirs = M.fromList $
     , "ciV", "scrum", "BG", "witcher", "calendar"]
 
 topicConfig :: TS.TopicConfig
-topicConfig = TS.defaultTopicConfig
+topicConfig = TS.def
     { TS.topicDirs = topicDirs
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
