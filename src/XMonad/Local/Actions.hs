@@ -4,6 +4,8 @@ module XMonad.Local.Actions where
 
 import Control.Monad
 import Data.Maybe
+import System.Posix.Directory
+import System.Posix.Env
 import System.Posix.Signals (Signal, signalProcess)
 
 import XMonad
@@ -14,8 +16,14 @@ import qualified XMonad.Util.WindowProperties as WP
 import qualified XMonad.Local.Config as Local
 
 -- launch applications ********************************************************
-spawnExplorer :: MonadIO m => m ()
-spawnExplorer = spawn Local.explorer
+spawnExplorer :: X ()
+spawnExplorer = do 
+    cwd <- liftIO getWorkingDirectory
+    pth <- liftIO $ getEnvDefault "HOME" cwd
+    spawnExplorerIn pth
+    
+spawnExplorerIn :: String -> X ()
+spawnExplorerIn dir = spawnShellIn dir (Just Local.explorer)
 
 spawnShell :: Maybe String -> X()
 spawnShell = spawnShellIn ""
