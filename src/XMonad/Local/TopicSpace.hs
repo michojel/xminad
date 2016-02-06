@@ -55,7 +55,10 @@ topicConfig = TS.def
         , ("firefox", spawn "firefox")
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
-        , ("chat", spawn "xchat" >> spawn "pidgin")
+        , ("chat",
+            spawn "empathy" >>
+            spawn "skype" >>
+            spawnShell (Just "mux start irssi"))
         , ("admin", spawnShell Nothing >> spawnShell Nothing)
         , ("virt", spawn "virt-manager")
         , ("vbox", spawn "VirtualBox")
