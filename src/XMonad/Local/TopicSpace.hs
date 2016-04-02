@@ -16,29 +16,21 @@ topicDirs = M.fromList $
     [ ("dashboard"   , "~")
     , ("xmonad"      , "~/wsp/my/xminad")
     , ("xminad"      , "~/wsp/my/xminad")
-    , ("video"       , "~/Documents/movies")
+    , ("video"       , "~/Videos")
     , ("docs"        , "~/Documents/doc")
     , ("pdf"         , "~/Documents")
     , ("graphics"    , "~")
     , ("gimp"        , "~")
-    , ("eclipse"     , "~/workspace")
-    , ("yawn"        , "~/wsp/rh/pywbem-yawn")
-    , ("openlmi"     , "~/wsp/rh/openlmi-providers")
-    , ("cim"         , "/usr/share/mof/cim-current")
     , ("hwdata"      , "~/wsp/rh/hwdata")
     , ("hdparm"      , "~/fedora-scm/hdparm")
-    , ("providers"   , "~/wsp/rh/openlmi-providers")
     , ("scripts"     , "~/wsp/rh/openlmi-scripts")
     , ("tools"       , "~/wsp/rh/openlmi-tools")
     , ("rhel"        , "~/rhel-scm")
     , ("fedora"      , "~/fedora-scm")
     , ("docker"      , "~/wsp/rh/docker")
     , ("distribution", "~/wsp/rh/distribution")
-    , ("ae"          , "~/wsp/rh/atomic-enterprise")
-    , ("aet"         , "~/wsp/rh/atomic-enterprise-training")
-    , ("aea"         , "~/wsp/rh/atomic-enterprise-ansible")
-    , ("aes"         , "~/wsp/rh/ae-scripts")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
+    , ("osdocs"      , "~/wsp/rh/openshift-docs")
     , ("k8s"         , "~/wsp/rh/kubernetes")
     ] ++ map (\w -> (w, "~"))
     [ "music", "p2p", "gimp", "graphics"
@@ -56,24 +48,13 @@ topicConfig = TS.def
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
         , ("chat",
-            spawn "empathy" >>
+            spawn "pidgin" >>
             spawn "skype" >>
             spawnShell (Just "mux start irssi"))
-        , ("admin", spawnShell Nothing >> spawnShell Nothing)
-        , ("virt", spawn "virt-manager")
         , ("vbox", spawn "VirtualBox")
         , ("gimp", spawn "gimp")
-        , ("eclipse", spawn "eclipse")
         , ("ebook", spawn "calibre")
-        , ("video", spawn "vlc")
-        , ("xmonad", spawnShell Nothing >> spawnShell Nothing)
-        , ("xminad", spawnShell Nothing >> spawnShell Nothing)
-        , ("remote", spawnShell Nothing >> spawnShell Nothing)
-        , ("devel", spawnShell Nothing >> spawnShell Nothing)
-        , ("openlmi",   spawnShell Nothing >> spawnShell Nothing)
-        , ("providers", spawnShell Nothing >> spawnShell Nothing)
-        , ("cim", spawnShell Nothing >>
-              spawnShellIn "/usr/lib/python2.7/site-packages/pywbem" Nothing)
+        , ("video", spawn "smplayer")
         , ("bank", spawn "google-chrome https://www.mojebanka.cz/InternetBanking/")
         , ("p2p", spawn "deluge-gtk")
         , ("hwdata",
@@ -114,7 +95,7 @@ topicConfig = TS.def
                 spawn ("google-chrome-stable --profile-directory=Default" ++
                     " --app-id=ejjicmeblgpmajnghnpcppodonldlgfn"))
         ] ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
-        [ "ae", "aet", "aes", "aea" ]
+        [ "osdocs", "xmonad", "xminad", "remote", "devel", "admin" ]
     , TS.defaultTopicAction = const $ return ()
     , TS.defaultTopic = "dashboard"
     }

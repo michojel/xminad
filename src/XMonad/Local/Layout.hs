@@ -63,8 +63,7 @@ chatL = IM.withIM (1%5) (IM.ClassName "Skype"
              `IM.And`   (        IM.Title "minarmc - Skype™ (Beta)"
                         `IM.Or`  IM.Title "Skype™ 2.2 (Beta) for Linux"
                         `IM.Or`  IM.Title "minarmc - Skype™"))
-      $ IM.withIM (1%5) (        IM.ClassName "Empathy"
-                        `IM.And` (IM.Title "Contact List" `IM.Or` IM.Role "contact_list"))
+      $ IM.withIM (1%5) (IM.ClassName "Pidgin" `IM.And` IM.Role "buddy_list")
         easyLay
 
 gimpL = LN.named "GIMP"
