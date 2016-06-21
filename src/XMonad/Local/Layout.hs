@@ -37,6 +37,7 @@ layoutHook = avoidStruts
            $ PW.onWorkspace "BG" bgL
            $ PW.onWorkspace "witcher" witcherL
            $ PW.onWorkspace "remote" remoteL
+           $ PW.onWorkspace "web" webL
            $ PW.onWorkspaces ["homam5", "civ4", "pst", "ciV"] wineGameL
              easyLay
 
@@ -66,6 +67,7 @@ chatL = IM.withIM (1%5) (IM.ClassName "Skype"
       $ IM.withIM (1%5) (IM.ClassName "Pidgin"
              `IM.And`   (        IM.Role "buddy_list"
                         `IM.Or`  IM.Title "Buddy List"))
+                
         easyLay
 
 gimpL = LN.named "GIMP"
@@ -78,6 +80,8 @@ gimpL = LN.named "GIMP"
             (mySubTabbed $ BW.boringWindows Accordion)
             (        CP.ClassName "Gimp"
             `CP.And` CP.Not (CP.Role "gimp-image-window"))
+
+webL = IM.withIM (1%4) (IM.ClassName "google-chrome" `IM.And` IM.Title "Tabs Outliner") $ easyLay
 
 bgL = windowNavigation $ BW.boringWindows $ smartBorders
     $ reflectHoriz $ Tall nmaster delta (7/9)
