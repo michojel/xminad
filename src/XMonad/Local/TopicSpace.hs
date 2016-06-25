@@ -43,7 +43,7 @@ topicConfig = TS.def
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
         , ("mail", spawn "thunderbird")
-        , ("web", spawn "google-chrome-stable")
+        , ("web", spawn "google-chrome-stable --profile-directory=Default")
         , ("firefox", spawn "firefox")
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
@@ -55,7 +55,8 @@ topicConfig = TS.def
         , ("gimp", spawn "gimp")
         , ("ebook", spawn "calibre")
         , ("video", spawn "smplayer")
-        , ("bank", spawn "google-chrome-stable https://www.mojebanka.cz/InternetBanking/")
+        , ("bank", spawn ("google-chrome-stable --profile-directory=Default" ++
+            " https://www.mojebanka.cz/InternetBanking/"))
         , ("p2p", spawn "deluge-gtk")
         , ("hwdata",
               spawnShell Nothing >>
