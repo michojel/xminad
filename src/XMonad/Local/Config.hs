@@ -2,9 +2,13 @@ module XMonad.Local.Config (
       explorer
     , xpConfig
     , terminal
+    , tabsOutlinerAppID
+    , tabsOutlinerAppName
+    , tabsOutlinerFloatRect
     ) where
 
 import qualified XMonad.Prompt as P
+import qualified XMonad.StackSet as W
 
 explorer :: String
 explorer = "caja"
@@ -22,3 +26,9 @@ xpConfig = P.def
     , P.height  = 24
     }
 
+tabsOutlinerAppID :: String
+tabsOutlinerAppID = "eggkanocgddhmamlbiijnphhppkpkmkl"
+tabsOutlinerAppName :: String
+tabsOutlinerAppName = "crx_" ++ tabsOutlinerAppID 
+tabsOutlinerFloatRect :: W.RationalRect
+tabsOutlinerFloatRect = W.RationalRect (1/5) (1/11) (3/5) (7/9)

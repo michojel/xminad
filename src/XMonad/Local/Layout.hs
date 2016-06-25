@@ -81,7 +81,7 @@ gimpL = LN.named "GIMP"
             (        CP.ClassName "Gimp"
             `CP.And` CP.Not (CP.Role "gimp-image-window"))
 
-webL = IM.withIM (1%4) (IM.ClassName "google-chrome" `IM.And` IM.Title "Tabs Outliner") $ easyLay
+webL = IM.withIM (1%4) (IM.ClassName "google-chrome" `IM.And` IM.Title "Tabs Outliner") easyLay
 
 bgL = windowNavigation $ BW.boringWindows $ smartBorders
     $ reflectHoriz $ Tall nmaster delta (7/9)

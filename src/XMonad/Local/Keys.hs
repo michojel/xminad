@@ -191,28 +191,29 @@ genericKeys conf = [
     , ("C-q", spawn "mate-screensaver-command --lock" >> spawn "xset dpms force off")
 
     -- namedScratchpads
-    , ("C-S-t", namedScratchpadAction namedScratchpads "htop")
+    , ("C-S-h", namedScratchpadAction namedScratchpads "htop")
     , ("C-S-a", namedScratchpadAction namedScratchpads "stardict")
     , ("C-S-n", namedScratchpadAction namedScratchpads "notes")
     , ("C-S-u", namedScratchpadAction namedScratchpads "charmap")
     , ("C-S-l", namedScratchpadAction namedScratchpads "alarm")
     , ("C-S-p", namedScratchpadAction namedScratchpads "volctl")
+    , ("C-S-t", namedScratchpadAction namedScratchpads "tabsoutliner")
 
     -- misc
     , ("S-h", PSsh.sshPrompt xpConfig)
     --, ("<Print>", spawn "xfce4-screenshooter")
     , ("y", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
-        | (k, a) <- [ ("n",       io $ liftM fromRight (MPD.withMPD MPD.next))
-                    , ("p",       io $ liftM fromRight (MPD.withMPD MPD.previous))
-                    , ("S-.",     io $ liftM fromRight (MPD.withMPD MPD.next))
-                    , ("S-,",     io $ liftM fromRight (MPD.withMPD MPD.previous))
-                    , ("y",       io $ liftM fromRight (MPD.withMPD (MPD.play Nothing)))
-                    , ("s",       io $ liftM fromRight (MPD.withMPD MPD.stop))
-                    , ("r",       io $ liftM fromRight (MPD.withMPD Local.toggleRepeat))
-                    , ("*",       io $ liftM fromRight (MPD.withMPD Local.toggleRandom))
-                    , ("S-8",     io $ liftM fromRight (MPD.withMPD Local.toggleRandom))
-                    , ("<Space>", io $ liftM fromRight (MPD.withMPD MPD.toggle))
+        | (k, a) <- [ ("n",       io $ fmap fromRight (MPD.withMPD MPD.next))
+                    , ("p",       io $ fmap fromRight (MPD.withMPD MPD.previous))
+                    , ("S-.",     io $ fmap fromRight (MPD.withMPD MPD.next))
+                    , ("S-,",     io $ fmap fromRight (MPD.withMPD MPD.previous))
+                    , ("y",       io $ fmap fromRight (MPD.withMPD (MPD.play Nothing)))
+                    , ("s",       io $ fmap fromRight (MPD.withMPD MPD.stop))
+                    , ("r",       io $ fmap fromRight (MPD.withMPD Local.toggleRepeat))
+                    , ("*",       io $ fmap fromRight (MPD.withMPD Local.toggleRandom))
+                    , ("S-8",     io $ fmap fromRight (MPD.withMPD Local.toggleRandom))
+                    , ("<Space>", io $ fmap fromRight (MPD.withMPD MPD.toggle))
                     ]
         ])
     , ("<Print>", spawn "mate-screenshot")
@@ -222,8 +223,8 @@ genericKeys conf = [
     -- MPD
     -- mov current playing song in mpd to thrash
     , ("<Delete>", spawn "mpcrm")
-    , ("<XF86Forward>", io $ liftM fromRight (MPD.withMPD MPD.next))
-    , ("<XF86Back>",    io $ liftM fromRight (MPD.withMPD MPD.previous))
+    , ("<XF86Forward>", io $ fmap fromRight (MPD.withMPD MPD.next))
+    , ("<XF86Back>",    io $ fmap fromRight (MPD.withMPD MPD.previous))
     ]
 
 
@@ -255,10 +256,10 @@ unprefixedKeys = [
     , ("<XF86HomePage>", TS.switchTopic topicConfig "web")
 
     -- mpc
-    , ("<XF86AudioPlay>", io $ liftM fromRight (MPD.withMPD MPD.toggle))
-    , ("<XF86AudioStop>", io $ liftM fromRight (MPD.withMPD MPD.stop))
-    , ("<XF86AudioNext>", io $ liftM fromRight (MPD.withMPD MPD.next))
-    , ("<XF86AudioPrev>", io $ liftM fromRight (MPD.withMPD MPD.previous))
+    , ("<XF86AudioPlay>", io $ fmap fromRight (MPD.withMPD MPD.toggle))
+    , ("<XF86AudioStop>", io $ fmap fromRight (MPD.withMPD MPD.stop))
+    , ("<XF86AudioNext>", io $ fmap fromRight (MPD.withMPD MPD.next))
+    , ("<XF86AudioPrev>", io $ fmap fromRight (MPD.withMPD MPD.previous))
 
     -- volume
     , ("<XF86AudioMute>",        void toggleMute)
