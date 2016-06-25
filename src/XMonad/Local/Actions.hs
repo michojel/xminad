@@ -23,7 +23,7 @@ spawnExplorer = do
     spawnExplorerIn pth
     
 spawnExplorerIn :: String -> X ()
-spawnExplorerIn dir = spawnShellIn dir (Just Local.explorer)
+spawnExplorerIn dir = spawn $ Local.explorer ++ " --no-desktop --browser " ++ dir
 
 spawnShell :: Maybe String -> X()
 spawnShell = spawnShellIn ""

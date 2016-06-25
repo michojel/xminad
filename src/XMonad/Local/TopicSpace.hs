@@ -32,6 +32,7 @@ topicDirs = M.fromList $
     , ("openshift"   , "~/wsp/rh/openshift-origin")
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
     , ("k8s"         , "~/wsp/rh/kubernetes")
+    , ("drive"       , "~/gdrive")
     ] ++ map (\w -> (w, "~"))
     [ "music", "p2p", "gimp", "graphics"
     , "web", "remote", "earth", "bank", "admin", "ebook"
@@ -88,6 +89,7 @@ topicConfig = TS.def
                 spawn "firefox http://slovnik.seznam.cz/de-cz/")
         , ("witcher", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/20900" >>
                 spawn "firefox --new-window http://slovnik.seznam.cz/de-cz/")
+        , ("drive", spawnShell Nothing >> spawnExplorerIn "~/gdrive")
         , ("calendar",
                 spawn (
                     "google-chrome-stable --profile-directory=RedHat" ++
