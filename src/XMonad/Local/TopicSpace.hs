@@ -33,6 +33,7 @@ topicDirs = M.fromList $
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
     , ("k8s"         , "~/wsp/rh/kubernetes")
     , ("drive"       , "~/gdrive")
+    , ("mymoney"     , "~/Documents/my-money")
     ] ++ map (\w -> (w, "~"))
     [ "music", "p2p", "gimp", "graphics"
     , "web", "remote", "earth", "bank", "admin", "ebook"
@@ -97,6 +98,7 @@ topicConfig = TS.def
                     " --auth-server-whitelist=*.redhat.com") >>
                 spawn ("google-chrome-stable --profile-directory=Default" ++
                     " --app-id=ejjicmeblgpmajnghnpcppodonldlgfn"))
+        , ("mymoney", spawn "kmymoney")
         ] ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
         [ "osdocs", "xmonad", "xminad", "remote", "devel", "admin" ]
     , TS.defaultTopicAction = const $ return ()
