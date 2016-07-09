@@ -1,5 +1,6 @@
 module XMonad.Local.Config (
-      explorer
+      browser
+    , explorer
     , xpConfig
     , terminal
     , tabsOutlinerAppID
@@ -25,6 +26,9 @@ xpConfig = P.def
     , P.font    = "-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*"
     , P.height  = 24
     }
+
+browser :: String
+browser = "google-chrome-stable"
 
 tabsOutlinerAppID :: String
 tabsOutlinerAppID = "eggkanocgddhmamlbiijnphhppkpkmkl"

@@ -10,6 +10,7 @@ import qualified XMonad.Actions.TopicSpace as TS
 
 -- local modules **************************************************************
 import XMonad.Local.Actions
+import XMonad.Local.Config
 
 topicDirs :: M.Map WorkspaceId String
 topicDirs = M.fromList $
@@ -37,7 +38,7 @@ topicDirs = M.fromList $
     ] ++ map (\w -> (w, "~"))
     [ "music", "p2p", "gimp", "graphics"
     , "web", "remote", "earth", "bank", "admin", "ebook"
-    , "ciV", "scrum", "BG", "witcher", "calendar"]
+    , "ciV", "scrum", "BG", "witcher", "calendar", "incognito"]
 
 topicConfig :: TS.TopicConfig
 topicConfig = TS.def
@@ -45,7 +46,7 @@ topicConfig = TS.def
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
         , ("mail", spawn "thunderbird")
-        , ("web", spawn "google-chrome-stable --profile-directory=Default")
+        , ("web", spawn $ browser ++ " --profile-directory=Default")
         , ("firefox", spawn "firefox")
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
@@ -57,7 +58,7 @@ topicConfig = TS.def
         , ("gimp", spawn "gimp")
         , ("ebook", spawn "calibre")
         , ("video", spawn "smplayer")
-        , ("bank", spawn ("google-chrome-stable --profile-directory=Default" ++
+        , ("bank", spawn (browser ++ " --profile-directory=Default" ++
             " https://www.mojebanka.cz/InternetBanking/"))
         , ("p2p", spawn "deluge-gtk")
         , ("hwdata",
@@ -85,18 +86,17 @@ topicConfig = TS.def
                 spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc"))
         , ("scripts", spawnShell Nothing >> spawnShell Nothing)
         , ("ciV", spawn "launch-ciV.sh -m -b")
-        , ("scrum", spawn "firefox --new-window https://bluejeans.com/3046463974/")
+        , ("scrum", spawn $ browser ++ " --new-window https://bluejeans.com/3046463974/")
         , ("BG", spawn "steam steam://rungameid/228280" >>
-                spawn "firefox http://slovnik.seznam.cz/de-cz/")
+                spawn (browser ++ " http://slovnik.seznam.cz/de-cz/"))
         , ("witcher", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/20900" >>
-                spawn "firefox --new-window http://slovnik.seznam.cz/de-cz/")
+                spawn (browser ++ " --new-window http://slovnik.seznam.cz/de-cz/"))
         , ("drive", spawnShell Nothing >> spawnExplorerIn "~/gdrive")
         , ("calendar",
-                spawn (
-                    "google-chrome-stable --profile-directory=RedHat" ++
+                spawn (browser ++ " --profile-directory=RedHat" ++
                     " --app-id=ejjicmeblgpmajnghnpcppodonldlgfn" ++
                     " --auth-server-whitelist=*.redhat.com") >>
-                spawn ("google-chrome-stable --profile-directory=Default" ++
+                spawn (browser ++ " --profile-directory=Default" ++
                     " --app-id=ejjicmeblgpmajnghnpcppodonldlgfn"))
         , ("mymoney", spawn "kmymoney")
         ] ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
