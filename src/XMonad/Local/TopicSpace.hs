@@ -53,7 +53,7 @@ topicConfig = TS.def
         , ("chat",
             spawn "pidgin" >>
             spawn "skype" >>
-            spawnShell (Just "mux start irssi"))
+            spawn "telegram-desktop")
         , ("vbox", spawn "VirtualBox")
         , ("gimp", spawn "gimp")
         , ("ebook", spawn "calibre")
