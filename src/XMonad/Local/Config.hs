@@ -15,7 +15,7 @@ explorer :: String
 explorer = "caja"
 
 terminal :: String
-terminal = "urxvtc"
+terminal = "st"
 
 xpConfig :: P.XPConfig
 xpConfig = P.def
