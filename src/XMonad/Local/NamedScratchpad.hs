@@ -1,6 +1,5 @@
 module XMonad.Local.NamedScratchpad (namedScratchpads) where
 
-import Data.String.Utils (startswith)
 import XMonad.ManageHook
 import qualified XMonad.StackSet as W
 import XMonad.Util.NamedScratchpad
@@ -20,9 +19,8 @@ namedScratchpads =
         , NS "calculator" (terminal ++ " -e python --title PCalculator")
                            (title =? "PCalculator") cFloating
         , NS "volctl" "mate-volume-control" (className =? "Mate-volume-control") cFloating
-        , NS "guake" (terminal ++ " --window-with-profile=Guake-normal" ++
-             " --tab-with-profile=Guake-root")
-             (className =? "Mate-terminal" <&&> (startsWith title "Guake")) cBottomFloat 
+        , NS "guake" (terminal ++ " -c st-guake tmux -c 'tmuxinator start guake'")
+             (appName =? "st-guake") cBottomFloat 
         , NS "tabsoutliner" ("google-chrome-stable --profile-directory=Default" ++
                 " --app-id=" ++ tabsOutlinerAppID)
              (className =? "google-chrome" <&&> appName =? tabsOutlinerAppName) cBigFloat
@@ -33,5 +31,4 @@ namedScratchpads =
         cBigFloat = customFloating $ tabsOutlinerFloatRect
         cTopFloat = customFloating $ W.RationalRect (1/5) (1/32) (3/5) (1/2)
         cBottomFloat = customFloating $ W.RationalRect (1/5) (6/11) (3/5) (4/11)
-        startsWith q x = fmap (startswith x) q
 
