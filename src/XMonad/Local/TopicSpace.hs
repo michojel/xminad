@@ -12,33 +12,57 @@ import qualified XMonad.Actions.TopicSpace as TS
 import XMonad.Local.Actions
 import XMonad.Local.Config
 
+tmuxProjects :: [WorkspaceId]
+tmuxProjects =
+    [ "distribution"
+    , "docker"
+    , "openshift"
+    , "osdocs"
+    , "rcs"
+    , "xminad"
+    ]
+
 topicDirs :: M.Map WorkspaceId String
 topicDirs = M.fromList $
-    [ ("dashboard"   , "~")
-    , ("xmonad"      , "~/wsp/my/xminad")
-    , ("xminad"      , "~/wsp/my/xminad")
-    , ("video"       , "~/Videos")
-    , ("docs"        , "~/Documents/doc")
-    , ("pdf"         , "~/Documents")
-    , ("graphics"    , "~")
-    , ("gimp"        , "~")
-    , ("hwdata"      , "~/wsp/rh/hwdata")
-    , ("hdparm"      , "~/fedora-scm/hdparm")
-    , ("scripts"     , "~/wsp/rh/openlmi-scripts")
-    , ("tools"       , "~/wsp/rh/openlmi-tools")
-    , ("rhel"        , "~/rhel-scm")
-    , ("fedora"      , "~/fedora-scm")
+    [ ("distribution", "~/wsp/rh/distribution")
     , ("docker"      , "~/wsp/rh/docker")
-    , ("distribution", "~/wsp/rh/distribution")
+    , ("docs"        , "~/Documents/doc")
+    , ("drive"       , "~/gdrive")
+    , ("fedora"      , "~/fedora-scm")
+    , ("hdparm"      , "~/fedora-scm/hdparm")
+    , ("hwdata"      , "~/wsp/rh/hwdata")
+    , ("k8s"         , "~/wsp/rh/kubernetes")
+    , ("mymoney"     , "~/Documents/my-money")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
-    , ("k8s"         , "~/wsp/rh/kubernetes")
-    , ("drive"       , "~/gdrive")
-    , ("mymoney"     , "~/Documents/my-money")
-    ] ++ map (\w -> (w, "~"))
-    [ "music", "p2p", "gimp", "graphics"
-    , "web", "remote", "earth", "bank", "admin", "ebook"
-    , "ciV", "scrum", "BG", "witcher", "calendar", "incognito"]
+    , ("pdf"         , "~/Documents")
+    , ("rcs"         , "~/.rcs")
+    , ("rhel"        , "~/rhel-scm")
+    , ("scripts"     , "~/wsp/rh/openlmi-scripts")
+    , ("tools"       , "~/wsp/rh/openlmi-tools")
+    , ("video"       , "~/Videos")
+    , ("xminad"      , "~/wsp/my/xminad")
+    , ("xmonad"      , "~/wsp/my/xminad")
+    ] ++ map (\w -> (w, "~")) homeScoped
+  where
+    homeScoped =
+        [ "admin"
+        , "bank"
+        , "BG"
+        , "calendar"
+        , "ciV"
+        , "earth"
+        , "ebook"
+        , "gimp"
+        , "graphics"
+        , "incognito"
+        , "music"
+        , "p2p"
+        , "remote"
+        , "scrum"
+        , "web"
+        , "witcher"
+        ]
 
 topicConfig :: TS.TopicConfig
 topicConfig = TS.def
@@ -68,18 +92,6 @@ topicConfig = TS.def
         , ("hdparm", spawnShell Nothing >>
               spawnShellIn "~/fedora-scm/hdparm" Nothing >>
               spawnShellIn "~/rhel-scm/hdparm" Nothing)
-        , ("docker",
-                spawnShellIn "~/wsp/go/docker" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/wsp/go/docker" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/wsp/go/docker" (Just "bash --rcfile .bashrc"))
-        , ("openshift",
-                spawnShellIn "~/wsp/go/openshift" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/wsp/go/openshift" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/wsp/go/openshift" (Just "bash --rcfile .bashrc"))
-        , ("distribution",
-                spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/wsp/go/distribution" (Just "bash --rcfile .bashrc"))
         , ("k8s",
                 spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc") >>
                 spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc") >>
@@ -98,9 +110,11 @@ topicConfig = TS.def
                     " --auth-server-whitelist=*.redhat.com") >>
                 spawn (browser ++ " --profile-directory=Default" ++
                     " --app-id=ejjicmeblgpmajnghnpcppodonldlgfn"))
-        , ("mymoney", spawn "kmymoney")
-        ] ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
-        [ "osdocs", "xmonad", "xminad", "remote", "devel", "admin" ]
+        , ("mymoney", spawn "kmymoney")]
+        ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
+            [ "remote", "devel", "admin" ]
+        ++ map (\w -> (w, spawnTmux w)) tmuxProjects
+
     , TS.defaultTopicAction = const $ return ()
     , TS.defaultTopic = "dashboard"
     }

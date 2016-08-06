@@ -33,11 +33,14 @@ spawnShellIn dir command = do
     t <- asks (terminal . config)
     spawn $ cmd' t
   where
-    run (Just c) = " -e '" ++ c ++ "'"
+    run (Just c) = " " ++ c
     run Nothing  = ""
 
     cmd' t | dir == "" = t ++ run command
            | otherwise = "cd " ++ dir ++ " && " ++ t ++ run command
+
+spawnTmux :: String -> X()
+spawnTmux project = spawnShell $ Just ("tmux -c 'tmuxinator " ++ project ++ "'")
 
 killWindowPID :: Signal -> Window -> X()
 killWindowPID s w = do

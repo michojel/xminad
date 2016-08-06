@@ -69,7 +69,7 @@ emacsKeys = \conf -> map prefix (keysMissingPrefix conf) ++ unprefixedKeys
 -- need to be prefixed with modifier
 genericKeys :: XConfig l -> [(String, X())]
 genericKeys conf = [
-           -- Applications
+      -- Applications
       (";", Local.spawnShell Nothing)
     , ("S-;", Local.spawnExplorer)
     , ("S-.", namedScratchpadAction namedScratchpads  "guake")
