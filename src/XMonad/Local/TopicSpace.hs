@@ -16,6 +16,7 @@ tmuxProjects :: [WorkspaceId]
 tmuxProjects =
     [ "distribution"
     , "docker"
+    , "kbcsv"
     , "openshift"
     , "osdocs"
     , "rcs"
@@ -32,6 +33,7 @@ topicDirs = M.fromList $
     , ("hdparm"      , "~/fedora-scm/hdparm")
     , ("hwdata"      , "~/wsp/rh/hwdata")
     , ("k8s"         , "~/wsp/rh/kubernetes")
+    , ("kbcsv"       , "~/wsp/my/kbcsv")
     , ("mymoney"     , "~/Documents/my-money")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
