@@ -20,7 +20,7 @@ namedScratchpads =
                            (title =? "PCalculator") cFloating
         , NS "volctl" "mate-volume-control" (className =? "Mate-volume-control") cFloating
         , NS "guake" (terminal ++ " -c st-guake tmux -c 'tmuxinator start guake'")
-             (appName =? "st-guake") cBottomFloat 
+             (appName =? "st-guake" <||> className =? "st-guake") cBottomFloat 
         , NS "tabsoutliner" ("google-chrome-stable --profile-directory=Default" ++
                 " --app-id=" ++ tabsOutlinerAppID)
              (className =? "google-chrome" <&&> appName =? tabsOutlinerAppName) cBigFloat
