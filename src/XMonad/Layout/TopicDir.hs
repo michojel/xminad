@@ -48,8 +48,7 @@ instance LayoutModifier TopicDir Window where
             return $ Just $ TopicDir (dds, wd')
         | otherwise = return Nothing
 
-topicDir :: LayoutClass l a => M.Map WorkspaceId String
-             -> l a -> ModifiedLayout TopicDir l a
+topicDir :: M.Map WorkspaceId String -> l a -> ModifiedLayout TopicDir l a
 topicDir m = ModifiedLayout (TopicDir (m, ""))
 
 cleanDir :: String -> X String
