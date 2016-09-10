@@ -73,7 +73,7 @@ manageHook = composeAll
     doMyShift wsp = do
         liftX (newWorkspace wsp)
         doF $ W.greedyView wsp . W.shift wsp
-    doTOFloat = doRectFloat $ tabsOutlinerFloatRect
+    doTOFloat = doRectFloat tabsOutlinerFloatRect
     myTFloats = [ "VLC (XVideo output)"
                 , "DownThemAll! - Make Your Selection"
                 , "Add Downloads"

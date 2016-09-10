@@ -84,7 +84,7 @@ gimpL = LN.named "GIMP"
 webL = IM.withIM (1%4) (IM.ClassName "google-chrome" `IM.And` IM.Title "Tabs Outliner") easyLay
 
 bgL = windowNavigation $ BW.boringWindows $ smartBorders
-    $ reflectHoriz $ Tall nmaster delta (7/9)
+    $ IM.withIM (2%7) (IM.ClassName "google-chrome") tiled
 
 witcherL = windowNavigation $ BW.boringWindows $ noBorders
     $ IM.withIM (2%7) (IM.ClassName "Firefox") tiled
