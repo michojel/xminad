@@ -21,12 +21,14 @@ tmuxProjects =
     , "osdocs"
     , "rcs"
     , "xminad"
+    , "containers"
     ]
 
 topicDirs :: M.Map WorkspaceId String
 topicDirs = M.fromList $
     [ ("distribution", "~/wsp/rh/distribution")
     , ("docker"      , "~/wsp/rh/docker")
+    , ("containers"  , "~/wsp/rh/containers")
     , ("docs"        , "~/Documents/doc")
     , ("drive"       , "~/gdrive")
     , ("fedora"      , "~/fedora-scm")
