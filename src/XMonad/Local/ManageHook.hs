@@ -1,27 +1,27 @@
+{-# LANGUAGE UnicodeSyntax #-}
 module XMonad.Local.ManageHook (
       manageHook
     ) where
 
-import Data.List
-import XMonad hiding (manageHook)
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
-import XMonad.Util.NamedScratchpad as NS
-import qualified XMonad.StackSet as W
+import           Data.List
+import           XMonad                       hiding (manageHook)
+import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageHelpers
+import qualified XMonad.StackSet              as W
+import           XMonad.Util.NamedScratchpad  as NS
 
 -- local modules **************************************************************
-import XMonad.Local.Config
-import XMonad.Local.NamedScratchpad
-import XMonad.Local.Workspaces
+import           XMonad.Local.Config
+import           XMonad.Local.NamedScratchpad
+import           XMonad.Local.Workspaces
 
 {- note: earlier hooks have higher priority -}
-manageHook :: ManageHook
+manageHook ∷ ManageHook
 manageHook = composeAll
      [ composeOne [NS.query c -?> hook c | c <- namedScratchpads]
      , composeOne (concat
         [ [checkDock -?> doIgnore]
-        , [(className =? "google-chrome" <&&>
-            appName   =? tabsOutlinerAppName) -?> doTOFloat]
+        , [(matchChrome <&&> appName =? tabsOutlinerAppName) -?> doTOFloat]
         , [className =? c -?> doIgnore | c <- myCIgnores]
         , [className =? "Wine" -?> doFloat ]
         , [isFullscreen -?> doMaster <+> doFullFloat]
@@ -32,7 +32,7 @@ manageHook = composeAll
         , [(    className =? "Qjackctl"
            <&&> fmap ("JACK Audio Connection Kit" `isPrefixOf`) title)
             -?> doMaster <+> doFloat]
-        , [(className =? "Dia" <&&> role =? "toolbox_window")
+        , [(className =? "Dia" <&&> windowRole =? "toolbox_window")
             -?> doMaster <+> doFloat]
         , [ className =? c <&&> title =? t -?> doMaster <+> doFloat
           | (c, t) <- myCTFloats ]
@@ -47,7 +47,7 @@ manageHook = composeAll
     , composeOne (concat
         [ [className =? "Dia"             -?> doMyShift "dia"]
         , [className =? c                 -?> doMyShift "chat" | c <- myChatClients ]
-        , [(className =? "Google-chrome" <&&> title =? "Hangouts") -?> doMyShift "chat"]
+        , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
         , [className =? c                 -?> doMyShift "web"  | c <- myWebBrowsers ]
         , [title =? "ncmpcpp"             -?> doMyShift "music" ]
         , [className =? c                 -?> doMyShift "music" | c <- myMusicPlayers ]
@@ -69,11 +69,15 @@ manageHook = composeAll
     ]
   where
     doMaster = doF W.shiftMaster
-    doMyShift :: WorkspaceId -> ManageHook
+
+    doMyShift ∷ WorkspaceId → ManageHook
     doMyShift wsp = do
         liftX (newWorkspace wsp)
         doF $ W.greedyView wsp . W.shift wsp
+
+    doTOFloat ∷ ManageHook
     doTOFloat = doRectFloat tabsOutlinerFloatRect
+
     myTFloats = [ "VLC (XVideo output)"
                 , "DownThemAll! - Make Your Selection"
                 , "Add Downloads"
@@ -107,12 +111,18 @@ manageHook = composeAll
     myWebBrowsers  = []
     myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
     myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
-    gimpManage = [ ( role =? "gimp-toolbox" <||> role =? "gimp-image-window"
+
+    gimpManage = [ ( windowRole =? "gimp-toolbox" <||> windowRole =? "gimp-image-window"
                    , ask >>= doF . W.sink)
-                 , (role =? "gimp-image-merge-layers", doCenterFloat)
+                 , (windowRole =? "gimp-image-merge-layers", doCenterFloat)
                  , (title =? "Scale Image", doCenterFloat)
                  , (title =? "Export File", doCenterFloat)
                  , (fmap ("Save as" `isPrefixOf`) title, doCenterFloat)
                  ]
 
-    role = stringProperty "WM_WINDOW_ROLE"
+matchChrome ∷ Query Bool
+matchChrome = className =? "google-chrome" <||> className =? "Google-chrome"
+
+windowRole ∷ Query String
+windowRole = stringProperty "WM_WINDOW_ROLE"
+

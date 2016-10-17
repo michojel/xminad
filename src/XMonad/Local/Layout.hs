@@ -1,34 +1,35 @@
 {-# OPTIONS -fno-warn-missing-signatures #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE UnicodeSyntax    #-}
 
 module XMonad.Local.Layout (layoutHook) where
 
-import Data.Ratio ((%))
-import XMonad.Hooks.ManageDocks (avoidStruts)
-import XMonad.Layout
-import XMonad.Layout.Accordion
-import qualified XMonad.Layout.BoringWindows as BW
-import XMonad.Layout.Column
-import qualified XMonad.Layout.ComboP as CP
-import qualified XMonad.Layout.IM as IM
-import qualified XMonad.Layout.MultiToggle as MT
-import qualified XMonad.Layout.Named as LN
-import XMonad.Layout.NoBorders
-import qualified XMonad.Layout.PerWorkspace as PW
-import XMonad.Layout.Reflect
-import XMonad.Layout.SimpleFloat
-import XMonad.Layout.Simplest (Simplest(..))
-import XMonad.Layout.SubLayouts
-import qualified XMonad.Layout.Tabbed as Tab
-import XMonad.Layout.ThreeColumns
-import XMonad.Layout.ToggleLayouts
-import XMonad.Layout.TrackFloating
-import XMonad.Layout.TwoPane
-import XMonad.Layout.WindowNavigation
+import           Data.Ratio                     ((%))
+import           XMonad.Hooks.ManageDocks       (avoidStruts)
+import           XMonad.Layout
+import           XMonad.Layout.Accordion
+import qualified XMonad.Layout.BoringWindows    as BW
+import           XMonad.Layout.Column
+import qualified XMonad.Layout.ComboP           as CP
+import qualified XMonad.Layout.IM               as IM
+import qualified XMonad.Layout.MultiToggle      as MT
+import qualified XMonad.Layout.Named            as LN
+import           XMonad.Layout.NoBorders
+import qualified XMonad.Layout.PerWorkspace     as PW
+import           XMonad.Layout.Reflect
+import           XMonad.Layout.SimpleFloat
+import           XMonad.Layout.Simplest         (Simplest (..))
+import           XMonad.Layout.SubLayouts
+import qualified XMonad.Layout.Tabbed           as Tab
+import           XMonad.Layout.ThreeColumns
+import           XMonad.Layout.ToggleLayouts
+import           XMonad.Layout.TrackFloating
+import           XMonad.Layout.TwoPane
+import           XMonad.Layout.WindowNavigation
 
 -- local modules **************************************************************
-import XMonad.Layout.TopicDir as TD
-import XMonad.Local.TopicSpace as Local
+import           XMonad.Layout.TopicDir         as TD
+import           XMonad.Local.TopicSpace        as Local
 
 layoutHook = avoidStruts
            $ TD.topicDir Local.topicDirs
@@ -42,14 +43,18 @@ layoutHook = avoidStruts
              easyLay
 
 nmaster = 1
+ratio ∷ Rational
 ratio = 1/2
+delta ∷ Rational
 delta = 3/100
 
+tiled ∷ Tall a
 tiled =  Tall nmaster delta ratio
+threecol ∷ ThreeCol a
 threecol =  ThreeColMid nmaster delta (1/3)
 
 -- common layouts
-easyLay = windowNavigation baseLay 
+easyLay = windowNavigation baseLay
 baseLay = smartBorders (tiled' ||| tabbed')
     where
         tiled' = mySubTabbed $ BW.boringWindows
@@ -67,7 +72,7 @@ chatL = IM.withIM (1%5) (IM.ClassName "Skype"
       $ IM.withIM (1%5) (IM.ClassName "Pidgin"
              `IM.And`   (        IM.Role "buddy_list"
                         `IM.Or`  IM.Title "Buddy List"))
-                
+
         easyLay
 
 gimpL = LN.named "GIMP"
@@ -81,10 +86,10 @@ gimpL = LN.named "GIMP"
             (        CP.ClassName "Gimp"
             `CP.And` CP.Not (CP.Role "gimp-image-window"))
 
-webL = IM.withIM (1%4) (IM.ClassName "google-chrome" `IM.And` IM.Title "Tabs Outliner") easyLay
+webL = IM.withIM (1%4) (matchChrome `IM.And` IM.Title "Tabs Outliner") easyLay
 
 bgL = windowNavigation $ BW.boringWindows $ smartBorders
-    $ IM.withIM (2%7) (IM.ClassName "google-chrome") tiled
+    $ IM.withIM (2%7) matchChrome tiled
 
 witcherL = windowNavigation $ BW.boringWindows $ noBorders
     $ IM.withIM (2%7) (IM.ClassName "Firefox") tiled
@@ -96,7 +101,7 @@ wineGameL = smartBorders $ simpleFloat ||| trackFloating Full
 
 mySubTabbed x = trackFloating $ Tab.addTabs Tab.shrinkText myTabTheme $ subLayout [] Simplest x
 
-myTabTheme :: Tab.Theme
+myTabTheme ∷ Tab.Theme
 myTabTheme = Tab.def
     { Tab.activeTextColor     = "#ffffff"
     , Tab.activeBorderColor   = "#FBAB2E"
@@ -110,3 +115,6 @@ myTabTheme = Tab.def
     , Tab.fontName            = "-*-terminus-*-*-*-*-12-*-*-*-*-*-*-*"
     , Tab.decoHeight          = 24
     }
+
+matchChrome ∷ IM.Property
+matchChrome = IM.ClassName "google-chrome" `IM.Or` IM.ClassName "Google-chrome"
