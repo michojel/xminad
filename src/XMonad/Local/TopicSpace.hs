@@ -1,18 +1,20 @@
+{-# LANGUAGE UnicodeSyntax #-}
+
 module XMonad.Local.TopicSpace (
       topicConfig
     , topicDirs
     , workspaces
     ) where
 
-import qualified Data.Map as M
-import XMonad hiding (workspaces)
+import qualified Data.Map                  as M
+import           XMonad                    hiding (workspaces)
 import qualified XMonad.Actions.TopicSpace as TS
 
 -- local modules **************************************************************
-import XMonad.Local.Actions
-import XMonad.Local.Config
+import           XMonad.Local.Actions
+import           XMonad.Local.Config
 
-tmuxProjects :: [WorkspaceId]
+tmuxProjects ∷ [WorkspaceId]
 tmuxProjects =
     [ "distribution"
     , "docker"
@@ -24,7 +26,7 @@ tmuxProjects =
     , "containers"
     ]
 
-topicDirs :: M.Map WorkspaceId String
+topicDirs ∷ M.Map WorkspaceId String
 topicDirs = M.fromList $
     [ ("distribution", "~/wsp/rh/distribution")
     , ("docker"      , "~/wsp/rh/docker")
@@ -48,28 +50,30 @@ topicDirs = M.fromList $
     , ("xminad"      , "~/wsp/my/xminad")
     , ("xmonad"      , "~/wsp/my/xminad")
     ] ++ map (\w -> (w, "~")) homeScoped
-  where
-    homeScoped =
-        [ "admin"
-        , "anki"
-        , "bank"
-        , "BG"
-        , "calendar"
-        , "ciV"
-        , "earth"
-        , "ebook"
-        , "gimp"
-        , "graphics"
-        , "incognito"
-        , "music"
-        , "p2p"
-        , "remote"
-        , "scrum"
-        , "web"
-        , "witcher"
-        ]
 
-topicConfig :: TS.TopicConfig
+homeScoped ∷ [String]
+homeScoped =
+    [ "admin"
+    , "anki"
+    , "bank"
+    , "BG"
+    , "calendar"
+    , "ciV"
+    , "earth"
+    , "ebook"
+    , "gimp"
+    , "graphics"
+    , "incognito"
+    , "music"
+    , "p2p"
+    , "remote"
+    , "scrum"
+    , "virt"
+    , "web"
+    , "witcher"
+    ]
+
+topicConfig ∷ TS.TopicConfig
 topicConfig = TS.def
     { TS.topicDirs = topicDirs
     , TS.topicActions = M.fromList $
@@ -85,6 +89,7 @@ topicConfig = TS.def
             spawn "skype" >>
             spawn "telegram-desktop")
         , ("vbox", spawn "VirtualBox")
+        , ("virt", spawn "virt-manager")
         , ("gimp", spawn "gimp")
         , ("ebook", spawn "calibre")
         , ("video", spawn "smplayer")
@@ -125,5 +130,5 @@ topicConfig = TS.def
     , TS.defaultTopic = "dashboard"
     }
 
-workspaces :: [WorkspaceId]
+workspaces ∷ [WorkspaceId]
 workspaces = ["dashboard", "devel"]
