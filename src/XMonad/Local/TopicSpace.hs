@@ -51,6 +51,7 @@ topicDirs = M.fromList $
   where
     homeScoped =
         [ "admin"
+        , "anki"
         , "bank"
         , "BG"
         , "calendar"
@@ -73,6 +74,7 @@ topicConfig = TS.def
     { TS.topicDirs = topicDirs
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
+        , ("anki", spawn "anki")
         , ("mail", spawn "thunderbird")
         , ("web", spawn $ browser ++ " --profile-directory=Default")
         , ("firefox", spawn "firefox")
