@@ -79,6 +79,7 @@ topicConfig = TS.def
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
         , ("anki", spawn "anki")
+        , ("incognito", spawn $ browser ++ " --incognito")
         , ("mail", spawn "thunderbird")
         , ("web", spawn $ browser ++ " --profile-directory=Default")
         , ("firefox", spawn "firefox")
