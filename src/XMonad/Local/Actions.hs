@@ -90,9 +90,18 @@ getClipboardText = catchX
     (runProcessAndLogError clipboardManager ["-c"] "")
     (io $ return Nothing)
 
-pasteTextFromClipboard ∷ X ()
-pasteTextFromClipboard = do
+saveTextToClipboard ∷ String → X ()
+saveTextToClipboard text = catchX
+    (void (runProcessAndLogError clipboardManager [] text))
+    (io $ return ())
+
+-- | Turn the current entry in clipboard into plain text and paste it to the
+-- current window using Ctrl+v shortcut.
+pastePlainTextFromClipboard ∷ X ()
+pastePlainTextFromClipboard = do
     t <- getClipboardText
     case t of
-        Just text -> catchX (Paste.pasteString text) (io $ return ())
-        Nothing   -> io (return ())
+        Just text -> do
+            saveTextToClipboard text
+            Paste.pasteChar controlMask 'V'
+        Nothing   -> io $ return ()

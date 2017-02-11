@@ -202,7 +202,7 @@ genericKeys conf = [
 
     -- misc
     , ("S-h", PSsh.sshPrompt xpConfig)
-    , ("v", Local.pasteTextFromClipboard)
+    , ("v", Local.pastePlainTextFromClipboard)
     --, ("<Print>", spawn "xfce4-screenshooter")
     , ("y", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
