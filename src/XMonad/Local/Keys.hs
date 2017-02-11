@@ -1,63 +1,64 @@
+{-# LANGUAGE UnicodeSyntax #-}
 module XMonad.Local.Keys (
       emacsKeys
     , keyBindings
     , modMask
     ) where
 
-import Control.Monad
-import Data.Either.Utils
-import qualified Data.Map as M
-import Data.Maybe
-import qualified Network.MPD as MPD
-import qualified Network.MPD.Commands.Extensions as MPD
-import System.Posix.Signals (sigCONT, sigSTOP)
+import           Control.Monad
+import           Data.Either.Utils
+import qualified Data.Map                         as M
+import           Data.Maybe
+import qualified Network.MPD                      as MPD
+import qualified Network.MPD.Commands.Extensions  as MPD
+import           System.Posix.Signals             (sigCONT, sigSTOP)
 
-import XMonad hiding (modMask, keys)
-import XMonad.Actions.CycleWS
+import           XMonad                           hiding (keys, modMask)
+import           XMonad.Actions.CycleWS
+import qualified XMonad.Actions.DwmPromote        as DwmP
 import qualified XMonad.Actions.DynamicWorkspaces as DW
-import qualified XMonad.Actions.DwmPromote as DwmP
-import XMonad.Actions.GridSelect as GS
-import qualified XMonad.Actions.Submap as SUB
-import qualified XMonad.Actions.TopicSpace as TS
-import XMonad.Actions.Volume
-import qualified XMonad.Actions.WithAll as WithAll
-import XMonad.Hooks.ManageDocks
-import qualified XMonad.Layout.BoringWindows as BW
-import XMonad.Layout.Minimize
-import qualified XMonad.Layout.MultiToggle as MT
-import XMonad.Layout.Reflect
-import XMonad.Layout.SubLayouts
-import qualified XMonad.Layout.TopicDir as TD
-import XMonad.Layout.ToggleLayouts
-import XMonad.Layout.WindowNavigation
-import qualified XMonad.Prompt.Shell as Shell
-import qualified XMonad.Prompt.Ssh as PSsh
-import qualified XMonad.StackSet as W
-import qualified XMonad.Util.EZConfig as EZ
-import XMonad.Util.NamedScratchpad
-import XMonad.Util.WorkspaceCompare (getSortByIndex)
+import           XMonad.Actions.GridSelect        as GS
+import qualified XMonad.Actions.Submap            as SUB
+import qualified XMonad.Actions.TopicSpace        as TS
+import           XMonad.Actions.Volume
+import qualified XMonad.Actions.WithAll           as WithAll
+import           XMonad.Hooks.ManageDocks
+import qualified XMonad.Layout.BoringWindows      as BW
+import           XMonad.Layout.Minimize
+import qualified XMonad.Layout.MultiToggle        as MT
+import           XMonad.Layout.Reflect
+import           XMonad.Layout.SubLayouts
+import           XMonad.Layout.ToggleLayouts
+import qualified XMonad.Layout.TopicDir           as TD
+import           XMonad.Layout.WindowNavigation
+import qualified XMonad.Prompt.Shell              as Shell
+import qualified XMonad.Prompt.Ssh                as PSsh
+import qualified XMonad.StackSet                  as W
+import qualified XMonad.Util.EZConfig             as EZ
+import           XMonad.Util.NamedScratchpad
+import           XMonad.Util.WorkspaceCompare     (getSortByIndex)
 
 -- local modules **************************************************************
-import qualified XMonad.Local.Actions as Local
-import XMonad.Local.Config
-import qualified XMonad.Local.GridSelect as Local
-import qualified XMonad.Local.Music as Local
-import XMonad.Local.NamedScratchpad
-import XMonad.Local.TopicSpace
-import qualified XMonad.Local.Workspaces as Local
+import qualified XMonad.Local.Actions             as Local
+import           XMonad.Local.Config
+import qualified XMonad.Local.GridSelect          as Local
+import qualified XMonad.Local.Music               as Local
+import           XMonad.Local.NamedScratchpad
+import           XMonad.Local.TopicSpace
+import qualified XMonad.Local.Workspaces          as Local
 
-modMask :: KeyMask
+modMask ∷ KeyMask
 modMask = mod4Mask
-modm :: String
+modm ∷ String
 modm = "M4"
 
-keyBindings :: XConfig l -> M.Map (KeyMask, KeySym) (X())
+keyBindings ∷ XConfig l → M.Map (KeyMask, KeySym) (X())
 keyBindings conf = EZ.mkKeymap conf $ emacsKeys conf
 
-emacsKeys :: XConfig l -> [(String, X())]
+emacsKeys ∷ XConfig l → [(String, X())]
 emacsKeys = \conf -> map prefix (keysMissingPrefix conf) ++ unprefixedKeys
   where
-    prefix :: (String, a) -> (String, a)
+    prefix ∷ (String, a) → (String, a)
     prefix (k, a) = (modm ++ "-" ++ k, a)
 
     keysMissingPrefix conf = concat
@@ -67,7 +68,7 @@ emacsKeys = \conf -> map prefix (keysMissingPrefix conf) ++ unprefixedKeys
         ]
 
 -- need to be prefixed with modifier
-genericKeys :: XConfig l -> [(String, X())]
+genericKeys ∷ XConfig l → [(String, X())]
 genericKeys conf = [
       -- Applications
       (";", Local.spawnShell Nothing)
@@ -201,6 +202,7 @@ genericKeys conf = [
 
     -- misc
     , ("S-h", PSsh.sshPrompt xpConfig)
+    , ("v", Local.pasteTextFromClipboard)
     --, ("<Print>", spawn "xfce4-screenshooter")
     , ("y", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
@@ -228,7 +230,7 @@ genericKeys conf = [
     ]
 
 
-switchWorkspaceKeys :: [(String, X())]
+switchWorkspaceKeys ∷ [(String, X())]
 switchWorkspaceKeys =
     [ (m ++ show i, withNthWorkspace f ((i + 9) `mod` 10))
     | i <- [1..9] ++ [0]
@@ -238,7 +240,7 @@ switchWorkspaceKeys =
                 ]
     ]
 
-switchScreenKeys :: [(String, X())]
+switchScreenKeys ∷ [(String, X())]
 switchScreenKeys =
     [ (m ++ k, screenWorkspace sc >>= flip whenJust (windows . f))
     | (k, sc) <- zip ["w", "e"] [0..]
@@ -246,7 +248,7 @@ switchScreenKeys =
     ]
 
 -- no prefix
-unprefixedKeys :: [(String, X())]
+unprefixedKeys ∷ [(String, X())]
 unprefixedKeys = [
       ("<XF86Calculator>",
          namedScratchpadAction namedScratchpads "calculator")
@@ -275,16 +277,16 @@ unprefixedKeys = [
     , ("C-<XF86MonBrightnessDown>", spawn "xbacklight -set 0")
     ]
 
-withNthWorkspace :: (String -> WindowSet -> WindowSet) -> Int -> X ()
+withNthWorkspace ∷ (String → WindowSet → WindowSet) → Int → X ()
 withNthWorkspace job wnum = do
     sortfunc <- getSortByIndex
     ws <- gets ( map W.tag . sortfunc . namedScratchpadFilterOutWorkspace
                . W.workspaces . windowset )
     case drop wnum ws of
          (w:_) -> windows $ job w
-         [] -> return ()
+         []    -> return ()
 
-nonEmptyWsPred :: X (WindowSpace -> Bool)
+nonEmptyWsPred ∷ X (WindowSpace → Bool)
 nonEmptyWsPred = do
     let ne = isJust . W.stack
     hs <- gets (map W.tag . W.hidden . windowset)
@@ -292,5 +294,5 @@ nonEmptyWsPred = do
     return $ \w -> hi w && ne w && W.tag w /= "NSP"
 
 -- cykle only NonEmpty, Hidden workspaces and not NSP workspaces
-nonEmptyWs :: WSType
+nonEmptyWs ∷ WSType
 nonEmptyWs = WSIs nonEmptyWsPred

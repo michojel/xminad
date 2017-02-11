@@ -1,4 +1,5 @@
 {-# LANGUAGE UnicodeSyntax #-}
+
 module XMonad.Local.ManageHook (
       manageHook
     ) where
@@ -7,6 +8,7 @@ import           Data.List
 import           XMonad                       hiding (manageHook)
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
+import           XMonad.Layout.Fullscreen
 import qualified XMonad.StackSet              as W
 import           XMonad.Util.NamedScratchpad  as NS
 
@@ -23,6 +25,8 @@ manageHook = composeAll
         [ [checkDock -?> doIgnore]
         , [(matchChrome <&&> appName =? tabsOutlinerAppName) -?> doTOFloat]
         , [className =? c -?> doIgnore | c <- myCIgnores]
+        , [appName =? "GOTHIC.EXE" -?> doMyShift "gothic" <+> fullscreenManageHook]
+        , [appName =? "Morrowind.exe" <||> title =? "Morrowind" -?> doMyShift "morrowind" <+> fullscreenManageHook]
         , [className =? "Wine" -?> doFloat ]
         , [isFullscreen -?> doMaster <+> doFullFloat]
         , [transience]
@@ -125,4 +129,3 @@ matchChrome = className =? "google-chrome" <||> className =? "Google-chrome"
 
 windowRole ∷ Query String
 windowRole = stringProperty "WM_WINDOW_ROLE"
-

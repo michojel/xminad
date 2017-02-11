@@ -11,6 +11,7 @@ import           XMonad.Layout.Accordion
 import qualified XMonad.Layout.BoringWindows    as BW
 import           XMonad.Layout.Column
 import qualified XMonad.Layout.ComboP           as CP
+import           XMonad.Layout.Fullscreen
 import qualified XMonad.Layout.IM               as IM
 import qualified XMonad.Layout.MultiToggle      as MT
 import qualified XMonad.Layout.Named            as LN
@@ -36,9 +37,10 @@ layoutHook = avoidStruts
            $ PW.onWorkspace "chat" chatL
            $ PW.onWorkspace "gimp" gimpL
            $ PW.onWorkspace "BG" bgL
-           $ PW.onWorkspace "witcher" witcherL
            $ PW.onWorkspace "remote" remoteL
            $ PW.onWorkspace "web" webL
+           $ PW.onWorkspace "witcher" gameDictL
+           $ PW.onWorkspaces ["gothic", "morrowind"] fullscreenGameL
            $ PW.onWorkspaces ["homam5", "civ4", "pst", "ciV"] wineGameL
              easyLay
 
@@ -91,8 +93,10 @@ webL = IM.withIM (1%4) (matchChrome `IM.And` IM.Title "Tabs Outliner") easyLay
 bgL = windowNavigation $ BW.boringWindows $ smartBorders
     $ IM.withIM (2%7) matchChrome tiled
 
-witcherL = windowNavigation $ BW.boringWindows $ noBorders
-    $ IM.withIM (2%7) (IM.ClassName "Firefox") tiled
+gameDictL = windowNavigation $ BW.boringWindows $ noBorders
+    $ IM.withIM (2%7) matchChrome simpleFloat
+
+fullscreenGameL = noBorders $ fullscreenFull Full
 
 remoteL = windowNavigation $ BW.boringWindows $ smartBorders
         $ Tab.tabbed Tab.shrinkText myTabTheme
