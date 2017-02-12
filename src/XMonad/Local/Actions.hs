@@ -3,14 +3,11 @@
 
 module XMonad.Local.Actions where
 
-import           Codec.Binary.UTF8.String
 import           Control.Monad
 import           Data.Maybe
-import           System.IO
 import           System.Posix.Directory
 import           System.Posix.Env
 import           System.Posix.Signals         (Signal, signalProcess)
-import           System.Process               (runInteractiveProcess)
 
 import           XMonad
 import qualified XMonad.Actions.TopicSpace    as TS
@@ -19,6 +16,8 @@ import qualified XMonad.Util.WindowProperties as WP
 
 -- local modules **************************************************************
 import qualified XMonad.Local.Config          as Local
+import qualified XMonad.Local.Prompt          as Local
+import qualified XMonad.Local.Util            as Local
 
 -- launch applications ********************************************************
 spawnExplorer ∷ X ()
@@ -70,30 +69,24 @@ mateRun = withDisplay $ \dpy -> do
 clipboardManager ∷ String
 clipboardManager = "/usr/bin/clipit"
 
-runProcessAndLogError ∷ MonadIO m ⇒ FilePath → [String] → String → m (Maybe String)
-runProcessAndLogError cmd args input = io $ do
-    (pin, pout, perr, _) <- runInteractiveProcess (encodeString cmd) (map encodeString args) Nothing Nothing
-    hPutStr pin input
-    hClose pin
-    output <- hGetContents pout
-    when (output == output) $ return ()
-    err <- hGetContents perr
-    when (err == err) $ return ()
-    hClose pout
-    hClose perr
-    unless (null err) $ hPrint stderr $ "failed to run " ++ clipboardManager ++ ": " ++ err
-    -- no need to waitForProcess, we ignore SIGCHLD
-    return $ Just output
-
 getClipboardText ∷ X (Maybe String)
 getClipboardText = catchX
-    (runProcessAndLogError clipboardManager ["-c"] "")
+    (Local.runProcessAndLogError clipboardManager ["-c"] "")
     (io $ return Nothing)
 
 saveTextToClipboard ∷ String → X ()
 saveTextToClipboard text = catchX
-    (void (runProcessAndLogError clipboardManager [] text))
+    (void (Local.runProcessAndLogError clipboardManager [] text))
     (io $ return ())
+
+getAndPasteDigraph ∷ X ()
+getAndPasteDigraph = do
+    dg <- Local.digraphPrompt
+    case dg of
+        Just text@(_:_) -> do
+            saveTextToClipboard text
+            Paste.pasteChar controlMask 'V'
+        _               -> io $ return ()
 
 -- | Turn the current entry in clipboard into plain text and paste it to the
 -- current window using Ctrl+v shortcut.
@@ -101,7 +94,7 @@ pastePlainTextFromClipboard ∷ X ()
 pastePlainTextFromClipboard = do
     t <- getClipboardText
     case t of
-        Just text -> do
+        Just text@(_:_) -> do
             saveTextToClipboard text
             Paste.pasteChar controlMask 'V'
-        Nothing   -> io $ return ()
+        _               -> io $ return ()

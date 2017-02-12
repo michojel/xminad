@@ -60,7 +60,9 @@ Library
     XMonad.Local.Mouse
     XMonad.Local.Music
     XMonad.Local.NamedScratchpad
+    XMonad.Local.Prompt
     XMonad.Local.TopicSpace
+    XMonad.Local.Util
     XMonad.Local.Workspaces
     XMonad.Local.XConfig
 
@@ -79,6 +81,7 @@ Library
     , process        >=1.2  && <1.6
     , regex-compat   >=0.90 && <1.0
     , regex-posix    >=0.90 && <1.0
+    , temporary      >=1.1  && <1.4
     , unix           >=2.0  && <3.0
     , utf8-string    >=0.3  && <1.1
     , xmonad         >=0.12 && <0.13
