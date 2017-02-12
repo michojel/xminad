@@ -34,13 +34,17 @@ digraphCompletionFunction ∷ String → IO [String]
 digraphCompletionFunction = return . gen
     where
         gen ∷ String → [String]
-        gen []                                      = [x:"?" | x <- digraphChars]
-        gen [x]    |    x `elem` digraphChars       = [[x, y] | y <- '_':digraphChars]
-                   |    otherwise                   = []
-        gen [x, y] |    x `elem` digraphChars
-                     && y `elem` ('_':digraphChars) = [[x, y]]
-                   |    otherwise                   = []
-        gen _                                       = []
+        gen []                                  = [x:"?" | x <- digraphChars]
+        gen [x]    | isValid 0 x                = [[x, y] | y <- '_':digraphChars]
+                   | otherwise                  = []
+        gen [x, y] | isValid 0 x && isValid 1 y = [[x, y]]
+                   | otherwise                  = []
+        gen _                                   = []
+
+        isValid :: Int -> Char -> Bool
+        isValid 0 c = c `elem` digraphChars
+        isValid 1 c = c `elem` ('_':digraphChars)
+        isValid _ _ = False
 
 vimEchoDigraphConfig ∷ String
 vimEchoDigraphConfig = unlines [
