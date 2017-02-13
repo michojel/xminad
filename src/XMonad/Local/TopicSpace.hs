@@ -120,12 +120,7 @@ topicConfig = TS.def
         , ("witcher", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/20900" >>
                 spawn (browser ++ " --new-window http://slovnik.seznam.cz/de-cz/"))
         , ("drive", spawnShell Nothing >> spawnExplorerIn "~/gdrive")
-        , ("calendar",
-                spawn (browser ++ " --profile-directory=RedHat" ++
-                    " --app-id=ejjicmeblgpmajnghnpcppodonldlgfn" ++
-                    " --auth-server-whitelist=*.redhat.com") >>
-                spawn (browser ++ " --profile-directory=Default" ++
-                    " --app-id=ejjicmeblgpmajnghnpcppodonldlgfn"))
+        , ("calendar", spawn "korganizer")
         , ("mymoney", spawn "kmymoney")]
         ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
             [ "remote", "devel", "admin" ]

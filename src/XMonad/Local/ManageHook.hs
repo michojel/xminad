@@ -60,6 +60,7 @@ manageHook = composeAll
         , [className =? "Atril"           -?> doMyShift "pdf"]
         , [className =? "Thunderbird"     -?> doMyShift "mail"]
         , [className =? "California"      -?> doMyShift "calendar"]
+        , [className =? "korganizer"      -?> doMyShift "calendar"]
         , [className =? "Gimp"            -?> doMyShift "gimp"]
         , [className =? "Virt-manager"    -?> doMyShift "virt"]
         , [className =? "VirtualBox"      -?> doMyShift "vbox"]
