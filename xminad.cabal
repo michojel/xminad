@@ -25,8 +25,10 @@ license:                BSD3
 -- The file containing the license text.
 license-file:           LICENSE
 
+homepage:               https://github.com/michojel/xminad
+
 -- The package author(s).
-author:                 Michal Minar
+author:                 Michal Minář
 
 -- An email address to which users can send suggestions, bug reports, and 
 -- patches.
@@ -45,6 +47,11 @@ build-type:             Simple
 
 -- Constraint on the version of Cabal needed to build this package.
 cabal-version:          >=1.10
+
+source-repository head
+    type:               git
+    location:           https://github.com/michojel/xminad
+    tag:                master
 
 Library
   exposed-modules: 
