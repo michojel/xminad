@@ -9,7 +9,7 @@ SRC                 := $(shell find . -type f -name '*.hs')
 CABAL_BIN           ?= $(shell which cabal)
 SANDBOX             := cabal.sandbox.config
 XMINAD              := dist/build/xminad/xminad
-CABAL_FLAGS         := --enable-optimization=2
+CABAL_FLAGS         := --enable-optimization=2 --prefix=$(PREFIX) --bindir=$(BIN_DIR) --datadir=$(DATA_DIR)
 CABAL_ADD_SOURCE    ?=
 DO_CHECK            ?= YES
 DISPLAY             ?= :0

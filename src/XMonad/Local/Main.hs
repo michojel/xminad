@@ -1,4 +1,4 @@
-{-# LANGUAGE UnicodeSyntax             #-}
+{-# LANGUAGE UnicodeSyntax #-}
 {-# OPTIONS -fno-warn-missing-signatures #-}
 
 -- This module is mainly a copy of upstream XMonad.Main.hs
@@ -11,26 +11,32 @@ module XMonad.Local.Main (
 
 import           Control.Monad
 import           Data.Function
+import           Data.Version                        (showVersion)
 import           System.Environment
+import           System.Info
 
 import           XMonad
 import           XMonad.Actions.UpdateFocus
 import           XMonad.Config.Desktop
-import qualified XMonad.Config.Mate as Mate
+import qualified XMonad.Config.Mate                  as Mate
 import           XMonad.Hooks.SetWMName
 import           XMonad.Hooks.UrgencyHook
-import           XMonad.Util.Run            (spawnPipe)
+import qualified XMonad.Util.Loggers.NamedScratchpad as NS
+import           XMonad.Util.Run                     (spawnPipe)
 
 -- local modules **************************************************************
-import qualified XMonad.Local.Config        as Local
-import qualified XMonad.Local.EventHook     as Local
-import qualified XMonad.Local.Keys          as Local
-import qualified XMonad.Local.Layout        as Local
-import qualified XMonad.Local.LogHook       as Local
-import qualified XMonad.Local.ManageHook    as Local
-import qualified XMonad.Local.Mouse         as Local
-import qualified XMonad.Local.TopicSpace    as Local
-import qualified XMonad.Local.XConfig       as Local
+import qualified XMonad.Local.Config                 as Local
+import qualified XMonad.Local.EventHook              as Local
+import qualified XMonad.Local.Keys                   as Local
+import qualified XMonad.Local.Layout                 as Local
+import qualified XMonad.Local.LogHook                as Local
+import qualified XMonad.Local.ManageHook             as Local
+import qualified XMonad.Local.Mouse                  as Local
+import qualified XMonad.Local.NamedScratchpad        as Local
+import qualified XMonad.Local.TopicSpace             as Local
+import qualified XMonad.Local.XConfig                as Local
+
+import           Paths_xminad                        (version)
 
 -- main module ****************************************************************
 myConfig h = Local.xConfig
@@ -54,6 +60,7 @@ myConfig h = Local.xConfig
         startupHook Local.xConfig
         adjustEventInput
         setWMName "LG3D"
+        NS.nspTrackStartup Local.namedScratchpads
 
 xminad ∷ IO ()
 xminad = do
@@ -70,8 +77,14 @@ xminad = do
     case cmdArgs of
         ["--help"]          -> usage
         ["--restart"]       -> sendRestart
+        ["--version"]       -> putStrLn $ unwords shortVersion
+        ["--verbose-version"] -> putStrLn . unwords $ shortVersion ++ longVersion
         "--replace" : args' -> sendReplace >> launch' args'
         _                   -> launch' cmdArgs
+  where
+    shortVersion = ["xmonad", showVersion version]
+    longVersion  = [ "compiled by", compilerName, showVersion compilerVersion
+                   , "for",  arch ++ "-" ++ os]
 
 usage ∷ IO ()
 usage = do
@@ -81,7 +94,8 @@ usage = do
         "Options:",
         "  --help           Print this message",
         "  --replace        Replace the running window manager with xminad",
-        "  --restart        Request a running xminad process to restart"]
+        "  --restart        Request a running xminad process to restart",
+        "  --version        Print the version number"]
 
 sendRestart ∷ IO ()
 sendRestart = do
