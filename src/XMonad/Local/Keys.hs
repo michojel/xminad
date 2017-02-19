@@ -195,7 +195,8 @@ genericKeys conf = [
 
     -- namedScratchpads
     , ("C-S-h", namedScratchpadAction namedScratchpads "htop")
-    , ("C-S-a", namedScratchpadAction namedScratchpads "stardict")
+    , ("C-S-m", namedScratchpadAction namedScratchpads "man-browser")
+    , ("C-S-a", namedScratchpadAction namedScratchpads "dictionary")
     , ("C-S-n", namedScratchpadAction namedScratchpads "notes")
     , ("C-S-u", namedScratchpadAction namedScratchpads "charmap")
     , ("C-S-l", namedScratchpadAction namedScratchpads "alarm")
