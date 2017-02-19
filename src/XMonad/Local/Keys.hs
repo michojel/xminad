@@ -44,6 +44,7 @@ import           XMonad.Local.Config
 import qualified XMonad.Local.GridSelect          as Local
 import qualified XMonad.Local.Music               as Local
 import           XMonad.Local.NamedScratchpad
+import           XMonad.Local.Operations          as Op
 import           XMonad.Local.TopicSpace
 import qualified XMonad.Local.Workspaces          as Local
 
@@ -179,8 +180,7 @@ genericKeys conf = [
       -- xmonad
     , ("q", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
-        | (k, a) <- [ ("c", spawn "xmonad --recompile; xmonad --restart")
-                    , ("r", spawn "xmonad --restart")
+        | (k, a) <- [ ("r", Op.restart)
                     , ("u", spawn "undock")
                     , ("S-u", spawn "undock -s")
                     , ("e", spawn "monitor-hotplug")

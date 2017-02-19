@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=XMinad
+Exec={{BIN_DIR}}/xminad
+NoDisplay=true
+X-GNOME-WMName=XMinad
+X-GNOME-Autostart-Phase=WindowManager
+X-GNOME-Provides=windowmanager
+X-GNOME-Autostart-Notify=true

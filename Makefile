@@ -1,16 +1,18 @@
 ################################################################################
-ARCH             := $(shell uname -m)
-OS               := $(shell uname -s | tr '[A-Z]' '[a-z]')
-TARGET           := $(HOME)/.xmonad/xmonad-$(ARCH)-$(OS)
-SRC              := $(shell find . -type f -name '*.hs')
-CABAL_BIN        ?= $(shell which cabal)
-SANDBOX          := cabal.sandbox.config
-XMINAD           := dist/build/xminad/xminad
-CABAL_FLAGS      := --enable-optimization=2
-CABAL_ADD_SOURCE ?=
-DO_CHECK         ?= YES
-XMONAD           ?= $(shell which xmonad)
-DISPLAY          ?= :0
+PREFIX              ?= $(HOME)/.local
+BIN_DIR             := $(PREFIX)/bin
+DATA_DIR            := $(PREFIX)/share/xminad
+ARCH                := $(shell uname -m)
+OS                  := $(shell uname -s | tr '[A-Z]' '[a-z]')
+TARGET              := $(BIN_DIR)/xminad
+SRC                 := $(shell find . -type f -name '*.hs')
+CABAL_BIN           ?= $(shell which cabal)
+SANDBOX             := cabal.sandbox.config
+XMINAD              := dist/build/xminad/xminad
+CABAL_FLAGS         := --enable-optimization=2
+CABAL_ADD_SOURCE    ?=
+DO_CHECK            ?= YES
+DISPLAY             ?= :0
 
 ################################################################################
 .PHONY: all build install restart clean realclean check pic
@@ -20,7 +22,12 @@ all: build
 
 ################################################################################
 install: $(TARGET)
-	sed 's!{{DATA_DIR}}!$(HOME)/.local/share/xminad!' config/xmobar.config > $(HOME)/.xmobarrc
+	# TODO: install the xmobarrc under the PREFIX and configure xminad with
+	# the correct path
+	sed 's!{{DATA_DIR}}!$(DATA_DIR)!' config/xmobar.config \
+	    > $(HOME)/.xmobarrc
+	sed 's!{{BIN_DIR}}!$(BIN_DIR)!' config/xminad.desktop \
+	    > $(PREFIX)/share/applications/xminad.desktop
 	make -C pic install
 
 ################################################################################
@@ -32,8 +39,8 @@ pic:
 
 ################################################################################
 restart: install
-	export DISPLAY=$(DISPLAY)
-	$(XMONAD) --restart
+	export DISPLAY="$(DISPLAY)"
+	$(TARGET) --restart
 
 ################################################################################
 clean:
@@ -75,7 +82,9 @@ $(SANDBOX):
 
 ################################################################################
 $(TARGET): $(XMINAD)
-	mkdir -p $(dir $@)
-	if [ -r $@ ]; then mv $@ $@.prev; fi
+	if [[ ! -e $(dir $@) ]]; then mkdir -p $(dir $@); fi
+	if [[ -r $@ ]]; then mv $@ $@.prev; fi
 	cp -p $? $@
-	cd $(dir $@) && ln -nfs $(notdir $@) xminad
+	if [[ $(notdir $(TARGET)) != xminad ]]; then \
+	    cd $(dir $@) && ln -nfs $(notdir $@) xminad; \
+	fi
