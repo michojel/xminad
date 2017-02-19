@@ -16,6 +16,7 @@ import           System.Environment
 import           XMonad
 import           XMonad.Actions.UpdateFocus
 import           XMonad.Config.Desktop
+import qualified XMonad.Config.Mate as Mate
 import           XMonad.Hooks.SetWMName
 import           XMonad.Hooks.UrgencyHook
 import           XMonad.Util.Run            (spawnPipe)
@@ -49,6 +50,7 @@ myConfig h = Local.xConfig
     }
   where
     myStartupHook = do
+        Mate.mateRegister
         startupHook Local.xConfig
         adjustEventInput
         setWMName "LG3D"

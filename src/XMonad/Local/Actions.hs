@@ -54,18 +54,6 @@ killWindowPID s w = do
 signalCurrentWindow ∷ Signal → X()
 signalCurrentWindow s = withFocused (killWindowPID s)
 
-mateRun ∷ X ()
-mateRun = withDisplay $ \dpy -> do
-    rw <- asks theRoot
-    mate_panel <- getAtom "_MATE_PANEL_ACTION"
-    panel_run  <- getAtom "_MATE_PANEL_ACTION_RUN_DIALOG"
-
-    io $ allocaXEvent $ \e -> do
-        setEventType e clientMessage
-        setClientMessageEvent e rw mate_panel 32 panel_run 0
-        sendEvent dpy rw False structureNotifyMask e
-        sync dpy False
-
 clipboardManager ∷ String
 clipboardManager = "/usr/bin/clipit"
 

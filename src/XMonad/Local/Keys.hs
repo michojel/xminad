@@ -22,6 +22,7 @@ import qualified XMonad.Actions.Submap            as SUB
 import qualified XMonad.Actions.TopicSpace        as TS
 import           XMonad.Actions.Volume
 import qualified XMonad.Actions.WithAll           as WithAll
+import qualified XMonad.Config.Mate               as Mate
 import           XMonad.Hooks.ManageDocks
 import qualified XMonad.Layout.BoringWindows      as BW
 import           XMonad.Layout.Minimize
@@ -76,7 +77,7 @@ genericKeys conf = [
     , ("S-;", Local.spawnExplorer)
     , ("S-.", namedScratchpadAction namedScratchpads  "guake")
     , ("p", Shell.shellPrompt xpConfig)
-    , ("S-p", Local.mateRun)
+    , ("S-p", Mate.mateRun)
 
       -- Layouts
     , ("<Space>", sendMessage NextLayout)
@@ -185,7 +186,8 @@ genericKeys conf = [
                     , ("S-u", spawn "undock -s")
                     , ("e", spawn "monitor-hotplug")
                     , ("s", spawn "mate-session-save --shutdown-dialog")
-                    , ("q", spawn "mate-session-save --logout")
+                    , ("q", spawn "mate-session-save --logout-dialog")
+                    , ("S-q", spawn "mate-session-save --logout")
                     , ("l", spawn "mate-screensaver-command --lock" >> spawn "xset dpms force off")
                     ]
         ])
