@@ -54,7 +54,7 @@ myPP wmap = xmobarPP
     indexWorkspace ∷ Bool → WorkspaceId → WorkspaceId
     indexWorkspace shorten' w
         | w `M.member` wmap = clickable index (show index ++ ":" ++ toName shorten' w)
-        | otherwise         = clickable index w
+        | otherwise         = toName shorten' w
         where
             index ∷ Int
             index = wmap M.! w
