@@ -28,7 +28,8 @@ tmuxProjects =
 
 topicDirs ∷ M.Map WorkspaceId String
 topicDirs = M.fromList $
-    [ ("distribution", "~/wsp/rh/distribution")
+    [ ("anki"        , "~/Documents/Anki")
+    , ("distribution", "~/wsp/rh/distribution")
     , ("docker"      , "~/wsp/rh/docker")
     , ("containers"  , "~/wsp/rh/containers")
     , ("docs"        , "~/Documents/doc")
@@ -41,6 +42,7 @@ topicDirs = M.fromList $
     , ("mymoney"     , "~/Documents/my-money")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
+    , ("panki"       , "~/Documents/Anki")
     , ("pdf"         , "~/Documents")
     , ("rcs"         , "~/.rcs")
     , ("rhel"        , "~/rhel-scm")
@@ -54,7 +56,6 @@ topicDirs = M.fromList $
 homeScoped ∷ [String]
 homeScoped =
     [ "admin"
-    , "anki"
     , "bank"
     , "BG"
     , "calendar"
