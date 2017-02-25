@@ -15,7 +15,7 @@ DO_CHECK            ?= YES
 DISPLAY             ?= :0
 
 ################################################################################
-.PHONY: all build install restart clean realclean check pic
+.PHONY: all build install restart clean realclean check pic configure
 
 ################################################################################
 all: build
@@ -29,6 +29,10 @@ install: $(TARGET)
 	sed 's!{{BIN_DIR}}!$(BIN_DIR)!' config/xminad.desktop \
 	    > $(PREFIX)/share/applications/xminad.desktop
 	make -C pic install
+
+
+configure:
+	$(CABAL_BIN) configure $(CABAL_FLAGS)
 
 ################################################################################
 build: $(XMINAD)
