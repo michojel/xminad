@@ -80,7 +80,8 @@ topicConfig = TS.def
     { TS.topicDirs = topicDirs
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
-        , ("anki", spawn "anki")
+        , ("anki", spawn "anki -p synchronized")
+        , ("panki", spawn "panki")
         , ("incognito", spawn $ browser ++ " --incognito")
         , ("mail", spawn "thunderbird")
         , ("web", spawn $ browser ++ " --profile-directory=Default")
