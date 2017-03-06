@@ -123,7 +123,7 @@ topicConfig = TS.def
                 spawn (browser ++ " --new-window http://slovnik.seznam.cz/de-cz/"))
         , ("drive", spawnShell Nothing >> spawnExplorerIn "~/gdrive")
         , ("calendar", spawn "korganizer")
-        , ("mymoney", spawn "kmymoney")]
+        , ("mymoney", spawn "mymoney")]
         ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
             [ "remote", "devel", "admin" ]
         ++ map (\w -> (w, spawnTmux w)) tmuxProjects
