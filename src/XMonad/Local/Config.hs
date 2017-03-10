@@ -22,7 +22,7 @@ xpConfig = P.def
     }
 
 browser ∷ String
-browser = "google-chrome-stable"
+browser = "chrome-launcher"
 
 vimBundlePath ∷ String
 vimBundlePath = "~/.vim/bundle/vundle"

@@ -74,6 +74,7 @@ homeScoped =
     , "virt"
     , "web"
     , "witcher"
+    , "work"
     ]
 
 topicConfig ∷ TS.TopicConfig
@@ -83,9 +84,10 @@ topicConfig = TS.def
         [ ("music", spawn "gmpc")
         , ("anki", spawn "anki -p synchronized")
         , ("panki", spawn "panki")
-        , ("incognito", spawn $ browser ++ " --incognito")
+        , ("incognito", spawn $ browser ++ " -i")
         , ("mail", spawn "thunderbird")
-        , ("web", spawn $ browser ++ " --profile-directory=Default")
+        , ("web", spawn browser)
+        , ("work", spawn $ browser ++ " -- --profile-directory=RedHat")
         , ("firefox", spawn "firefox")
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
@@ -98,8 +100,7 @@ topicConfig = TS.def
         , ("gimp", spawn "gimp")
         , ("ebook", spawn "calibre")
         , ("video", spawn "smplayer")
-        , ("bank", spawn (browser ++ " --profile-directory=Default" ++
-            " https://www.mojebanka.cz/InternetBanking/"))
+        , ("bank", spawn (browser ++ " -w https://www.mojebanka.cz/InternetBanking/"))
         , ("p2p", spawn "deluge-gtk")
         , ("hwdata",
               spawnShell Nothing >>
@@ -114,13 +115,13 @@ topicConfig = TS.def
                 spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc"))
         , ("scripts", spawnShell Nothing >> spawnShell Nothing)
         , ("ciV", spawn "launch-ciV.sh -m -b")
-        , ("scrum", spawn $ browser ++ " --new-window https://bluejeans.com/3046463974/")
+        , ("scrum", spawn $ browser ++ " https://bluejeans.com/3046463974/")
         , ("BG", spawn "steam steam://rungameid/228280" >>
-                spawn (browser ++ " --new-window http://slovnik.seznam.cz/de-cz/"))
+                spawn (browser ++ " -n http://slovnik.seznam.cz/de-cz/"))
         , ("gothic", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/65540")
         , ("morrowind", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/22320")
         , ("witcher", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/20900" >>
-                spawn (browser ++ " --new-window http://slovnik.seznam.cz/de-cz/"))
+                spawn (browser ++ " -n http://slovnik.seznam.cz/de-cz/"))
         , ("drive", spawnShell Nothing >> spawnExplorerIn "~/gdrive")
         , ("calendar", spawn "korganizer")
         , ("mymoney", spawn "mymoney")]

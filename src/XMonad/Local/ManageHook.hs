@@ -51,6 +51,13 @@ manageHook = composeAll
     , composeOne (concat
         [ [className =? "Dia"             -?> doMyShift "dia"]
         , [className =? c                 -?> doMyShift "chat" | c <- myChatClients ]
+        {-  unfortunately this is not yet possible
+         -  new windows inherit the class of their predecessors
+        , [(className =? "Chromium.work" <||> className =? "Google-chrome.work")
+             -?> doMyShift "work"]
+        , [(className =? "Chromium.incognito" <||> className =? "Google-chrome.incognito")
+             -?> doMyShift "incognito"]
+             -}
         , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
         , [className =? c                 -?> doMyShift "web"  | c <- myWebBrowsers ]
         , [title =? "ncmpcpp"             -?> doMyShift "music" ]
@@ -126,7 +133,7 @@ manageHook = composeAll
                  ]
 
 matchChrome ∷ Query Bool
-matchChrome = className =? "google-chrome" <||> className =? "Google-chrome"
+matchChrome = className =? "google-chrome" <||> className =? "Google-chrome" <||> className =? "Chromium"
 
 windowRole ∷ Query String
 windowRole = stringProperty "WM_WINDOW_ROLE"
