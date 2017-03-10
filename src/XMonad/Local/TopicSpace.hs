@@ -87,7 +87,7 @@ topicConfig = TS.def
         , ("incognito", spawn $ browser ++ " -i")
         , ("mail", spawn "thunderbird")
         , ("web", spawn browser)
-        , ("work", spawn $ browser ++ " -- --profile-directory=RedHat")
+        , ("work", spawn $ browser ++ " RedHat")
         , ("firefox", spawn "firefox")
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")

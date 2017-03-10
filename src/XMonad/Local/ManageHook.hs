@@ -51,13 +51,8 @@ manageHook = composeAll
     , composeOne (concat
         [ [className =? "Dia"             -?> doMyShift "dia"]
         , [className =? c                 -?> doMyShift "chat" | c <- myChatClients ]
-        {-  unfortunately this is not yet possible
-         -  new windows inherit the class of their predecessors
-        , [(className =? "Chromium.work" <||> className =? "Google-chrome.work")
-             -?> doMyShift "work"]
-        , [(className =? "Chromium.incognito" <||> className =? "Google-chrome.incognito")
-             -?> doMyShift "incognito"]
-             -}
+        , [matchSuffixedChrome "redhat" -?> doMyShift "work"]
+        , [matchSuffixedChrome "nobody" -?> doMyShift "incognito"]
         , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
         , [className =? c                 -?> doMyShift "web"  | c <- myWebBrowsers ]
         , [title =? "ncmpcpp"             -?> doMyShift "music" ]
@@ -131,6 +126,11 @@ manageHook = composeAll
                  , (title =? "Export File", doCenterFloat)
                  , (fmap ("Save as" `isPrefixOf`) title, doCenterFloat)
                  ]
+
+matchSuffixedChrome ∷ String → Query Bool
+matchSuffixedChrome suffix =
+      className =? ("Chromium." ++ suffix) <||>
+      className =? ("Google-chrome." ++ suffix)
 
 matchChrome ∷ Query Bool
 matchChrome = className =? "google-chrome" <||> className =? "Google-chrome" <||> className =? "Chromium"
