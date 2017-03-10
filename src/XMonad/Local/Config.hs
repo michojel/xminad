@@ -33,3 +33,6 @@ tabsOutlinerAppName ∷ String
 tabsOutlinerAppName = "crx_" ++ tabsOutlinerAppID
 tabsOutlinerFloatRect ∷ W.RationalRect
 tabsOutlinerFloatRect = W.RationalRect (1/5) (1/11) (3/5) (7/9)
+
+chromeClassNames ∷ [String]
+chromeClassNames = ["Chromium", "Google-chrome", "google-chrome"]

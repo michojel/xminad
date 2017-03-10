@@ -9,6 +9,7 @@ import           XMonad.Util.NamedScratchpad
 
 -- local modules **************************************************************
 import           XMonad.Local.Config
+import           XMonad.Local.Util
 
 namedScratchpads ∷ [NamedScratchpad]
 namedScratchpads =
@@ -22,9 +23,8 @@ namedScratchpads =
         , stns "guake" "tmux -c 'tmuxinator start guake'" cBottomFloat
         , stns "man-browser" "tmux -c 'tmuxinator start man-browser'"  cTopFloat
         , NS "volctl" "mate-volume-control" (className =? "Mate-volume-control") cFloating
-        , NS "tabsoutliner" ("google-chrome-stable --profile-directory=Default" ++
-                " --app-id=" ++ tabsOutlinerAppID)
-           (className =? "google-chrome" <&&> appName =? tabsOutlinerAppName) cBigFloat
+        , NS "tabsoutliner" (browser ++ " Default --app-id=" ++ tabsOutlinerAppID)
+           (matchChrome <&&> appName =? tabsOutlinerAppName) cBigFloat
         ]
     where
         role = stringProperty "WM_WINDOW_ROLE"

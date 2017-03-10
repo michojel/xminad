@@ -15,6 +15,7 @@ import           XMonad.Util.NamedScratchpad  as NS
 -- local modules **************************************************************
 import           XMonad.Local.Config
 import           XMonad.Local.NamedScratchpad
+import           XMonad.Local.Util
 import           XMonad.Local.Workspaces
 
 {- note: earlier hooks have higher priority -}
@@ -51,8 +52,8 @@ manageHook = composeAll
     , composeOne (concat
         [ [className =? "Dia"             -?> doMyShift "dia"]
         , [className =? c                 -?> doMyShift "chat" | c <- myChatClients ]
-        , [matchSuffixedChrome "redhat" -?> doMyShift "work"]
-        , [matchSuffixedChrome "nobody" -?> doMyShift "incognito"]
+        , [matchSuffixedChrome "redhat"   -?> doMyShift "work"]
+        , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
         , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
         , [className =? c                 -?> doMyShift "web"  | c <- myWebBrowsers ]
         , [title =? "ncmpcpp"             -?> doMyShift "music" ]
@@ -128,12 +129,11 @@ manageHook = composeAll
                  ]
 
 matchSuffixedChrome ∷ String → Query Bool
-matchSuffixedChrome suffix =
-      className =? ("Chromium." ++ suffix) <||>
-      className =? ("Google-chrome." ++ suffix)
-
-matchChrome ∷ Query Bool
-matchChrome = className =? "google-chrome" <||> className =? "Google-chrome" <||> className =? "Chromium"
+matchSuffixedChrome suffix = foldr (\a p -> p <||> pcs a) (pcs h) rest
+    where
+        h = head chromeClassNames
+        rest = tail chromeClassNames
+        pcs cn = className =? (cn ++ "." ++ suffix)
 
 windowRole ∷ Query String
 windowRole = stringProperty "WM_WINDOW_ROLE"

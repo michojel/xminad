@@ -30,6 +30,7 @@ import           XMonad.Layout.WindowNavigation
 
 -- local modules **************************************************************
 import           XMonad.Layout.TopicDir         as TD
+import           XMonad.Local.Config            as Local
 import           XMonad.Local.TopicSpace        as Local
 
 layoutHook = avoidStruts
@@ -121,4 +122,7 @@ myTabTheme = Tab.def
     }
 
 matchChrome ∷ IM.Property
-matchChrome = IM.ClassName "google-chrome" `IM.Or` IM.ClassName "Google-chrome"
+matchChrome = foldr (\a p -> p `IM.Or` IM.ClassName a) (IM.ClassName h) rest
+    where
+        h = head Local.chromeClassNames
+        rest = tail Local.chromeClassNames

@@ -10,6 +10,9 @@ import System.Process           (runInteractiveProcess)
 
 import XMonad
 
+-- local modules **************************************************************
+import           XMonad.Local.Config           as Local
+
 -- utilities ******************************************************************
 runProcessAndGetOutputs ∷ MonadIO m ⇒ FilePath → [String] → String → m (String, String)
 runProcessAndGetOutputs cmd args input = io $ do
@@ -33,3 +36,10 @@ runProcessAndLogError cmd args input = do
     else do
         io $ hPrint stderr $ "failed to run " ++ cmd ++ ": " ++ err
         return Nothing
+
+matchChrome ∷ Query Bool
+matchChrome = foldr (\a p -> p <||> (className =? a)) (className =? h) rest
+    where
+        h = head Local.chromeClassNames
+        rest = tail Local.chromeClassNames
+
