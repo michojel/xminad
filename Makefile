@@ -8,8 +8,10 @@ TARGET              := $(BIN_DIR)/xminad
 SRC                 := $(shell find . -type f -name '*.hs')
 CABAL_BIN           ?= $(shell which cabal)
 SANDBOX             := cabal.sandbox.config
+CONFIG              := cabal.config
 XMINAD              := dist/build/xminad/xminad
-CABAL_FLAGS         := --enable-optimization=2 --prefix=$(PREFIX) --bindir=$(BIN_DIR) --datadir=$(DATA_DIR)
+CABAL_FLAGS         := --enable-optimization=2
+CABAL_DIR_FLAGS     := --prefix=$(PREFIX) --bindir=$(BIN_DIR) --datadir=$(DATA_DIR) 
 CABAL_ADD_SOURCE    ?=
 DO_CHECK            ?= YES
 DISPLAY             ?= :0
@@ -31,8 +33,12 @@ install: $(TARGET)
 	make -C pic install
 
 
-configure:
-	$(CABAL_BIN) configure $(CABAL_FLAGS)
+configure: $(SANDBOX)
+	$(CABAL_BIN) configure $(CABAL_FLAGS) $(CABAL_DIR_FLAGS)
+	echo "install-dirs" > $(CONFIG)
+	grep -E '^\s*(bindir|datadir|install-dirs)\>' $(SANDBOX) >$(CONFIG)
+	sed -i 's,\(bindir\s*:\s*\).*,\1$(BIN_DIR),'   $(CONFIG)
+	sed -i 's,\(datadir\s*:\s*\).*,\1$(DATA_DIR),' $(CONFIG)
 
 ################################################################################
 build: $(XMINAD)
@@ -48,7 +54,7 @@ restart: install
 
 ################################################################################
 clean:
-	rm -rf dist $(XMINAD) $(CHECK) $(SANDBOX)
+	rm -rf dist $(XMINAD) $(CHECK) $(SANDBOX) $(CONFIG)
 	make -C pic clean
 
 ################################################################################
@@ -71,7 +77,7 @@ endif
 build: $(XMINAD)
 
 ################################################################################
-$(XMINAD): $(SRC) $(SANDBOX)
+$(XMINAD): $(SRC) $(CONFIG)
 	ghc -V
 	$(CABAL_BIN) build
 	$(CHECK)
@@ -81,8 +87,11 @@ $(SANDBOX):
 	$(CABAL_BIN) sandbox init
 	$(if $(CABAL_ADD_SOURCE),$(CABAL_BIN) sandbox add-source $(CABAL_ADD_SOURCE),)
 	$(CABAL_BIN) install --only-dependencies $(CABAL_FLAGS)
-	$(CABAL_BIN) configure $(CABAL_FLAGS)
 	touch $@
+
+################################################################################
+$(CONFIG):
+	make -C . configure
 
 ################################################################################
 $(TARGET): $(XMINAD)

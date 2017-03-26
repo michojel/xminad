@@ -28,7 +28,7 @@ tmuxProjects =
 
 topicDirs ∷ M.Map WorkspaceId String
 topicDirs = M.fromList $
-    [ ("anki"        , "~/Documents/Anki")
+    [ ("anki"        , "~/Documents/memory/anki")
     , ("distribution", "~/wsp/rh/distribution")
     , ("docker"      , "~/wsp/rh/docker")
     , ("containers"  , "~/wsp/rh/containers")
@@ -42,7 +42,7 @@ topicDirs = M.fromList $
     , ("mymoney"     , "~/Documents/my-money")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
-    , ("panki"       , "~/Documents/Anki")
+    , ("panki"       , "~/Documents/memory/anki")
     , ("pdf"         , "~/Documents")
     , ("rcs"         , "~/.rcs")
     , ("rhel"        , "~/rhel-scm")
@@ -82,7 +82,7 @@ topicConfig = TS.def
     { TS.topicDirs = topicDirs
     , TS.topicActions = M.fromList $
         [ ("music", spawn "gmpc")
-        , ("anki", spawn "anki -p synchronized")
+        , ("anki", spawn "anki -b ~/Documents/memory/anki -p synchronized")
         , ("panki", spawn "panki")
         , ("incognito", spawn $ browser ++ " -i")
         , ("mail", spawn "thunderbird")
