@@ -64,8 +64,10 @@ myPP wmap = xmobarPP
     toName False = id
 
     clickable ∷ Int → String → String
-    clickable index | index == 10 = aWrap "0"
-                    | index < 10  = aWrap (show index)
+    clickable index | index < 10  = aWrap (show index)
+                    | index == 10 = aWrap "0"
+                    | index < 20  = aWrap ("minus super+" ++ show (index `mod` 10))
+                    | index == 20 = aWrap "minus super+0"
                     | otherwise   = xmobarSanitize
 
     aWrap ∷ String → String → String
