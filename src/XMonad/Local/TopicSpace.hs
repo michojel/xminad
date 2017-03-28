@@ -115,7 +115,7 @@ topicConfig = TS.def
                 spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc"))
         , ("scripts", spawnShell Nothing >> spawnShell Nothing)
         , ("ciV", spawn "launch-ciV.sh -m -b")
-        , ("scrum", spawn $ browser ++ " https://bluejeans.com/3046463974/")
+        , ("scrum", spawn $ browser ++ " https://bluejeans.com/3024462685/")
         , ("BG", spawn "steam steam://rungameid/228280" >>
                 spawn (browser ++ " -n http://slovnik.seznam.cz/de-cz/"))
         , ("gothic", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/65540")
