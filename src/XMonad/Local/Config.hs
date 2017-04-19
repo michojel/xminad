@@ -34,5 +34,10 @@ tabsOutlinerAppName = "crx_" ++ tabsOutlinerAppID
 tabsOutlinerFloatRect ∷ W.RationalRect
 tabsOutlinerFloatRect = W.RationalRect (1/5) (1/11) (3/5) (7/9)
 
+remoteDesktopAppID ∷ String
+remoteDesktopAppID = "gbchcmhmhahfdphkhkmpfmihenigjmpp"
+remoteDesktopAppName ∷ String
+remoteDesktopAppName = "crx_" ++ remoteDesktopAppName
+
 chromeClassNames ∷ [String]
 chromeClassNames = ["Chromium", "Google-chrome", "google-chrome"]

@@ -70,6 +70,7 @@ homeScoped =
     , "music"
     , "p2p"
     , "remote"
+    , "rmtdesk"
     , "scrum"
     , "virt"
     , "web"
@@ -124,7 +125,8 @@ topicConfig = TS.def
                 spawn (browser ++ " -n http://slovnik.seznam.cz/de-cz/"))
         , ("drive", spawnShell Nothing >> spawnExplorerIn "~/gdrive")
         , ("calendar", spawn "korganizer")
-        , ("mymoney", spawn "mymoney")]
+        , ("mymoney", spawn "mymoney")
+        , ("rmtdesk", spawn $ browser ++ " -o Default --app-id=" ++ remoteDesktopAppID)]
         ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
             [ "remote", "devel", "admin" ]
         ++ map (\w -> (w, spawnTmux w)) tmuxProjects

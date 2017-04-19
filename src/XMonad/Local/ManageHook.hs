@@ -52,6 +52,7 @@ manageHook = composeAll
     , composeOne (concat
         [ [className =? "Dia"             -?> doMyShift "dia"]
         , [className =? c                 -?> doMyShift "chat" | c <- myChatClients ]
+        , [matchChrome <&&> appName =? remoteDesktopAppName -?> doMyShift "rmtdesk"]
         , [matchSuffixedChrome "redhat"   -?> doMyShift "work"]
         , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
         , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
