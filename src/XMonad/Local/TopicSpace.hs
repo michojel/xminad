@@ -93,8 +93,7 @@ topicConfig = TS.def
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
         , ("chat",
-            spawn "pidgin" >>
-            spawn "skype" >>
+            spawn "wire-desktop" >>
             spawn "telegram-desktop")
         , ("vbox", spawn "VirtualBox")
         , ("virt", spawn "virt-manager")

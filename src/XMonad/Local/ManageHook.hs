@@ -116,7 +116,8 @@ manageHook = composeAll
                       , "Xfce4-panel"
                       , "Alarm-clock-applet"
                       ]
-    myChatClients  = ["Pidgin", "Xchat", "Skype", "Empathy", "Hexchat"]
+    myChatClients  = [ "Pidgin", "Xchat", "Skype", "Empathy", "Hexchat"
+                     , "Wire", "TelegramDesktop"]
     myWebBrowsers  = []
     myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
     myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
