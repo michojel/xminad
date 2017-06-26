@@ -41,3 +41,6 @@ remoteDesktopAppName = "crx_" ++ remoteDesktopAppName
 
 chromeClassNames ∷ [String]
 chromeClassNames = ["Chromium", "Google-chrome", "google-chrome"]
+
+screenSaverCmd ∷ String
+screenSaverCmd = "xscreensaver-command"

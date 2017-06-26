@@ -188,10 +188,10 @@ genericKeys conf = [
                     , ("s", spawn "mate-session-save --shutdown-dialog")
                     , ("q", spawn "mate-session-save --logout-dialog")
                     , ("S-q", spawn "mate-session-save --logout")
-                    , ("l", spawn "mate-screensaver-command --lock" >> spawn "xset dpms force off")
+                    , ("l", spawn (screenSaverCmd ++ " --lock") >> spawn "xset dpms force off")
                     ]
         ])
-    , ("C-q", spawn "mate-screensaver-command --lock" >> spawn "xset dpms force off")
+    , ("C-q", spawn (screenSaverCmd ++ " --lock") >> spawn "xset dpms force off")
 
     -- namedScratchpads
     , ("C-S-h", namedScratchpadAction namedScratchpads "htop")
