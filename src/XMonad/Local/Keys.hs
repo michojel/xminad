@@ -150,18 +150,8 @@ genericKeys conf = [
     , ("]",         moveTo Next $ WSIs nonEmptyWsPred)
     , ("C-<Left>",  moveTo Prev $ WSIs nonEmptyWsPred)
     , ("[",         moveTo Prev $ WSIs nonEmptyWsPred)
-    , ("-", SUB.submap $ EZ.mkKeymap conf
-        [ (m ++ show k, withNthWorkspace f i)
-        | (k, i) <- zip ([1..9] ++ [0]) [10..] :: [(Int, Int)]
-        , (f, m) <- concat
-            [ [ -- switch to ith workspace
-                (W.greedyView, m)
-                -- shift focused to ith workspace
-              , (\ws -> W.greedyView ws . W.shift ws, m ++ "S-")
-              ]
-            | m <- ["", modm ++ "-"]
-            ]
-        ])
+    , ("-", switchWorkspaceSubmap conf 10)
+    , ("S--", switchWorkspaceSubmap conf 20)
 
     , ("n", Local.promptedNewWorkspace False)
     , ("S-n", Local.promptedNewWorkspace True)
@@ -233,6 +223,19 @@ genericKeys conf = [
     , ("<XF86Back>",    io $ fmap fromRight (MPD.withMPD MPD.previous))
     ]
 
+switchWorkspaceSubmap ∷ XConfig l → Int → X()
+switchWorkspaceSubmap conf base = SUB.submap $ EZ.mkKeymap conf
+        [ (m ++ show k, withNthWorkspace f i)
+        | (k, i) <- zip ([1..9] ++ [0]) [base..] ∷ [(Int, Int)]
+        , (f, m) <- concat
+            [ [ -- switch to (base + i)th workspace
+                (W.greedyView, m)
+                -- shift focused to (base + i)th workspace
+              , (\ws -> W.greedyView ws . W.shift ws, m ++ "S-")
+              ]
+            | m <- ["", modm ++ "-"]
+            ]
+        ]
 
 switchWorkspaceKeys ∷ [(String, X())]
 switchWorkspaceKeys =
