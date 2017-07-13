@@ -13,12 +13,12 @@ terminal = "st"
 
 xpConfig ∷ P.XPConfig
 xpConfig = P.def
-    { P.fgColor = "#dfdfdf"
-    , P.bgColor = "#3c3c3c"
+    { P.fgColor  = "#dfdfdf"
+    , P.bgColor  = "#3c3c3c"
     , P.fgHLight = "#ffffff"
     , P.bgHLight = "#3c3c3c"
-    , P.font    = "-*-terminus-*-*-*-*-14-*-*-*-*-*-*-*"
-    , P.height  = 24
+    , P.font     = "xft:Ubuntu Mono:size=10"
+    , P.height   = 24
     }
 
 browser ∷ String

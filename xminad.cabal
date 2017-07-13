@@ -10,7 +10,7 @@ name:                   xminad
 -- PVP summary:         +-+------- breaking API changes
 --                      | |  +----- non-breaking API additions
 --                      | |  | +--- code changes with no API change
-version:                0.13.1.3
+version:                0.13.1.5
 
 -- A short (one-line) description of the package.
 synopsis:               Minar's XMonad window manager
@@ -82,7 +82,7 @@ Library
   -- Directories containing source files.
   hs-source-dirs:       src
 
-  ghc-options:          -Wall
+  ghc-options:          -Wall -dynamic -fforce-recomp
 
   build-depends:
       -- TODO: ditch this dependency and return to xmonad-extras
@@ -90,12 +90,12 @@ Library
     , base           >=4.6  && <5.0
     , containers     >=0.5  && <0.7
     , dbus           >=0.10 && <0.13
-    , directory      >=1.2  && <1.3
+    , directory      >=1.2  && <2.0
     , filepath
     , libmpd         >=0.9  && <0.11
     , MissingH       >=1.2  && <1.5
     , mtl
-    , process        >=1.2  && <1.6
+    , process        >=1.2  && <2.0
     , regex-compat   >=0.90 && <1.0
     , regex-posix    >=0.90 && <1.0
     , temporary      >=1.1  && <1.4
@@ -114,7 +114,7 @@ executable xminad
   -- .hs or .lhs file containing the Main module.
   main-is:              xminad.hs
 
-  ghc-options:          -Wall
+  ghc-options:          -Wall -dynamic -fforce-recomp
   
   -- LANGUAGE extensions used by modules in this package.
   other-extensions:
@@ -124,7 +124,7 @@ executable xminad
       base           >=4.6  && <5.0
     , containers     >=0.5  && <0.7
     , dbus           >=0.10 && <0.13
-    , directory      >=1.2  && <1.3
+    , directory      >=1.2  && <2.0
     , libmpd         >=0.9  && <0.11
     , MissingH       >=1.2  && <1.5
     , regex-compat   >=0.90 && <1.1
@@ -142,7 +142,7 @@ executable xminad
 executable checkrc
   main-is:              checkrc.hs
 
-  ghc-options:          -Wall
+  ghc-options:          -Wall -dynamic -fforce-recomp
 
   build-depends:
       base

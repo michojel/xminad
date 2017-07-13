@@ -29,9 +29,9 @@ import           XMonad.Layout.TwoPane
 import           XMonad.Layout.WindowNavigation
 
 -- local modules **************************************************************
-import           XMonad.Layout.TopicDir         as TD
-import           XMonad.Local.Config            as Local
-import           XMonad.Local.TopicSpace        as Local
+import qualified XMonad.Layout.TopicDir         as TD
+import qualified XMonad.Local.Config            as Local
+import qualified XMonad.Local.TopicSpace        as Local
 
 layoutHook = avoidStruts
            $ TD.topicDir Local.topicDirs
@@ -117,7 +117,7 @@ myTabTheme = Tab.def
     , Tab.urgentTextColor     = "#ff0000"
     , Tab.urgentBorderColor   = "#ff0000"
     , Tab.urgentColor         = "#000000"
-    , Tab.fontName            = "-*-terminus-*-*-*-*-12-*-*-*-*-*-*-*"
+    , Tab.fontName            = "xft:Ubuntu Mono:size=10"
     , Tab.decoHeight          = 24
     }
 
