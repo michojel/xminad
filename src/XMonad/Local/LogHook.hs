@@ -39,7 +39,7 @@ myPP wmap = xmobarPP
                     . indexWorkspace False
     , ppHidden   = hidden . noScratchPad
     , ppUrgent   = xmobarColor "red" "black" . indexWorkspace False
-    , ppLayout   = xmobarColor "lightblue" "" . aWrap "space" . xmobarSanitize . shortenLayout
+    , ppLayout   = xmobarColor "lightblue" "" . mkClickAction "super+space" . shortenLayout
     , ppSep      = xmobarColor "brown" "" $ xmobarSanitize " : "
     , ppWsSep    = " "
     }
@@ -53,7 +53,7 @@ myPP wmap = xmobarPP
 
     indexWorkspace ∷ Bool → WorkspaceId → WorkspaceId
     indexWorkspace shorten' w
-        | w `M.member` wmap = clickable index (show index ++ ":" ++ toName shorten' w)
+        | w `M.member` wmap = mkInteractiveWorkspace index (show index ++ ":" ++ toName shorten' w)
         | otherwise         = toName shorten' w
         where
             index ∷ Int
@@ -63,16 +63,14 @@ myPP wmap = xmobarPP
     toName True  = take topicLength
     toName False = id
 
-    clickable ∷ Int → String → String
-    clickable index | index < 10  = aWrap (show index)
-                    | index == 10 = aWrap "0"
-                    | index < 20  = aWrap ("minus super+" ++ show (index `mod` 10))
-                    | index == 20 = aWrap "minus super+0"
-                    | otherwise   = xmobarSanitize
+    mkInteractiveWorkspace ∷ Int → String → String
+    mkInteractiveWorkspace desktopIndex workspace = "<action=`xdotool set_desktop "
+        ++ (show desktopIndex) ++ "` button=1>"
+        ++ xmobarSanitize workspace ++ "</action>"
 
-    aWrap ∷ String → String → String
-    aWrap key w = "<action=`xdotool key super+" ++ key ++
-                    "` button=1>" ++ xmobarSanitize w ++ "</action>"
+    mkClickAction ∷ String → String → String
+    mkClickAction key label = "<action=`xdotool key " ++ key
+        ++ "` button=1>" ++ xmobarSanitize label ++ "</action>"
 
     noScratchPad ws | ws =~ "^NSP(:[0-9]+)?$" = ""
                     | otherwise               = ws
