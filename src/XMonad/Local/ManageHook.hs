@@ -73,6 +73,9 @@ manageHook = composeAll
         , [className =? "Squeak"          -?> doMyShift "squeak"]
         , [className =? "Civ5XP"          -?> doMyShift "ciV"]
         , [className =? "Googleearth-bin" -?> doMyShift "earth"]
+        , [(className =? "Anki" <&&> (fmap ("redhat"       `isSuffixOf`) title)) -?> doMyShift "rhanki"]
+        , [(className =? "Anki" <&&> (fmap ("private"      `isSuffixOf`) title)) -?> doMyShift "panki"]
+        , [(className =? "Anki" <&&> (fmap ("synchronized" `isSuffixOf`) title)) -?> doMyShift "anki"]
         -- see http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Hooks-XPropManage.html#xPropManageHook
         ])
     ]
