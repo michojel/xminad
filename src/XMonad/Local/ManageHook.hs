@@ -120,7 +120,7 @@ manageHook = composeAll
                       , "Alarm-clock-applet"
                       ]
     myChatClients  = [ "Pidgin", "Xchat", "Skype", "Empathy", "Hexchat"
-                     , "Wire", "TelegramDesktop"]
+                     , "Wire", "TelegramDesktop", "Slack"]
     myWebBrowsers  = []
     myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
     myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
