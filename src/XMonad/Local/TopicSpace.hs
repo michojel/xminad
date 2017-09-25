@@ -19,6 +19,8 @@ tmuxProjects =
     [ "distribution"
     , "docker"
     , "kbcsv"
+    , "k8s"
+    , "k8sextstg"
     , "openshift"
     , "osdocs"
     , "rcs"
@@ -38,6 +40,7 @@ topicDirs = M.fromList $
     , ("hdparm"      , "~/fedora-scm/hdparm")
     , ("hwdata"      , "~/wsp/rh/hwdata")
     , ("k8s"         , "~/wsp/rh/kubernetes")
+    , ("k8sextstg"   , "~/wsp/rh/k8s-external-storage")
     , ("kbcsv"       , "~/wsp/my/kbcsv")
     , ("mymoney"     , "~/Documents/my-money")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
@@ -111,10 +114,6 @@ topicConfig = TS.def
         , ("hdparm", spawnShell Nothing >>
               spawnShellIn "~/fedora-scm/hdparm" Nothing >>
               spawnShellIn "~/rhel-scm/hdparm" Nothing)
-        , ("k8s",
-                spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc") >>
-                spawnShellIn "~/wsp/go/kubernetes" (Just "bash --rcfile .bashrc"))
         , ("scripts", spawnShell Nothing >> spawnShell Nothing)
         , ("ciV", spawn "launch-ciV.sh -m -b")
         , ("scrum", spawn $ browser ++ " https://bluejeans.com/3024462685/")
