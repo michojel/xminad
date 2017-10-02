@@ -44,6 +44,7 @@ topicDirs = M.fromList $
     , ("kbcsv"       , "~/wsp/my/kbcsv")
     , ("mymoney"     , "~/Documents/my-money")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
+    , ("osansible"   , "~/wsp/rh/openshift-ansible")
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
     , ("panki"       , "~/Documents/memory/anki")
     , ("rhanki"      , "~/Documents/memory/anki")
