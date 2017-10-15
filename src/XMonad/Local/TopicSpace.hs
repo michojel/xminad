@@ -16,7 +16,8 @@ import           XMonad.Local.Config
 
 tmuxProjects ∷ [WorkspaceId]
 tmuxProjects =
-    [ "distribution"
+    [ "adminscripts"
+    , "distribution"
     , "docker"
     , "kbcsv"
     , "k8s"
@@ -30,7 +31,8 @@ tmuxProjects =
 
 topicDirs ∷ M.Map WorkspaceId String
 topicDirs = M.fromList $
-    [ ("anki"        , "~/Documents/memory/anki")
+    [ ("adminscripts", "~/wsp/my/adminscripts")
+    , ("anki"        , "~/Documents/memory/anki")
     , ("distribution", "~/wsp/rh/distribution")
     , ("docker"      , "~/wsp/rh/docker")
     , ("containers"  , "~/wsp/rh/containers")

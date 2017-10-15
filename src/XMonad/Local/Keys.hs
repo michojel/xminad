@@ -171,7 +171,7 @@ genericKeys conf = [
       -- xmonad
     , ("q", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
-        | (k, a) <- [ ("r", Op.restart)
+        | (k, a) <- [ ("r", spawn "pkill -x mate-panel" >> Op.restart)
                     , ("u", spawn "undock")
                     , ("S-u", spawn "undock -s")
                     , ("e", spawn "monitor-hotplug")
