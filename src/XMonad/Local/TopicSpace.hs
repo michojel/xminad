@@ -17,6 +17,7 @@ import           XMonad.Local.Config
 tmuxProjects ∷ [WorkspaceId]
 tmuxProjects =
     [ "adminscripts"
+    , "aoscdjobs"
     , "distribution"
     , "docker"
     , "kbcsv"
@@ -89,7 +90,7 @@ topicConfig ∷ TS.TopicConfig
 topicConfig = TS.def
     { TS.topicDirs = topicDirs
     , TS.topicActions = M.fromList $
-        [ ("music", spawn "gmpc")
+        [ ("music", spawn "gmpc" >> spawnShellIn "~/Music" (Just "ncmpcpp"))
         , ("anki", spawn "anki -b ~/Documents/memory/anki -p synchronized")
         , ("panki", spawn "panki")
         , ("rhanki", spawn "rhanki")
