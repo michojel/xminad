@@ -18,6 +18,7 @@ tmuxProjects ∷ [WorkspaceId]
 tmuxProjects =
     [ "adminscripts"
     , "aoscdjobs"
+    , "containers"
     , "distribution"
     , "docker"
     , "kbcsv"
@@ -26,8 +27,8 @@ tmuxProjects =
     , "openshift"
     , "osdocs"
     , "rcs"
+    , "sapvora"
     , "xminad"
-    , "containers"
     ]
 
 topicDirs ∷ M.Map WorkspaceId String
