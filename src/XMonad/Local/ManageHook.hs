@@ -51,7 +51,8 @@ manageHook = composeAll
         ])
     , composeOne (concat
         [ [className =? "Dia"             -?> doMyShift "dia"]
-        , [className =? c                 -?> doMyShift "chat" | c <- myChatClients ]
+        , [className =? c                 -?> doMyShift "chat"  | c <- myChatClients ]
+        , [className =? c                 -?> doMyShift "wchat" | c <- myWChatClients ]
         , [matchChrome <&&> appName =? remoteDesktopAppName -?> doMyShift "rmtdesk"]
         , [matchSuffixedChrome "redhat"   -?> doMyShift "work"]
         , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
@@ -119,8 +120,8 @@ manageHook = composeAll
                       , "Xfce4-panel"
                       , "Alarm-clock-applet"
                       ]
-    myChatClients  = [ "Pidgin", "Xchat", "Skype", "Empathy", "Hexchat"
-                     , "Wire", "TelegramDesktop", "Slack"]
+    myChatClients  = ["Pidgin", "Skype", "Empathy", "Wire", "TelegramDesktop"]
+    myWChatClients  = ["Xchat", "Hexchat" , "Slack"]
     myWebBrowsers  = []
     myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
     myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]

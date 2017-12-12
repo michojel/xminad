@@ -84,6 +84,7 @@ homeScoped =
     , "virt"
     , "web"
     , "witcher"
+    , "wchat"
     , "work"
     ]
 
@@ -98,6 +99,7 @@ topicConfig = TS.def
         , ("incognito", spawn $ browser ++ " -i")
         , ("mail", spawn "thunderbird")
         , ("web", spawn browser)
+        , ("wchat", spawn "hexchat" >> spawn "slack")
         , ("work", spawn $ browser ++ " RedHat")
         , ("firefox", spawn "firefox")
         , ("opera", spawn "opera")
