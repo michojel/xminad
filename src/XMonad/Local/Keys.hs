@@ -18,6 +18,7 @@ import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.DwmPromote        as DwmP
 import qualified XMonad.Actions.DynamicWorkspaces as DW
 import           XMonad.Actions.GridSelect        as GS
+import           XMonad.Actions.Minimize
 import qualified XMonad.Actions.Submap            as SUB
 import qualified XMonad.Actions.TopicSpace        as TS
 import           XMonad.Actions.Volume
@@ -25,7 +26,6 @@ import qualified XMonad.Actions.WithAll           as WithAll
 import qualified XMonad.Config.Mate               as Mate
 import           XMonad.Hooks.ManageDocks
 import qualified XMonad.Layout.BoringWindows      as BW
-import           XMonad.Layout.Minimize
 import qualified XMonad.Layout.MultiToggle        as MT
 import           XMonad.Layout.Reflect
 import           XMonad.Layout.SubLayouts
@@ -119,7 +119,7 @@ genericKeys conf = [
 
     -- minimized widnows
     , ("z", withFocused minimizeWindow)
-    , ("S-z", sendMessage RestoreNextMinimizedWin)
+    , ("S-z", withLastMinimized maximizeWindowAndFocus)
 
       -- Toggle full screen
     , ("<F12>", sendMessage ToggleStruts >> refresh)

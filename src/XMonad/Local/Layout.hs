@@ -13,6 +13,7 @@ import           XMonad.Layout.Column
 import qualified XMonad.Layout.ComboP           as CP
 import           XMonad.Layout.Fullscreen
 import qualified XMonad.Layout.IM               as IM
+import           XMonad.Layout.Minimize
 import qualified XMonad.Layout.MultiToggle      as MT
 import qualified XMonad.Layout.Named            as LN
 import           XMonad.Layout.NoBorders
@@ -60,11 +61,12 @@ threecol =  ThreeColMid nmaster delta (1/3)
 easyLay = windowNavigation baseLay
 baseLay = smartBorders (tiled' ||| tabbed')
     where
-        tiled' = mySubTabbed $ BW.boringWindows
+        tiled' = mySubTabbed $ BW.boringWindows $ minimize
                $ toggleLayouts threecol
                $       MT.mkToggle (MT.single REFLECTX) tiled
                    ||| MT.mkToggle (MT.single REFLECTY) (Mirror tiled)
-        tabbed' = BW.boringWindows $ trackFloating $ Tab.tabbed Tab.shrinkText myTabTheme
+        tabbed' = BW.boringWindows $ minimize $ trackFloating
+                $ Tab.tabbed Tab.shrinkText myTabTheme
 
 
 -- workspace layouts

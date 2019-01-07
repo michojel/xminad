@@ -10,7 +10,7 @@ name:                   xminad
 -- PVP summary:         +-+------- breaking API changes
 --                      | |  +----- non-breaking API additions
 --                      | |  | +--- code changes with no API change
-version:                0.13.1.7
+version:                0.14.1.2
 
 -- A short (one-line) description of the package.
 synopsis:               Minar's XMonad window manager
@@ -82,14 +82,14 @@ Library
   -- Directories containing source files.
   hs-source-dirs:       src
 
-  ghc-options:          -Wall -dynamic -fforce-recomp
+  ghc-options:          -Wall -fforce-recomp
 
   build-depends:
       -- TODO: ditch this dependency and return to xmonad-extras
       alsa-mixer     >=0.2
     , base           >=4.6  && <5.0
     , containers     >=0.5  && <0.7
-    , dbus           >=0.10 && <0.13
+    , dbus           >=0.10 && <2.0
     , directory      >=1.2  && <2.0
     , filepath
     , libmpd         >=0.9  && <0.11
@@ -101,11 +101,10 @@ Library
     , temporary      >=1.1  && <1.4
     , unix           >=2.0  && <3.0
     , utf8-string    >=0.3  && <1.1
-    , xmonad         >=0.13 && <0.14
-    , xmonad-contrib >=0.13 && <0.14
+    , xmonad         >=0.14 && <0.15
+    , xmonad-contrib >=0.14 && <0.15
     -- dependency cannot be satisfied
-    -- TODO: revert back once 0.13 is out
-    -- , xmonad-extras  >=0.13 && <0.14
+    , xmonad-extras  >=0.14 && <0.15
 
   -- Base language which the package is written in.
   default-language:     Haskell2010
@@ -114,7 +113,7 @@ executable xminad
   -- .hs or .lhs file containing the Main module.
   main-is:              xminad.hs
 
-  ghc-options:          -Wall -dynamic -fforce-recomp
+  ghc-options:          -Wall -fforce-recomp
   
   -- LANGUAGE extensions used by modules in this package.
   other-extensions:
@@ -123,7 +122,7 @@ executable xminad
   build-depends:
       base           >=4.6  && <5.0
     , containers     >=0.5  && <0.7
-    , dbus           >=0.10 && <0.13
+    , dbus           >=0.10 && <2.0
     , directory      >=1.2  && <2.0
     , libmpd         >=0.9  && <0.11
     , MissingH       >=1.2  && <1.5
@@ -133,8 +132,8 @@ executable xminad
     , utf8-string    >=0.3  && <1.1
     , X11            >=1.6  && <2.0
     , xminad
-    , xmonad         >=0.13 && <0.14
-    , xmonad-contrib >=0.13 && <0.14
+    , xmonad         >=0.14 && <0.15
+    , xmonad-contrib >=0.14 && <0.15
 
   -- Base language which the package is written in.
   default-language:     Haskell2010
@@ -142,7 +141,7 @@ executable xminad
 executable checkrc
   main-is:              checkrc.hs
 
-  ghc-options:          -Wall -dynamic -fforce-recomp
+  ghc-options:          -Wall -fforce-recomp
 
   build-depends:
       base

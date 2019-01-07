@@ -17,7 +17,7 @@ DO_CHECK            ?= YES
 DISPLAY             ?= :0
 
 ################################################################################
-.PHONY: all build install restart clean realclean check pic configure
+.PHONY: all build install restart clean realclean check pic configure shell nix
 
 ################################################################################
 all: build
@@ -72,6 +72,18 @@ ifeq ($(DO_CHECK),YES)
 else
   CHECK = :
 endif
+
+shell.nix: xminad.cabal
+	cabal2nix --shell --no-haddock  file://./ >$@
+
+xminad.nix: xminad.cabal
+	cabal2nix --no-haddock  file://./ >$@
+
+nix: shell.nix xminad.nix
+
+################################################################################
+shell: shell.nix
+	nix-shell
 
 ################################################################################
 build: $(XMINAD)
