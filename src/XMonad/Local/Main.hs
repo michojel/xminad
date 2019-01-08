@@ -13,6 +13,7 @@ import           Control.Monad
 import           Data.Function
 import           Data.Version                        (showVersion)
 import           System.Environment
+import           System.FilePath.Posix               ((</>))
 import           System.Info
 
 import           XMonad
@@ -36,7 +37,7 @@ import qualified XMonad.Local.NamedScratchpad        as Local
 import qualified XMonad.Local.TopicSpace             as Local
 import qualified XMonad.Local.XConfig                as Local
 
-import           Paths_xminad                        (version)
+import           Paths_xminad                        (version, getDataDir)
 
 -- main module ****************************************************************
 myConfig h = Local.xConfig
@@ -66,8 +67,12 @@ xminad ∷ IO ()
 xminad = do
     installSignalHandlers -- important to ignore SIGCHLD to avoid zombies
 
-    let launch' cmdArgs = do
-                h <- spawnPipe "xmobar"
+    let launch' xmobarrcPath cmdArgs = do
+                h <- case xmobarrcPath of
+                  Just path -> spawnPipe $ "xmobar " ++ path
+                  _         -> do
+                    dir <- getDataDir
+                    spawnPipe $ "xmobar " ++ show (dir </> "xmobarrc")
                 let conf = withUrgencyHook NoUrgencyHook $ myConfig h
                 conf'@XConfig{layoutHook = Layout l}
                     <- handleExtraArgs conf cmdArgs conf{layoutHook = Layout (layoutHook conf)}
@@ -75,12 +80,13 @@ xminad = do
 
     cmdArgs <- getArgs
     case cmdArgs of
-        ["--help"]          -> usage
-        ["--restart"]       -> sendRestart
-        ["--version"]       -> putStrLn $ unwords shortVersion
-        ["--verbose-version"] -> putStrLn . unwords $ shortVersion ++ longVersion
-        "--replace" : args' -> sendReplace >> launch' args'
-        _                   -> launch' cmdArgs
+        ["--help"]                  -> usage
+        ["--restart"]               -> sendRestart
+        ["--version"]               -> putStrLn $ unwords shortVersion
+        ["--verbose-version"]       -> putStrLn . unwords $ shortVersion ++ longVersion
+        "--xmobarrc" : path : args' -> launch' (Just path) args'
+        "--replace" : args'         -> sendReplace >> launch' Nothing args'
+        _                           -> launch' Nothing  cmdArgs
   where
     shortVersion = ["xmonad", showVersion version]
     longVersion  = [ "compiled by", compilerName, showVersion compilerVersion
@@ -95,6 +101,7 @@ usage = do
         "  --help           Print this message",
         "  --replace        Replace the running window manager with xminad",
         "  --restart        Request a running xminad process to restart",
+        "  --xmobarrc PATH  Path to the xmobarrc config file",
         "  --version        Print the version number"]
 
 sendRestart ∷ IO ()

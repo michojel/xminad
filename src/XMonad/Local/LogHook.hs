@@ -65,7 +65,7 @@ myPP wmap = xmobarPP
 
     mkInteractiveWorkspace ∷ Int → String → String
     mkInteractiveWorkspace desktopIndex workspace = "<action=`xdotool set_desktop "
-        ++ (show desktopIndex) ++ "` button=1>"
+        ++ show desktopIndex ++ "` button=1>"
         ++ xmobarSanitize workspace ++ "</action>"
 
     mkClickAction ∷ String → String → String

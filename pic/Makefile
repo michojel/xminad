@@ -1,6 +1,6 @@
-HEIGHT=20
+HEIGHT  ?= 20
 OUT=$(addsuffix .xpm, $(basename $(filter-out bar-base.svg, $(wildcard *.svg))))
-DESTDIR=$(HOME)/.local/share/xminad
+DESTDIR ?= $(HOME)/.local/share/xminad/pixmaps
 DESTS=$(addprefix $(DESTDIR)/, $(OUT))
 
 .PHONY: all clean install datadir
@@ -12,7 +12,7 @@ install: $(DESTS)
 datadir: $(DESTDIR)
 
 $(DESTDIR):
-	-mkdir $(DESTDIR)
+	-mkdir -p $(DESTDIR)
 
 $(DESTDIR)/%: datadir %
 	install -m 0644 $* $@ 
