@@ -27,7 +27,7 @@ spawnExplorer = do
     spawnExplorerIn pth
 
 spawnExplorerIn ∷ String → X ()
-spawnExplorerIn dir = spawn $ Local.explorer ++ " --no-desktop --browser " ++ dir
+spawnExplorerIn dir = spawn $ Local.explorer ++ " " ++ dir
 
 spawnShell ∷ Maybe String → X()
 spawnShell = spawnShellIn ""
@@ -55,16 +55,16 @@ signalCurrentWindow ∷ Signal → X()
 signalCurrentWindow s = withFocused (killWindowPID s)
 
 clipboardManager ∷ String
-clipboardManager = "/usr/bin/clipit"
+clipboardManager = "xsel"
 
 getClipboardText ∷ X (Maybe String)
 getClipboardText = catchX
-    (Local.runProcessAndLogError clipboardManager ["-c"] "")
+    (Local.runProcessAndLogError clipboardManager ["-b"] "")
     (io $ return Nothing)
 
 saveTextToClipboard ∷ String → X ()
 saveTextToClipboard text = catchX
-    (void (Local.runProcessAndLogError clipboardManager [] text))
+    (void (Local.runProcessAndLogError clipboardManager ["-b"] text))
     (io $ return ())
 
 getAndPasteDigraph ∷ X ()
@@ -73,6 +73,8 @@ getAndPasteDigraph = do
     case dg of
         Just text@(_:_) -> do
             saveTextToClipboard text
+            -- TODO: support terminal emulators (Shift+Insert)
+            -- determine by wm_class
             Paste.pasteChar controlMask 'V'
         _               -> io $ return ()
 

@@ -9,7 +9,16 @@ let
   xminad = nixpkgs.pkgs.haskell.packages.${compiler}.callPackage ./xminad.nix { };
 in xminad.overrideDerivation (attrs: rec {
   buildDependencies = [imagemagick];
-  runtimeDependencies = [nixpkgs.haskellPackages.xmobar];
+  runtimeDependencies = [
+    nixpkgs.haskellPackages.xmobar
+        nixpkgs.pcmanfm-qt
+        nixpkgs.lxqt.qterminal
+        nixpkgs.tmux
+        nixpkgs.vim
+        nixpkgs.xorg.xbacklight
+        nixpkgs.xdg-utils   # xdg-screensaver
+        nixpkgs.xsel
+     ];
 
   buildInputs = attrs.buildInputs ++ [makeWrapper imagemagick];
   configureFlags = attrs.configureFlags ++ ["--datasubdir="];
@@ -23,9 +32,11 @@ in xminad.overrideDerivation (attrs: rec {
     DESTDIR="$datadir/pixmaps" make -C pic install
 
     mkdir -p $datadir/applications
-	  sed "s!{{DATA_DIR}}!$datadir/pixmaps!g" config/xmobar.config \
-	      > $datadir/xmobarrc
-		sed "s!{{BIN_DIR}}!$out/bin!" config/xminad.desktop \
-	    	> $datadir/applications/xminad.desktop
+    sed "s!{{DATA_DIR}}!$datadir/pixmaps!g" config/xmobar.config \
+          > $datadir/xmobarrc
+    sed "s!{{BIN_DIR}}!$out/bin!" config/xminad.desktop \
+          > $datadir/applications/xminad.desktop
   '';
 })
+
+# ex: set et ts=4 sw=4 :

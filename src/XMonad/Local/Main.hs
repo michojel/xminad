@@ -19,7 +19,6 @@ import           System.Info
 import           XMonad
 import           XMonad.Actions.UpdateFocus
 import           XMonad.Config.Desktop
-import qualified XMonad.Config.Mate                  as Mate
 import           XMonad.Hooks.SetWMName
 import           XMonad.Hooks.UrgencyHook
 import qualified XMonad.Util.Loggers.NamedScratchpad as NS
@@ -57,11 +56,11 @@ myConfig h = Local.xConfig
     }
   where
     myStartupHook = do
-        Mate.mateRegister
         startupHook Local.xConfig
         adjustEventInput
         setWMName "LG3D"
         NS.nspTrackStartup Local.namedScratchpads
+        spawn "killall lxqt-panel; lxqt-panel"
 
 xminad ∷ IO ()
 xminad = do

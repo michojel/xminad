@@ -58,7 +58,7 @@ vimEchoDigraphConfig = unlines [
     "call vundle#end()"]
 
 vimBinary ∷ String
-vimBinary = "/usr/bin/vim"
+vimBinary = "vim"
 
 -- |
 -- TODO: make it vim independent

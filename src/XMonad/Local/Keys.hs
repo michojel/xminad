@@ -23,7 +23,6 @@ import qualified XMonad.Actions.Submap            as SUB
 import qualified XMonad.Actions.TopicSpace        as TS
 import           XMonad.Actions.Volume
 import qualified XMonad.Actions.WithAll           as WithAll
-import qualified XMonad.Config.Mate               as Mate
 import           XMonad.Hooks.ManageDocks
 import qualified XMonad.Layout.BoringWindows      as BW
 import qualified XMonad.Layout.MultiToggle        as MT
@@ -77,7 +76,7 @@ genericKeys conf = [
     , ("S-;", Local.spawnExplorer)
     , ("S-.", namedScratchpadAction namedScratchpads  "guake")
     , ("p", Shell.shellPrompt xpConfig)
-    , ("S-p", Mate.mateRun)
+    , ("S-p", spawn "lxqt-runner")
 
       -- Layouts
     , ("<Space>", sendMessage NextLayout)
@@ -171,17 +170,16 @@ genericKeys conf = [
       -- xmonad
     , ("q", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
-        | (k, a) <- [ ("r", spawn "pkill -x mate-panel" >> Op.restart)
+        | (k, a) <- [ ("r", spawn "pkill -x lxqt-panel" >> Op.restart)
                     , ("u", spawn "undock")
                     , ("S-u", spawn "undock -s")
                     , ("e", spawn "monitor-hotplug")
-                    , ("s", spawn "mate-session-save --shutdown-dialog")
-                    , ("q", spawn "mate-session-save --logout-dialog")
-                    , ("S-q", spawn "mate-session-save --logout")
-                    , ("l", spawn (screenSaverCmd ++ " --lock") >> spawn "xset dpms force off")
+                    , ("s", spawn "lxqt-leave")
+                    , ("q", spawn "lxqt-leave --logout")
+                    , ("l", spawn "lxqt-leave --lockscreen" >> spawn "xset dpms force off")
                     ]
         ])
-    , ("C-q", spawn (screenSaverCmd ++ " --lock") >> spawn "xset dpms force off")
+    , ("C-q", spawn "lxqt-leave --lockscreen" >> spawn "xset dpms force off")
 
     -- namedScratchpads
     , ("C-S-h", namedScratchpadAction namedScratchpads "htop")
@@ -212,9 +210,9 @@ genericKeys conf = [
                     , ("<Space>", io $ fmap fromRight (MPD.withMPD MPD.toggle))
                     ]
         ])
-    , ("<Print>", spawn "mate-screenshot")
-    , ("C-<Print>", spawn "mate-screenshot -w")
-    , ("S-<Print>", spawn "mate-screenshot -a")
+    , ("<Print>", spawn "scrot -u ~/Pictures/%Y-%m-%d-%T-window-screenshot.png")
+    , ("C-<Print>", spawn "scrot -s ~/Pictures/%Y-%m-%d-%T-screenshot.png")
+    , ("S-<Print>", spawn "scrot ~/Pictures/%Y-%m-%d-%T-root-screenshot.png")
 
     -- MPD
     -- mov current playing song in mpd to thrash
@@ -282,6 +280,9 @@ unprefixedKeys = [
     , ("S-<XF86MonBrightnessDown>", spawn "xbacklight -20")
     , ("C-<XF86MonBrightnessUp>",   spawn "xbacklight -set 100")
     , ("C-<XF86MonBrightnessDown>", spawn "xbacklight -set 0")
+
+    , ("C-S-<F9>", spawn "xset dpms force off && sleep 0.5 && xset dpms force on")
+    , ("<XF86Tools>", spawn "xset dpms force off && sleep 0.5 && xset dpms force on")
     ]
 
 withNthWorkspace ∷ (String → WindowSet → WindowSet) → Int → X ()

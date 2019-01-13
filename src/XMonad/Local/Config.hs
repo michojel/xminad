@@ -6,10 +6,10 @@ import qualified XMonad.Prompt   as P
 import qualified XMonad.StackSet as W
 
 explorer ∷ String
-explorer = "caja"
+explorer = "pcmanfm-qt"
 
 terminal ∷ String
-terminal = "st"
+terminal = "qterminal"
 
 xpConfig ∷ P.XPConfig
 xpConfig = P.def
@@ -43,4 +43,4 @@ chromeClassNames ∷ [String]
 chromeClassNames = ["Chromium", "Google-chrome", "google-chrome"]
 
 screenSaverCmd ∷ String
-screenSaverCmd = "xscreensaver-command"
+screenSaverCmd = "xdg-screensaver"
