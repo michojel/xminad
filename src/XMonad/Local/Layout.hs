@@ -36,12 +36,11 @@ import qualified XMonad.Local.TopicSpace        as Local
 
 layoutHook = avoidStruts
            $ TD.topicDir Local.topicDirs
-           $ PW.onWorkspace "chat" chatL
-           $ PW.onWorkspace "gimp" gimpL
-           $ PW.onWorkspace "BG" bgL
-           $ PW.onWorkspace "remote" remoteL
-           $ PW.onWorkspace "web" webL
-           $ PW.onWorkspace "witcher" gameDictL
+           $ PW.onWorkspaces ["chat", "wchat"] chatL
+           $ PW.onWorkspace  "gimp" gimpL
+           $ PW.onWorkspace  "BG" bgL
+           $ PW.onWorkspace  "remote" remoteL
+           $ PW.onWorkspaces ["web", "work"] webL
            $ PW.onWorkspaces ["gothic", "morrowind"] fullscreenGameL
            $ PW.onWorkspaces ["homam5", "civ4", "pst", "ciV"] wineGameL
              easyLay

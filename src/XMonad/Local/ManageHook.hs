@@ -32,6 +32,7 @@ manageHook = composeAll
         , [isFullscreen -?> doMaster <+> doFullFloat]
         , [transience]
         , [isDialog -?> doMaster <+> doCenterFloat]
+        , [className =? "Anki" <&&> title =? "Notiztyp hinzufügen" -?> doFloat]
         , [fmap ("Preferences" `isInfixOf`) title -?> doMaster <+> doCenterFloat]
         , [(className =? "Gimp" <&&> c) -?> h | (c, h) <- gimpManage]
         , [(    className =? "Qjackctl"

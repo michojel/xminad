@@ -26,6 +26,7 @@ tmuxProjects =
     , "k8sextstg"
     , "openshift"
     , "osdocs"
+    , "osregistry"
     , "rcs"
     , "sapvora"
     , "xminad"
@@ -50,6 +51,7 @@ topicDirs = M.fromList $
     , ("openshift"   , "~/wsp/rh/openshift-origin")
     , ("osansible"   , "~/wsp/rh/openshift-ansible")
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
+    , ("osregistry"   , "~/wsp/rh/image-registry")
     , ("panki"       , "~/Documents/memory/anki")
     , ("rhanki"      , "~/Documents/memory/anki")
     , ("pdf"         , "~/Documents")
