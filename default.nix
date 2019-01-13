@@ -16,7 +16,7 @@ in xminad.overrideDerivation (attrs: rec {
         nixpkgs.tmux
         nixpkgs.vim
         nixpkgs.xorg.xbacklight
-        nixpkgs.xdg-utils   # xdg-screensaver
+        nixpkgs.xdg_utils   # xdg-screensaver
         nixpkgs.xsel
      ];
 
