@@ -55,9 +55,24 @@ manageHook = composeAll
         , [className =? c                 -?> doMyShift "chat"  | c <- myChatClients ]
         , [className =? c                 -?> doMyShift "wchat" | c <- myWChatClients ]
         , [matchChrome <&&> appName =? remoteDesktopAppName -?> doMyShift "rmtdesk"]
-        , [matchSuffixedChrome "redhat"   -?> doMyShift "work"]
+
+        , [matchChromeApp ["redhat"] app           -?> doMyShift "wmail" | app <- [rhgmailapp, sapmailapp]]
+        , [matchChromeApp [] gmailapp -?> doMyShift "mail"]
+        , [matchChromeApp [] app           -?> doMyShift "calendar"
+                | app <- [calendarapp, rhcalendarapp]]
+        , [matchChromeApp [] app          -?> doMyShift "docs"
+            | app <- [gdocsapp, gsheetsapp, rhgdocsapp, rhgsheetsapp]]
+        , [matchChromeApp [] app          -?> doMyShift "cloud" | app <- [gdriveapp, rhgdriveapp]]
         , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
         , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
+        , [matchChromeApp ["redhat"] rhchatapp -?> doMyShift "wchat"]
+        , [matchChromeApp [] app -?> doMyShift "chat"
+                | app <- [whatsapp, wireapp, skypeapp]]
+        , [matchChromeApp [] youtubeapp -?> doMyShift "play"]
+        , [matchChromeApp [] duolingoapp -?> doMyShift "learn"]
+        , [matchChromeApp [] gmapsapp -?> doMyShift "maps"]
+        , [matchSuffixedChrome "redhat"   -?> doMyShift "work"]
+
         , [className =? c                 -?> doMyShift "web"  | c <- myWebBrowsers ]
         , [title =? "ncmpcpp"             -?> doMyShift "music" ]
         , [className =? c                 -?> doMyShift "music" | c <- myMusicPlayers ]
@@ -75,9 +90,10 @@ manageHook = composeAll
         , [className =? "Squeak"          -?> doMyShift "squeak"]
         , [className =? "Civ5XP"          -?> doMyShift "ciV"]
         , [className =? "Googleearth-bin" -?> doMyShift "earth"]
-        , [(className =? "Anki" <&&> (fmap ("redhat"       `isSuffixOf`) title)) -?> doMyShift "rhanki"]
-        , [(className =? "Anki" <&&> (fmap ("private"      `isSuffixOf`) title)) -?> doMyShift "panki"]
-        , [(className =? "Anki" <&&> (fmap ("synchronized" `isSuffixOf`) title)) -?> doMyShift "anki"]
+        , [(className =? "Anki" <&&> fmap ("redhat"       `isSuffixOf`) title) -?> doMyShift "rhanki"]
+        , [(className =? "Anki" <&&> fmap ("private"      `isSuffixOf`) title) -?> doMyShift "panki"]
+        , [(className =? "Anki" <&&> fmap ("synchronized" `isSuffixOf`) title) -?> doMyShift "anki"]
+        , [className =? "Anki"  -?> doMyShift "learn"]
         -- see http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Hooks-XPropManage.html#xPropManageHook
         ])
     ]
@@ -121,8 +137,8 @@ manageHook = composeAll
                       , "Xfce4-panel"
                       , "Alarm-clock-applet"
                       ]
-    myChatClients  = ["Pidgin", "Skype", "Empathy", "Wire", "TelegramDesktop"]
-    myWChatClients  = ["Xchat", "Hexchat" , "Slack"]
+    myChatClients  = ["Skype", "Empathy", "Wire", "TelegramDesktop"]
+    myWChatClients  = ["Xchat", "Hexchat" , "Slack", "Pidgin"]
     myWebBrowsers  = []
     myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
     myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
@@ -135,12 +151,44 @@ manageHook = composeAll
                  , (fmap ("Save as" `isPrefixOf`) title, doCenterFloat)
                  ]
 
+    calendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    duolingoapp = "crx_aiahmijlpehemcpleichkcokhegllfjl"
+    gdocsapp = "crx_bojccfnmcnekjgjhcaklmcgofnngpjcl"
+    gdriveapp = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
+    gmailapp = "crx_pjkljhegncpnkpknbcohdijeoejaedia"
+    gmapsapp = "crx_ejidjjhkpiempkbhmpbfngldlkglhimk"
+    gsheetsapp = "crx_lcahnhkcfaikkapifpaenbabamhfnecc"
+    rhcalendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    rhchatapp = "crx_pommaclcbfghclhalboakcipcmmndhcj"
+    rhgdriveapp = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
+    rhgdocsapp = "crx_gcefppfnjnmndpknenooeofkfcbakpkp"
+    rhgmailapp = "crx_nkcknjnfmnmjahcahhhjgakeikoiomof"
+    rhgsheetsapp = "crx_albjknpbljlpmmpfjicdohagjcifagdi"
+    sapmailapp = "crx_plnbadkpncgbnekpephdpooeafambhak"
+    skypeapp = "crx_bjdilgfelnbljgdpngladebaeggachpa"
+    whatsapp = "crx_hnpfjngllnobngcgfapefoaidbinmjnm"
+    wireapp = "crx_kfhkficiiapojlgcnbkgacfjmpffgoki"
+    youtubeapp = "crx_blpcfgokakmgnkcojhhkbfbldkacnbeo"
+
 matchSuffixedChrome ∷ String → Query Bool
 matchSuffixedChrome suffix = foldr (\a p -> p <||> pcs a) (pcs h) rest
     where
-        h = head chromeClassNames
-        rest = tail chromeClassNames
+        h      = head chromeClassNames
+        rest   = tail chromeClassNames
         pcs cn = className =? (cn ++ "." ++ suffix)
+
+matchChromeApp :: [String] → String → Query Bool
+matchChromeApp profiles app = foldr (\a p -> p <||> pcs' a) (pcs' h) rest
+    where
+        h             = head filters
+        rest          = tail filters
+        pcs cn suf an
+            | suf == ""        = fmap (cn `isPrefixOf`) className <&&> appName =? an
+            | suf == "default" = className =? cn <&&> appName =? an
+            | otherwise        = className =? (cn ++ "." ++ suf)  <&&> appName =? an
+        pcs' (cn, suf, an) = pcs cn suf an
+        filters       = [(cn, suf, app) | cn <- chromeClassNames, suf <- profiles]
+
 
 windowRole ∷ Query String
 windowRole = stringProperty "WM_WINDOW_ROLE"

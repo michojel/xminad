@@ -1,4 +1,5 @@
 {-# LANGUAGE UnicodeSyntax #-}
+{-# LANGUAGE TupleSections #-}
 
 module XMonad.Local.TopicSpace (
       topicConfig
@@ -24,6 +25,7 @@ tmuxProjects =
     , "kbcsv"
     , "k8s"
     , "k8sextstg"
+    , "nixos"
     , "openshift"
     , "osdocs"
     , "osregistry"
@@ -48,6 +50,7 @@ topicDirs = M.fromList $
     , ("k8sextstg"   , "~/wsp/rh/k8s-external-storage")
     , ("kbcsv"       , "~/wsp/my/kbcsv")
     , ("mymoney"     , "~/Documents/my-money")
+    , ("nixos"       , "~/wsp/nixos")
     , ("openshift"   , "~/wsp/rh/openshift-origin")
     , ("osansible"   , "~/wsp/rh/openshift-ansible")
     , ("osdocs"      , "~/wsp/rh/openshift-docs")
@@ -62,7 +65,7 @@ topicDirs = M.fromList $
     , ("video"       , "~/Videos")
     , ("xminad"      , "~/wsp/my/xminad")
     , ("xmonad"      , "~/wsp/my/xminad")
-    ] ++ map (\w -> (w, "~")) homeScoped
+    ] ++ map (, "~") homeScoped
 
 homeScoped ∷ [String]
 homeScoped =
@@ -78,11 +81,15 @@ homeScoped =
     , "graphics"
     , "incognito"
     , "morrowind"
+    , "mail"
+    , "maps"
     , "music"
     , "p2p"
+    , "play"
     , "remote"
     , "rmtdesk"
     , "scrum"
+    , "vbox"
     , "virt"
     , "web"
     , "witcher"
@@ -99,16 +106,16 @@ topicConfig = TS.def
         , ("panki", spawn "panki")
         , ("rhanki", spawn "rhanki")
         , ("incognito", spawn $ browser ++ " -i")
-        , ("mail", spawn "thunderbird")
+        , ("mail", spawn "gmail")
+        , ("wmail", spawn "rhgmail" >> spawn "sapmail")
         , ("web", spawn browser)
-        , ("wchat", spawn "hexchat" >> spawn "slack")
+        , ("wchat", spawn "pidgin" >> spawn "slack" >> spawn "rhchat")
         , ("work", spawn $ browser ++ " RedHat")
         , ("firefox", spawn "firefox")
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
-        , ("chat",
-            spawn "wire-desktop" >>
-            spawn "telegram-desktop")
+        , ("chat", spawn "telegram-desktop"
+                >> spawn "whatsapp" >> spawn "wireweb" >> spawn "skype")
         , ("vbox", spawn "VirtualBox")
         , ("virt", spawn "virt-manager")
         , ("gimp", spawn "gimp")
@@ -133,10 +140,10 @@ topicConfig = TS.def
         , ("witcher", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/20900" >>
                 spawn (browser ++ " -n http://slovnik.seznam.cz/de-cz/"))
         , ("drive", spawnShell Nothing >> spawnExplorerIn "~/gdrive")
-        , ("calendar", spawn "korganizer")
+        , ("calendar", spawn "calendar" >> spawn "rhcalendar")
         , ("mymoney", spawn "mymoney")
         , ("rmtdesk", spawn $ browser ++ " -o Default --app-id=" ++ remoteDesktopAppID)]
-        ++ map (\w -> (w, spawnShell Nothing >> spawnShell Nothing))
+        ++ map (, spawnShell Nothing >> spawnShell Nothing)
             [ "remote", "devel", "admin" ]
         ++ map (\w -> (w, spawnTmux w)) tmuxProjects
 
