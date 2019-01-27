@@ -46,6 +46,7 @@ digraphCompletionFunction = return . gen
         isValid 1 c = c `elem` ('_':digraphChars)
         isValid _ _ = False
 
+-- TODO: fix
 vimEchoDigraphConfig ∷ String
 vimEchoDigraphConfig = unlines [
     "set noswapfile",
@@ -53,9 +54,9 @@ vimEchoDigraphConfig = unlines [
     "filetype off",
     "\" load unicode plugin for unicode#Digraph function",
     "set rtp+=" ++ Local.vimBundlePath,
-    "call vundle#begin()",
-    "Plugin 'chrisbra/unicode.vim'",
-    "call vundle#end()"]
+    "call plug#begin()",
+    "Plug 'chrisbra/unicode.vim'",
+    "call plug#end()"]
 
 vimBinary ∷ String
 vimBinary = "vim"

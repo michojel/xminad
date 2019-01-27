@@ -95,8 +95,8 @@ webL = IM.withIM (1%4) (matchChrome `IM.And` IM.Title "Tabs Outliner") easyLay
 bgL = windowNavigation $ BW.boringWindows $ smartBorders
     $ IM.withIM (2%7) matchChrome tiled
 
-gameDictL = windowNavigation $ BW.boringWindows $ noBorders
-    $ IM.withIM (2%7) matchChrome simpleFloat
+--gameDictL = windowNavigation $ BW.boringWindows $ noBorders
+--    $ IM.withIM (2%7) matchChrome simpleFloat
 
 fullscreenGameL = noBorders $ fullscreenFull Full
 

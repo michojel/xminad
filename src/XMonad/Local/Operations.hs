@@ -21,7 +21,7 @@ restart = do
         if exists
             then return binaryPath
             else do
-                pth <-  getExecutablePath
+                pth <- getExecutablePath
                 hPutStr stderr $ "binary path " ++ binaryPath ++ " does not exist, falling back to " ++ pth ++ "\n"
                 return pth
     Op.restart binPath True

@@ -158,7 +158,7 @@ genericKeys conf = [
     , ("S-r", DW.renameWorkspace xpConfig)
     , ("c", TD.changeDir xpConfig)
 
-    , ("r", Local.swapScreens)
+    , ("S-r", Local.swapScreens)
 
     , ("a", TS.currentTopicAction topicConfig)
 
@@ -170,16 +170,16 @@ genericKeys conf = [
       -- xmonad
     , ("q", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
-        | (k, a) <- [ ("r", spawn "pkill -x lxqt-panel" >> Op.restart)
+        | (k, a) <- [ ("r", spawn "pkill -x lxqt-panel" >> spawn "pkill -x xmobar" >> Op.restart)
                     , ("u", spawn "undock")
                     , ("S-u", spawn "undock -s")
                     , ("e", spawn "monitor-hotplug")
                     , ("s", spawn "lxqt-leave")
                     , ("q", spawn "lxqt-leave --logout")
-                    , ("l", spawn "lxqt-leave --lockscreen" >> spawn "xset dpms force off")
+                    , ("l", spawn "xautolock -locknow")
                     ]
         ])
-    , ("C-q", spawn "lxqt-leave --lockscreen" >> spawn "xset dpms force off")
+    , ("C-q", spawn "xautolock -locknow")
 
     -- namedScratchpads
     , ("C-S-h", namedScratchpadAction namedScratchpads "htop")
@@ -248,7 +248,7 @@ switchWorkspaceKeys =
 switchScreenKeys ∷ [(String, X())]
 switchScreenKeys =
     [ (m ++ k, screenWorkspace sc >>= flip whenJust (windows . f))
-    | (k, sc) <- zip ["w", "e"] [0..]
+    | (k, sc) <- zip ["w", "e", "r"] [0..]
     , (f, m)  <- [(W.view, ""), (W.shift, "S-")]
     ]
 

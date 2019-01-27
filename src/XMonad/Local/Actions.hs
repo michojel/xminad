@@ -37,7 +37,8 @@ spawnShellIn dir command = do
     t <- asks (terminal . config)
     spawn $ cmd' t
   where
-    run (Just c) = " " ++ c
+    -- TODO: escape quotes in the c command
+    run (Just c) = " -e '" ++ c ++ "'"
     run Nothing  = ""
 
     cmd' t | dir == "" = t ++ run command

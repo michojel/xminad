@@ -25,7 +25,7 @@ browser ∷ String
 browser = "chrome-launcher"
 
 vimBundlePath ∷ String
-vimBundlePath = "~/.vim/bundle/vundle"
+vimBundlePath = "~/.config/nvim/plugged"
 
 tabsOutlinerAppID ∷ String
 tabsOutlinerAppID = "eggkanocgddhmamlbiijnphhppkpkmkl"
