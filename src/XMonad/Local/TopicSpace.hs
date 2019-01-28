@@ -73,6 +73,7 @@ homeScoped =
     , "bank"
     , "BG"
     , "calendar"
+    , "chat"
     , "ciV"
     , "earth"
     , "ebook"
@@ -94,6 +95,7 @@ homeScoped =
     , "web"
     , "witcher"
     , "wchat"
+    , "wmail"
     , "work"
     ]
 

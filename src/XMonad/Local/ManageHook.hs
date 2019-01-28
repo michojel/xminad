@@ -23,90 +23,51 @@ manageHook ∷ ManageHook
 manageHook = composeAll
      [ composeOne [NS.query c -?> hook c | c <- namedScratchpads]
      , composeOne (concat
-        [ [checkDock -?> doIgnore]
-        , [(matchChrome <&&> appName =? tabsOutlinerAppName) -?> doTOFloat]
-        , [className =? c -?> doIgnore | c <- myCIgnores]
-        , [appName =? "GOTHIC.EXE" -?> doMyShift "gothic" <+> fullscreenManageHook]
-        , [appName =? "Morrowind.exe" <||> title =? "Morrowind" -?> doMyShift "morrowind" <+> fullscreenManageHook]
-        , [className =? "Wine" -?> doFloat ]
-        , [isFullscreen -?> doMaster <+> doFullFloat]
-        , [transience]
-        , [isDialog -?> doMaster <+> doCenterFloat]
-        , [className =? "Anki" <&&> title =? "Notiztyp hinzufügen" -?> doFloat]
-        , [fmap ("Preferences" `isInfixOf`) title -?> doMaster <+> doCenterFloat]
-        , [(className =? "Gimp" <&&> c) -?> h | (c, h) <- gimpManage]
-        , [(    className =? "Qjackctl"
-           <&&> fmap ("JACK Audio Connection Kit" `isPrefixOf`) title)
-            -?> doMaster <+> doFloat]
-        , [(className =? "Dia" <&&> windowRole =? "toolbox_window")
-            -?> doMaster <+> doFloat]
-        , [ className =? c <&&> title =? t -?> doMaster <+> doFloat
-          | (c, t) <- myCTFloats ]
-        , [className =? c -?> doMaster <+> doCenterFloat | c <- myCCenterFloats]
-        , [className =? "Virt-manager" <&&> title =? "New VM"
-          -?> doMaster <+> doCenterFloat]
-        , [className =? c -?> doMaster <+> doFloat | c <- myCFloats ]
-        , [title =? t -?> doMaster <+> doFloat | t <- myTFloats ]
-        , [className =? "BaldursGate" -?> doMyShift "BG" <+> doMaster]
-        , [className =? "witcher.exe" -?> doMyShift "witcher" <+> doMaster]
-        ])
-    , composeOne (concat
-        [ [className =? "Dia"             -?> doMyShift "dia"]
-        , [className =? c                 -?> doMyShift "chat"  | c <- myChatClients ]
-        , [className =? c                 -?> doMyShift "wchat" | c <- myWChatClients ]
-        , [matchChrome <&&> appName =? remoteDesktopAppName -?> doMyShift "rmtdesk"]
-
-        , [matchChromeApp ["redhat"] app           -?> doMyShift "wmail" | app <- [rhgmailapp, sapmailapp]]
-        , [matchChromeApp [] gmailapp -?> doMyShift "mail"]
-        , [matchChromeApp [] app           -?> doMyShift "calendar"
-                | app <- [calendarapp, rhcalendarapp]]
-        , [matchChromeApp [] app          -?> doMyShift "docs"
-            | app <- [gdocsapp, gsheetsapp, rhgdocsapp, rhgsheetsapp]]
-        , [matchChromeApp [] app          -?> doMyShift "cloud" | app <- [gdriveapp, rhgdriveapp]]
-        , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
-        , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
-        , [matchChromeApp ["redhat"] rhchatapp -?> doMyShift "wchat"]
-        , [matchChromeApp [] app -?> doMyShift "chat"
-                | app <- [whatsapp, wireapp, skypeapp]]
-        , [matchChromeApp [] youtubeapp -?> doMyShift "play"]
-        , [matchChromeApp [] duolingoapp -?> doMyShift "learn"]
-        , [matchChromeApp [] gmapsapp -?> doMyShift "maps"]
-        , [matchSuffixedChrome "redhat"   -?> doMyShift "work"]
-
-        , [className =? c                 -?> doMyShift "web"  | c <- myWebBrowsers ]
-        , [title =? "ncmpcpp"             -?> doMyShift "music" ]
-        , [className =? c                 -?> doMyShift "music" | c <- myMusicPlayers ]
-        , [className =? c                 -?> doMyShift "video" | c <- myVideoPlayers ]
-        , [className =? "Evince"          -?> doMyShift "pdf"]
-        , [className =? "Atril"           -?> doMyShift "pdf"]
-        , [className =? "Thunderbird"     -?> doMyShift "mail"]
-        , [className =? "California"      -?> doMyShift "calendar"]
-        , [className =? "korganizer"      -?> doMyShift "calendar"]
-        , [className =? "Gimp"            -?> doMyShift "gimp"]
-        , [className =? "Virt-manager"    -?> doMyShift "virt"]
-        , [className =? "VirtualBox"      -?> doMyShift "vbox"]
-        , [className =? "Deluge"          -?> doMyShift "p2p"]
-        , [className =? "Calibre"         -?> doMyShift "ebook"]
-        , [className =? "Squeak"          -?> doMyShift "squeak"]
-        , [className =? "Civ5XP"          -?> doMyShift "ciV"]
-        , [className =? "Googleearth-bin" -?> doMyShift "earth"]
-        , [(className =? "Anki" <&&> fmap ("redhat"       `isSuffixOf`) title) -?> doMyShift "rhanki"]
-        , [(className =? "Anki" <&&> fmap ("private"      `isSuffixOf`) title) -?> doMyShift "panki"]
-        , [(className =? "Anki" <&&> fmap ("synchronized" `isSuffixOf`) title) -?> doMyShift "anki"]
-        , [className =? "Anki"  -?> doMyShift "learn"]
-        -- see http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Hooks-XPropManage.html#xPropManageHook
-        ])
-    ]
+       [ [checkDock -?> doIgnore]
+       , [className =? c -?> doIgnore | c <- myCIgnores]
+       , [(matchChrome <&&> appName =? tabsOutlinerAppName) -?> doTOFloat]
+       , [definiteToMaybe $ composeAll [floatManageHook, shiftManageHook]]
+       ])]
   where
-    doMaster = doF W.shiftMaster
-
-    doMyShift ∷ WorkspaceId → ManageHook
-    doMyShift wsp = do
-        liftX (newWorkspace wsp)
-        doF $ W.greedyView wsp . W.shift wsp
-
     doTOFloat ∷ ManageHook
     doTOFloat = doRectFloat tabsOutlinerFloatRect
+
+    myCIgnores = [ "Xfce4-notifyd" ]
+
+    alwaysMatch :: Query Bool
+    alwaysMatch = fmap ("" `isPrefixOf`) className
+
+    definiteToMaybe :: ManageHook -> MaybeManageHook
+    definiteToMaybe m = alwaysMatch -?> m
+
+floatManageHook :: ManageHook
+floatManageHook = composeOne (concat
+    [ [appName =? "GOTHIC.EXE" -?> doMyShift "gothic" <+> fullscreenManageHook]
+    , [appName =? "Morrowind.exe" <||> title =? "Morrowind" -?> doMyShift "morrowind" <+> fullscreenManageHook]
+    , [className =? "Wine" -?> doFloat ]
+    , [isFullscreen -?> doMaster <+> doFullFloat]
+    , [transience]
+    , [isDialog -?> doMaster <+> doCenterFloat]
+    , [className =? "Anki" <&&> title =? "Notiztyp hinzufügen" -?> doFloat]
+    , [fmap ("Preferences" `isInfixOf`) title -?> doMaster <+> doCenterFloat]
+    , [(className =? "Gimp" <&&> c) -?> h | (c, h) <- gimpManage]
+    , [(    className =? "Qjackctl"
+       <&&> fmap ("JACK Audio Connection Kit" `isPrefixOf`) title)
+        -?> doMaster <+> doFloat]
+    , [(className =? "Dia" <&&> windowRole =? "toolbox_window")
+        -?> doMaster <+> doFloat]
+    , [ className =? c <&&> title =? t -?> doMaster <+> doFloat
+      | (c, t) <- myCTFloats ]
+    , [className =? c -?> doMaster <+> doCenterFloat | c <- myCCenterFloats]
+    , [className =? "Virt-manager" <&&> title =? "New VM"
+      -?> doMaster <+> doCenterFloat]
+    , [className =? c -?> doMaster <+> doFloat | c <- myCFloats ]
+    , [title =? t -?> doMaster <+> doFloat | t <- myTFloats ]
+    , [className =? "BaldursGate" -?> doMyShift "BG" <+> doMaster]
+    , [className =? "witcher.exe" -?> doMyShift "witcher" <+> doMaster]
+    ])
+  where
+    doMaster = doF W.shiftMaster
 
     myTFloats = [ "VLC (XVideo output)"
                 , "DownThemAll! - Make Your Selection"
@@ -114,8 +75,6 @@ manageHook = composeAll
                 , "Add URL(s)"
                 , "Run Application"
                 ]
-    myCIgnores = [ "Xfce4-notifyd"
-                 ]
     myCFloats = [ "Close session"
                 , "MPlayer"
                 , "Wine"
@@ -137,11 +96,6 @@ manageHook = composeAll
                       , "Xfce4-panel"
                       , "Alarm-clock-applet"
                       ]
-    myChatClients  = ["Skype", "Empathy", "Wire", "TelegramDesktop"]
-    myWChatClients  = ["Xchat", "Hexchat" , "Slack", "Pidgin"]
-    myWebBrowsers  = []
-    myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
-    myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
 
     gimpManage = [ ( windowRole =? "gimp-toolbox" <||> windowRole =? "gimp-image-window"
                    , ask >>= doF . W.sink)
@@ -150,6 +104,61 @@ manageHook = composeAll
                  , (title =? "Export File", doCenterFloat)
                  , (fmap ("Save as" `isPrefixOf`) title, doCenterFloat)
                  ]
+
+shiftManageHook :: ManageHook
+shiftManageHook = composeOne (concat
+    [ [className =? "Dia"             -?> doMyShift "dia"]
+    , [className =? c                 -?> doMyShift "chat"  | c <- myChatClients ]
+    , [className =? c                 -?> doMyShift "wchat" | c <- myWChatClients ]
+
+    , [matchChrome <&&> appName =? remoteDesktopAppName -?> doMyShift "rmtdesk"]
+
+    , [className =? c                 -?> doMyShift "web"  | c <- myWebBrowsers ]
+    , [title =? "ncmpcpp"             -?> doMyShift "music" ]
+    , [className =? c                 -?> doMyShift "music" | c <- myMusicPlayers ]
+    , [className =? c                 -?> doMyShift "video" | c <- myVideoPlayers ]
+    , [className =? "Evince"          -?> doMyShift "pdf"]
+    , [className =? "Atril"           -?> doMyShift "pdf"]
+    , [className =? "Thunderbird"     -?> doMyShift "mail"]
+    , [className =? "California"      -?> doMyShift "calendar"]
+    , [className =? "korganizer"      -?> doMyShift "calendar"]
+    , [className =? "Gimp"            -?> doMyShift "gimp"]
+    , [className =? "Virt-manager"    -?> doMyShift "virt"]
+    , [className =? "VirtualBox"      -?> doMyShift "vbox"]
+    , [className =? "Deluge"          -?> doMyShift "p2p"]
+    , [className =? "Calibre"         -?> doMyShift "ebook"]
+    , [className =? "Squeak"          -?> doMyShift "squeak"]
+    , [className =? "Civ5XP"          -?> doMyShift "ciV"]
+    , [className =? "Googleearth-bin" -?> doMyShift "earth"]
+    , [(className =? "Anki" <&&> fmap ("redhat"       `isSuffixOf`) title) -?> doMyShift "rhanki"]
+    , [(className =? "Anki" <&&> fmap ("private"      `isSuffixOf`) title) -?> doMyShift "panki"]
+    , [(className =? "Anki" <&&> fmap ("synchronized" `isSuffixOf`) title) -?> doMyShift "anki"]
+    , [className =? "Anki"  -?> doMyShift "learn"]
+    -- see http://xmonad.org/xmonad-docs/xmonad-contrib/src/XMonad-Hooks-XPropManage.html#xPropManageHook
+
+    , [matchChromeApp ["redhat"] app   -?> doMyShift "wmail" | app <- [rhgmailapp, sapmailapp]]
+    , [matchChromeApp [] gmailapp -?> doMyShift "mail"]
+    , [matchChromeApp [] app           -?> doMyShift "calendar"
+            | app <- [calendarapp, rhcalendarapp]]
+    , [matchChromeApp [] app          -?> doMyShift "docs"
+        | app <- [gdocsapp, gsheetsapp, rhgdocsapp, rhgsheetsapp]]
+    , [matchChromeApp [] app          -?> doMyShift "cloud" | app <- [gdriveapp, rhgdriveapp]]
+    , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
+    , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
+    , [matchChromeApp ["redhat"] rhchatapp -?> doMyShift "wchat"]
+    , [matchChromeApp [] app -?> doMyShift "chat"
+            | app <- [whatsapp, wireapp, skypeapp]]
+    , [matchChromeApp [] youtubeapp -?> doMyShift "play"]
+    , [matchChromeApp [] duolingoapp -?> doMyShift "learn"]
+    , [matchChromeApp [] gmapsapp -?> doMyShift "maps"]
+    , [matchSuffixedChrome "redhat"   -?> doMyShift "work"]
+    ])
+  where
+    myChatClients  = ["Skype", "Empathy", "Wire", "TelegramDesktop"]
+    myWChatClients  = ["Xchat", "Hexchat" , "Slack", "Pidgin"]
+    myWebBrowsers  = []
+    myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
+    myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
 
     calendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
     duolingoapp = "crx_aiahmijlpehemcpleichkcokhegllfjl"
@@ -170,6 +179,11 @@ manageHook = composeAll
     wireapp = "crx_kfhkficiiapojlgcnbkgacfjmpffgoki"
     youtubeapp = "crx_blpcfgokakmgnkcojhhkbfbldkacnbeo"
 
+doMyShift ∷ WorkspaceId → ManageHook
+doMyShift wsp = do
+    liftX (newWorkspace wsp)
+    doF $ W.greedyView wsp . W.shift wsp
+
 matchSuffixedChrome ∷ String → Query Bool
 matchSuffixedChrome suffix = foldr (\a p -> p <||> pcs a) (pcs h) rest
     where
@@ -187,7 +201,8 @@ matchChromeApp profiles app = foldr (\a p -> p <||> pcs' a) (pcs' h) rest
             | suf == "default" = className =? cn <&&> appName =? an
             | otherwise        = className =? (cn ++ "." ++ suf)  <&&> appName =? an
         pcs' (cn, suf, an) = pcs cn suf an
-        filters       = [(cn, suf, app) | cn <- chromeClassNames, suf <- profiles]
+        filters | null profiles = [(cn, "", app)  | cn <- chromeClassNames]
+                | otherwise     = [(cn, suf, app) | cn <- chromeClassNames, suf <- profiles]
 
 
 windowRole ∷ Query String
