@@ -61,6 +61,7 @@ myConfig h = Local.xConfig
         setWMName "LG3D"
         NS.nspTrackStartup Local.namedScratchpads
         spawn "killall lxqt-panel; lxqt-panel"
+        spawn "if [ -e ~/.fehbg ]; then ~/.fehbg; fi"
 
 xminad ∷ IO ()
 xminad = do
