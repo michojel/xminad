@@ -34,7 +34,7 @@ manageHook = composeAll
     doTOFloat ∷ ManageHook
     doTOFloat = doRectFloat tabsOutlinerFloatRect
 
-    myCIgnores = [ "Xfce4-notifyd", "lxqt-notificationd" ]
+    myCIgnores = [ "Xfce4-notifyd", "lxqt-notificationd", "xmobar" ]
 
     alwaysMatch :: Query Bool
     alwaysMatch = fmap ("" `isPrefixOf`) className
