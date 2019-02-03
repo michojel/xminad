@@ -24,6 +24,8 @@ manageHook = composeAll
      [ composeOne [NS.query c -?> hook c | c <- namedScratchpads]
      , composeOne (concat
        [ [checkDock -?> doIgnore]
+       , [appName =? "steam.exe" -?> doIgnore]
+       , [transience]
        , [className =? c -?> doIgnore | c <- myCIgnores]
        , [(matchChrome <&&> appName =? tabsOutlinerAppName) -?> doTOFloat]
        , [definiteToMaybe $ composeAll [floatManageHook, shiftManageHook]]
@@ -32,7 +34,7 @@ manageHook = composeAll
     doTOFloat ∷ ManageHook
     doTOFloat = doRectFloat tabsOutlinerFloatRect
 
-    myCIgnores = [ "Xfce4-notifyd" ]
+    myCIgnores = [ "Xfce4-notifyd", "lxqt-notificationd" ]
 
     alwaysMatch :: Query Bool
     alwaysMatch = fmap ("" `isPrefixOf`) className
@@ -46,7 +48,6 @@ floatManageHook = composeOne (concat
     , [appName =? "Morrowind.exe" <||> title =? "Morrowind" -?> doMyShift "morrowind" <+> fullscreenManageHook]
     , [className =? "Wine" -?> doFloat ]
     , [isFullscreen -?> doMaster <+> doFullFloat]
-    , [transience]
     , [isDialog -?> doMaster <+> doCenterFloat]
     , [className =? "Anki" <&&> title =? "Notiztyp hinzufügen" -?> doFloat]
     , [fmap ("Preferences" `isInfixOf`) title -?> doMaster <+> doCenterFloat]

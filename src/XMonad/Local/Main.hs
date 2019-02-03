@@ -19,6 +19,7 @@ import           System.Info
 import           XMonad
 import           XMonad.Actions.UpdateFocus
 import           XMonad.Config.Desktop
+import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.SetWMName
 import           XMonad.Hooks.UrgencyHook
 import qualified XMonad.Util.Loggers.NamedScratchpad as NS
@@ -57,6 +58,7 @@ myConfig h = Local.xConfig
   where
     myStartupHook = do
         startupHook Local.xConfig
+        ewmhDesktopsStartup
         adjustEventInput
         setWMName "LG3D"
         NS.nspTrackStartup Local.namedScratchpads
