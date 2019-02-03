@@ -14,6 +14,7 @@ import qualified Network.MPD.Commands.Extensions  as MPD
 import           System.Posix.Signals             (sigCONT, sigSTOP)
 
 import           XMonad                           hiding (keys, modMask)
+import qualified XMonad.Actions.CopyWindow        as CW
 import           XMonad.Actions.CycleWS
 import qualified XMonad.Actions.DwmPromote        as DwmP
 import qualified XMonad.Actions.DynamicWorkspaces as DW
@@ -124,7 +125,7 @@ genericKeys conf = [
     , ("<F12>", sendMessage ToggleStruts >> refresh)
 
       -- Windows
-    , ("S-c", kill)
+    , ("S-c", CW.kill1)         -- kill just one copy of the window
     , ("C-S-c", WithAll.killAll)
 
     , ("x", SUB.submap $ EZ.mkKeymap conf $ concat
