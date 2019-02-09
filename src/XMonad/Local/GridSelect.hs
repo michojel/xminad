@@ -1,7 +1,9 @@
 module XMonad.Local.GridSelect (
       gsConfig
     , gsw
-    , gswShift
+    , gswinDo
+    , gswinShift
+    , gswspDo
     ) where
 
 import Control.Monad
@@ -69,19 +71,23 @@ gsConfig = def
     navHandler = const navigation'
 
 gsw :: X()
-gsw = gsw' W.greedyView
-  where
-    gsw' :: (WorkspaceId -> WindowSet -> WindowSet) -> X ()
-    gsw' viewFunc = withWindowSet $ \ws -> do
+gsw = gswspDo W.greedyView
+
+-- gswspDo :: (Eq s, Eq i, Eq a) => (i -> W.StackSet i l a s sd -> W.StackSet i l a s sd) -> X()
+gswspDo :: (WorkspaceId -> WindowSet -> WindowSet) -> X ()
+gswspDo viewFunc = withWindowSet $ \ws -> do
         let wss = map W.tag $ fHidden ws ++ map W.workspace (W.current ws : W.visible ws)
         gridselect gsConfig (zip wss wss) >>= flip whenJust (switchTopic' viewFunc)
-    fHidden = filter ((/=) "NSP" . W.tag) . W.hidden
+    where
+        fHidden = filter ((/=) "NSP" . W.tag) . W.hidden
 
-gswShift :: X()
-gswShift = gridselectWorkspace gsConfig (\ws -> W.greedyView ws . W.shift ws)
+gswinShift :: X()
+gswinShift = gswinDo (\ws -> W.greedyView ws . W.shift ws)
 
-switchTopic' :: (WorkspaceId -> WindowSet -> WindowSet)
-                -> TS.Topic -> X ()
+gswinDo :: (WorkspaceId -> WindowSet -> WindowSet) -> X ()
+gswinDo = gridselectWorkspace gsConfig
+
+switchTopic' :: (WorkspaceId -> WindowSet -> WindowSet) -> TS.Topic -> X ()
 switchTopic' viewMethod topic = do
    windows $ viewMethod topic
    wins <- gets (W.integrate' . W.stack . W.workspace . W.current . windowset)

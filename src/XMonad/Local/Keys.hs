@@ -1,4 +1,5 @@
 {-# LANGUAGE UnicodeSyntax #-}
+
 module XMonad.Local.Keys (
       emacsKeys
     , keyBindings
@@ -66,6 +67,7 @@ emacsKeys = \conf -> map prefix (keysMissingPrefix conf) ++ unprefixedKeys
     keysMissingPrefix conf = concat
         [ genericKeys conf
         , switchWorkspaceKeys
+        , wspActionKeys conf
         , switchScreenKeys
         ]
 
@@ -125,8 +127,36 @@ genericKeys conf = [
     , ("<F12>", sendMessage ToggleStruts >> refresh)
 
       -- Windows
-    , ("S-c", CW.kill1)         -- kill just one copy of the window
+    , ("S-c", CW.kill1)    -- kill just one copy of the window
+    , ("M-c", CW.killAllOtherCopies)   
     , ("C-S-c", WithAll.killAll)
+    -- copy window
+    , ("c", SUB.submap $ EZ.mkKeymap conf $ let
+                -- for any given key and action, allow both modm-prefixed and unprefixed key combos
+                modcompose (k, a) t = (modm ++ "-" ++ k, a):(k, a):t
+        in
+            foldr modcompose [] $ concat $
+                -- to particular workspace by index
+                [ [ (show i,         withNthWorkspace CW.copy         ((i + 9) `mod` 10))
+                  , ("S-" ++ show i, withNthWorkspace copyWinAndFocus ((i + 9) `mod` 10))]
+                | i <- [1..9] ++ [0]
+                ] ++
+                -- to a screen
+                -- NOTE: the copied window will not be visible on a non-focused screen
+                [ [ (k,         screenWorkspace i >>= flip whenJust (windows . CW.copy))
+                  , ("S-" ++ k, screenWorkspace i >>= flip whenJust (windows . (\ws -> W.view ws . CW.copy ws))) ]
+                | (k, i) <- zip ["w", "e", "r"] [0..]
+                ] ++ -- to all workspaces
+                [ [ ("a", windows CW.copyToAll)
+                    -- to a new workspace
+                    -- TODO: make this work
+                  -- , ("n", Local.getpromptedNewWorkspace False)
+                    -- to a workspace selected with grid select
+                  , ("s",   Local.gswinDo CW.copy)
+                  , ("S-s", Local.gswinDo copyWinAndFocus)
+                  ]
+                ])
+
 
     , ("x", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ k, a)]
@@ -157,7 +187,7 @@ genericKeys conf = [
     , ("S-n", Local.promptedNewWorkspace True)
     , ("S-<Backspace>", WithAll.killAll >> DW.removeWorkspace)
     , ("S-r", DW.renameWorkspace xpConfig)
-    , ("c", TD.changeDir xpConfig)
+    , ("S-c", TD.changeDir xpConfig)
 
     , ("S-r", Local.swapScreens)
 
@@ -166,7 +196,7 @@ genericKeys conf = [
     -- Grid Select workspace
     , ("i", GS.goToSelected Local.gsConfig)
     , ("s", Local.gsw)
-    , ("S-s", Local.gswShift)
+    , ("S-s", Local.gswinShift)
 
       -- xmonad
     , ("q", SUB.submap $ EZ.mkKeymap conf $ concat
@@ -230,21 +260,47 @@ switchWorkspaceSubmap conf base = SUB.submap $ EZ.mkKeymap conf
             [ [ -- switch to (base + i)th workspace
                 (W.greedyView, m)
                 -- shift focused to (base + i)th workspace
-              , (\ws -> W.greedyView ws . W.shift ws, m ++ "S-")
+              , (shiftWinAndFocus, m ++ "S-")
               ]
             | m <- ["", modm ++ "-"]
             ]
         ]
 
-switchWorkspaceKeys ∷ [(String, X())]
+switchWorkspaceKeys ∷  [(String, X())]
 switchWorkspaceKeys =
     [ (m ++ show i, withNthWorkspace f ((i + 9) `mod` 10))
     | i <- [1..9] ++ [0]
     , (f, m) <- [ (W.greedyView, "") -- switch to ith workspace
                 -- shift focused to ith workspace
-                , (\ws -> W.greedyView ws . W.shift ws, "S-")
+                , (shiftWinAndFocus, "S-")
                 ]
     ]
+
+
+wspActionKeys ∷ XConfig l -> [(String, X())]
+wspActionKeys conf =
+    [ ("C-" ++ show i, wspActionSubmap conf ((i + 9) `mod` 10))
+    | i <- [1..9] ++ [0]
+    ]
+
+wspActionSubmap ∷ XConfig m -> Int -> X()
+wspActionSubmap conf n = SUB.submap $ EZ.mkKeymap conf $ concat
+        [ [(k, a), ("C-" ++ modm ++ "-" ++ k, a), (modm ++ "-" ++ k, a)]
+        | (k, a) <- [ ("c", wspDo   CW.copy)
+                    , ("a", windows CW.copyToAll)
+                    , ("s", wspDo   W.shift)
+                    , ("f", wspDo   shiftWinAndFocus)
+                    ]
+        ]
+    where
+        wspDo :: (String → WindowSet → WindowSet) → X ()
+        wspDo f = withNthWorkspace f n
+
+shiftWinAndFocus :: (Ord a, Eq s, Eq i) => i -> W.StackSet i l a s sd -> W.StackSet i l a s sd
+shiftWinAndFocus ws = W.greedyView ws . W.shift ws
+
+copyWinAndFocus :: (Ord a, Eq s, Eq i) => i -> W.StackSet i l a s sd -> W.StackSet i l a s sd
+copyWinAndFocus ws = W.greedyView ws . CW.copy ws
 
 switchScreenKeys ∷ [(String, X())]
 switchScreenKeys =

@@ -34,6 +34,16 @@ promptedNewWorkspace shiftFocused = PI.inputPrompt Local.xpConfig "New Workspace
     action True = newWorkspaceDir shiftto
     action _    = newWorkspaceDir goto
 
+{-
+getPromptedNewWorkspace :: X (Maybe WorkspaceId)
+getPromptedNewWorkspace = PI.inputPrompt Local.xpConfig "New Workspace"
+                                  PI.?+ action shiftFocused
+  where
+    action :: Bool -> String -> X()
+    action True = newWorkspaceDir shiftto
+    action _    = newWorkspaceDir goto
+-}
+
 newWorkspace :: WorkspaceId -> X()
 newWorkspace w = do
     exists <- widExists w
@@ -54,9 +64,7 @@ newWorkspaceDir gotofunc w = do
          ["mail", "chat", "virt", "vbox", "web"] ++ M.keys Local.topicDirs
 
 widExists :: WorkspaceId -> X Bool
-widExists wid = do
-    xs <- get
-    return $ widExists' wid (windowset xs)
+widExists wid = widExists' wid . windowset <$> get
   where
     widExists' :: WorkspaceId -> W.StackSet WorkspaceId l a s sd -> Bool
     widExists' w ws = w `elem` map W.tag (W.workspaces ws)
