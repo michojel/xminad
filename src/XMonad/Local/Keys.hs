@@ -129,37 +129,34 @@ genericKeys conf = [
 
       -- Windows
     -- copy window
-    , ("c", SUB.submap $ EZ.mkKeymap conf $ let
-                -- for any given key and action, allow both modm-prefixed and unprefixed key combos
-                modcompose (k, a) t = (modm ++ "-" ++ k, a):(k, a):t
-        in
-            foldr modcompose [] $ concat $
-                -- to particular workspace by index
-                [ [ (show i,         withNthWorkspace CW.copy         ((i + 9) `mod` 10))
-                  , ("S-" ++ show i, withNthWorkspace copyWinAndFocus ((i + 9) `mod` 10))]
-                | i <- [1..9] ++ [0]
-                ] ++
-                -- to a screen
-                -- NOTE: the copied window will not be visible on a non-focused screen
-                [ [ (k,         screenWorkspace i >>= flip whenJust (windows . CW.copy))
-                  , ("S-" ++ k, screenWorkspace i >>= flip whenJust (windows . (\ws -> W.view ws . CW.copy ws))) ]
-                | (k, i) <- zip ["w", "e", "r"] [0..]
-                ] ++ -- to all workspaces
-                [ [ ("a", windows CW.copyToAll)
-                    -- to a new workspace
-                    -- TODO: make this work
-                  -- , ("n", Local.getpromptedNewWorkspace False)
-                    -- to a workspace selected with grid select
-                  , ("s",   Local.gswinDo CW.copy)
-                  , ("S-s", Local.gswinDo copyWinAndFocus)
-                  ]
-                ])
+    , ("c", SUB.submap $ EZ.mkKeymap conf $ extendKeyListForMod $ concat $
+        -- to particular workspace by index
+        [ [ (show i,         withNthWorkspace CW.copy         ((i + 9) `mod` 10))
+          , ("S-" ++ show i, withNthWorkspace copyWinAndFocus ((i + 9) `mod` 10))]
+        | i <- [1..9] ++ [0]
+        ] ++
+        -- to a screen
+        -- NOTE: the copied window will not be visible on a non-focused screen
+        [ [ (k,         screenWorkspace i >>= flip whenJust (windows . CW.copy))
+          , ("S-" ++ k, screenWorkspace i >>= flip whenJust (windows . (\ws -> W.view ws . CW.copy ws))) ]
+        | (k, i) <- zip ["w", "e", "r"] [0..]
+        ] ++ -- to all workspaces
+        [ [ ("a", windows CW.copyToAll)
+            -- to a new workspace
+            -- TODO: make this work
+          -- , ("n", Local.getpromptedNewWorkspace False)
+            -- to a workspace selected with grid select
+          , ("s",   Local.gswinDo CW.copy)
+          , ("S-s", Local.gswinDo copyWinAndFocus)
+          ]
+        ])
     -- kill window
     , ("x", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
         | (k, a) <- [ ("s",        Local.signalCurrentWindow sigSTOP)
                     , ("c",        Local.signalCurrentWindow sigCONT)
                     , ("x",        safeSpawnProg "xkill")
+                    , ("k",        kill)        -- kill all the copies of the window
                     , ("<Return>", CW.kill1)    -- kill just one copy of the window
                     , ("1",        CW.kill1)    -- kill just one copy of the window
                     , ("o",        CW.killAllOtherCopies)   
@@ -254,6 +251,12 @@ genericKeys conf = [
     , ("<XF86Forward>", io $ fmap fromRight (MPD.withMPD MPD.next))
     , ("<XF86Back>",    io $ fmap fromRight (MPD.withMPD MPD.previous))
     ]
+
+extendKeyListForMod :: [(String, b)] -> [(String, b)]
+extendKeyListForMod = foldr modcompose []
+    where
+        -- for any given key and action, allow both modm-prefixed and unprefixed key combos
+        modcompose (k, a) t = (modm ++ "-" ++ k, a):(k, a):t
 
 switchWorkspaceSubmap ∷ XConfig l → Int → X()
 switchWorkspaceSubmap conf base = SUB.submap $ EZ.mkKeymap conf
