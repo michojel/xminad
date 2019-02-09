@@ -127,9 +127,6 @@ genericKeys conf = [
     , ("<F12>", sendMessage ToggleStruts >> refresh)
 
       -- Windows
-    , ("S-c", CW.kill1)    -- kill just one copy of the window
-    , ("M-c", CW.killAllOtherCopies)   
-    , ("C-S-c", WithAll.killAll)
     -- copy window
     , ("c", SUB.submap $ EZ.mkKeymap conf $ let
                 -- for any given key and action, allow both modm-prefixed and unprefixed key combos
@@ -156,13 +153,16 @@ genericKeys conf = [
                   , ("S-s", Local.gswinDo copyWinAndFocus)
                   ]
                 ])
-
-
+    -- kill window
     , ("x", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ k, a)]
         | (k, a) <- [ ("s", Local.signalCurrentWindow sigSTOP)
                     , ("c", Local.signalCurrentWindow sigCONT)
                     , ("x", spawn "xkill")
+                    , ("<Enter>", CW.kill1)    -- kill just one copy of the window
+                    , ("1",       CW.kill1)    -- kill just one copy of the window
+                    , ("o",       CW.killAllOtherCopies)   
+                    , ("a",       WithAll.killAll)   
                     ]
         ])
 
