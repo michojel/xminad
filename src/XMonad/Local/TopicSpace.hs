@@ -117,7 +117,7 @@ topicConfig = TS.def
         , ("opera", spawn "opera")
         , ("pdf", spawn "atril")
         , ("chat", spawn "telegram-desktop"
-                >> spawn "whatsapp" >> spawn "wireweb" >> spawn "skype")
+                >> spawn "whatsapp" >> spawn "wireweb")
         , ("vbox", spawn "VirtualBox")
         , ("virt", spawn "virt-manager")
         , ("gimp", spawn "gimp")
