@@ -49,7 +49,7 @@ xpConfig = P.def
     }
 
 browser ∷ String
-browser = "chrome-launcher"
+browser = "3w"
 
 vimBundlePath ∷ String
 vimBundlePath = "~/.config/nvim/plugged"

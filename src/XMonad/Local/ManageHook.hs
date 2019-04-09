@@ -80,6 +80,7 @@ floatManageHook = composeOne (concat
                 , "MPlayer"
                 , "Wine"
                 , "Galculator"
+                , "Nm-connection-editor"
                 ]
     myCTFloats = [ ("Skype", "Information")
                  , ("Firefox", "Certificate Manager")

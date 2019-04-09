@@ -146,6 +146,7 @@ genericKeys conf = [
             -- TODO: make this work
           -- , ("n", Local.getpromptedNewWorkspace False)
             -- to a workspace selected with grid select
+            -- TODO: copy to previous namespace (<Tab>)
           , ("s",   Local.gswinDo CW.copy)
           , ("S-s", Local.gswinDo copyWinAndFocus)
           ]
