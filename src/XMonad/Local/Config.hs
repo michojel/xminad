@@ -2,6 +2,10 @@
 
 module XMonad.Local.Config where
 
+import qualified Data.ByteString.UTF8 as BSU
+import Data.List                    (isPrefixOf)
+import Text.ShellEscape             (escape)
+
 import qualified XMonad.Prompt   as P
 import qualified XMonad.StackSet as W
 
@@ -9,7 +13,30 @@ explorer ∷ String
 explorer = "pcmanfm-qt"
 
 terminal ∷ String
-terminal = "qterminal"
+terminal = "terminator"
+
+-- class parameter does not work for terminator
+mkTermArgs :: Maybe String -> Maybe FilePath -> Maybe String -> Maybe String 
+                          -> Maybe String -> [String]
+mkTermArgs mprofile mwd mrole mtitle mcmd = foldr combine [] args
+  where
+    args = [ ("-p", mprofile)
+           , ("--working-directory", mwd)
+           , ("-r", mrole)
+           , ("-T", mtitle)
+           , ("-e", mcmd)
+           ]
+    combine :: (String, Maybe String) -> [String] -> [String]
+    combine (_, Nothing) b       = b
+    combine (flag, Just value) b = b ++ mkArg flag value
+    mkArg flag value | "--" `isPrefixOf` flag = [flag ++ "=" ++ value]
+                     | otherwise              = [flag, value]
+
+mkTermCmd :: Maybe String -> Maybe FilePath -> Maybe String -> Maybe String 
+                          -> Maybe String -> String
+mkTermCmd mprofile mwd mrole mtitle mcmd = unwords
+        $ map ((\t -> "\"" ++ t ++ "\"") . BSU.toString . escape . BSU.fromString)
+        $ terminal : mkTermArgs mprofile mwd mrole mtitle mcmd
 
 xpConfig ∷ P.XPConfig
 xpConfig = P.def

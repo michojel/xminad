@@ -38,6 +38,7 @@ import qualified XMonad.Prompt.Ssh                as PSsh
 import qualified XMonad.StackSet                  as W
 import qualified XMonad.Util.EZConfig             as EZ
 import           XMonad.Util.NamedScratchpad
+import           XMonad.Util.Run
 import           XMonad.Util.WorkspaceCompare     (getSortByIndex)
 
 -- local modules **************************************************************
@@ -75,11 +76,11 @@ emacsKeys = \conf -> map prefix (keysMissingPrefix conf) ++ unprefixedKeys
 genericKeys ∷ XConfig l → [(String, X())]
 genericKeys conf = [
       -- Applications
-      (";", Local.spawnShell Nothing)
+      (";", Local.spawnShell)
     , ("S-;", Local.spawnExplorer)
     , ("S-.", namedScratchpadAction namedScratchpads  "guake")
     , ("p", Shell.shellPrompt xpConfig)
-    , ("S-p", spawn "lxqt-runner")
+    , ("S-p", safeSpawnProg "lxqt-runner")
 
       -- Layouts
     , ("<Space>", sendMessage NextLayout)
@@ -155,33 +156,33 @@ genericKeys conf = [
                 ])
     -- kill window
     , ("x", SUB.submap $ EZ.mkKeymap conf $ concat
-        [ [(k, a), (modm ++ k, a)]
-        | (k, a) <- [ ("s", Local.signalCurrentWindow sigSTOP)
-                    , ("c", Local.signalCurrentWindow sigCONT)
-                    , ("x", spawn "xkill")
-                    , ("<Enter>", CW.kill1)    -- kill just one copy of the window
-                    , ("1",       CW.kill1)    -- kill just one copy of the window
-                    , ("o",       CW.killAllOtherCopies)   
-                    , ("a",       WithAll.killAll)   
+        [ [(k, a), (modm ++ "-" ++ k, a)]
+        | (k, a) <- [ ("s",        Local.signalCurrentWindow sigSTOP)
+                    , ("c",        Local.signalCurrentWindow sigCONT)
+                    , ("x",        safeSpawnProg "xkill")
+                    , ("<Return>", CW.kill1)    -- kill just one copy of the window
+                    , ("1",        CW.kill1)    -- kill just one copy of the window
+                    , ("o",        CW.killAllOtherCopies)   
+                    , ("a",        WithAll.killAll)   
                     ]
         ])
 
     -- Compositing
     , ("S-x", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-S-" ++ k, a)]
-        | (k, a) <- [ ("r", spawn "systemctl --user restart compositing")
-                    , ("s", spawn "systemctl --user stop compositing")]
+        | (k, a) <- [ ("r", safeSpawn "systemctl" ["--user", "restart", "compositing"])
+                    , ("s", safeSpawn "systemctl" ["--user", "stop", "compositing"])]
         ])
 
       -- Workspaces
-    , ("<Tab>", Local.toggleWS)
-    , ("S-<Tab>", Local.toggleWSSwitch)
+    , ("<Tab>",     Local.toggleWS)
+    , ("S-<Tab>",   Local.toggleWSSwitch)
     , ("C-<Right>", moveTo Next nonEmptyWs)
     , ("]",         moveTo Next $ WSIs nonEmptyWsPred)
     , ("C-<Left>",  moveTo Prev $ WSIs nonEmptyWsPred)
     , ("[",         moveTo Prev $ WSIs nonEmptyWsPred)
-    , ("-", switchWorkspaceSubmap conf 10)
-    , ("S--", switchWorkspaceSubmap conf 20)
+    , ("-",         switchWorkspaceSubmap conf 10)
+    , ("S--",       switchWorkspaceSubmap conf 20)
 
     , ("n", Local.promptedNewWorkspace False)
     , ("S-n", Local.promptedNewWorkspace True)
@@ -201,16 +202,18 @@ genericKeys conf = [
       -- xmonad
     , ("q", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
-        | (k, a) <- [ ("r", spawn "pkill -x lxqt-panel" >> spawn "pkill -x xmobar" >> Op.restart)
-                    , ("u", spawn "undock")
-                    , ("S-u", spawn "undock -s")
-                    , ("e", spawn "monitor-hotplug")
-                    , ("s", spawn "lxqt-leave")
-                    , ("q", spawn "lxqt-leave --logout")
-                    , ("l", spawn "xautolock -locknow")
+        | (k, a) <- [ ("r", safeSpawn     "pkill" ["-x", "lxqt-panel"]
+                         >> safeSpawn     "pkill" ["-x", "xmobar"]
+                         >> Op.restart)
+                    , ("u", safeSpawnProg "undock")
+                    , ("S-u", safeSpawn   "undock" ["-s"])
+                    , ("e", safeSpawnProg "monitor-hotplug")
+                    , ("s", safeSpawnProg "lxqt-leave")
+                    , ("q", safeSpawn     "lxqt-leave" ["--logout"])
+                    , ("l", safeSpawn     "xautolock" ["-locknow"])
                     ]
         ])
-    , ("C-q", spawn "xautolock -locknow")
+    , ("C-q", safeSpawn "xautolock" ["-locknow"])
 
     -- namedScratchpads
     , ("C-S-h", namedScratchpadAction namedScratchpads "htop")
@@ -226,7 +229,7 @@ genericKeys conf = [
     , ("S-h", PSsh.sshPrompt xpConfig)
     , ("v", Local.pastePlainTextFromClipboard)
     , ("d", Local.getAndPasteDigraph)
-    --, ("<Print>", spawn "xfce4-screenshooter")
+    --, ("<Print>", safeSpawnProg "xfce4-screenshooter")
     , ("y", SUB.submap $ EZ.mkKeymap conf $ concat
         [ [(k, a), (modm ++ "-" ++ k, a)]
         | (k, a) <- [ ("n",       io $ fmap fromRight (MPD.withMPD MPD.next))
@@ -241,13 +244,13 @@ genericKeys conf = [
                     , ("<Space>", io $ fmap fromRight (MPD.withMPD MPD.toggle))
                     ]
         ])
-    , ("<Print>", spawn "scrot -u ~/Pictures/%Y-%m-%d-%T-window-screenshot.png")
-    , ("C-<Print>", spawn "scrot -s ~/Pictures/%Y-%m-%d-%T-screenshot.png")
-    , ("S-<Print>", spawn "scrot ~/Pictures/%Y-%m-%d-%T-root-screenshot.png")
+    , ("<Print>",   unsafeSpawn "scrot -u ~/Pictures/%Y-%m-%d-%T-window-screenshot.png")
+    , ("C-<Print>", unsafeSpawn "scrot -s ~/Pictures/%Y-%m-%d-%T-screenshot.png")
+    , ("S-<Print>", unsafeSpawn "scrot ~/Pictures/%Y-%m-%d-%T-root-screenshot.png")
 
     -- MPD
     -- mov current playing song in mpd to thrash
-    , ("<Delete>", spawn "mpcrm")
+    , ("<Delete>",      safeSpawnProg "mpcrm")
     , ("<XF86Forward>", io $ fmap fromRight (MPD.withMPD MPD.next))
     , ("<XF86Back>",    io $ fmap fromRight (MPD.withMPD MPD.previous))
     ]
@@ -315,8 +318,8 @@ unprefixedKeys = [
       ("<XF86Calculator>",
          namedScratchpadAction namedScratchpads "calculator")
     , ("<XF86Mail>", TS.switchTopic topicConfig "mail")
-    , ("<XF86Terminal>", Local.spawnShell Nothing)
-    , ("<XF86Explorer>", spawn "Terminal")
+    , ("<XF86Terminal>", Local.spawnShell)
+    , ("<XF86Explorer>", Local.spawnExplorer)
     , ("<XF86HomePage>", TS.switchTopic topicConfig "web")
 
     -- mpc
@@ -331,15 +334,15 @@ unprefixedKeys = [
     , ("<XF86AudioLowerVolume>", void (lowerVolume 4))
 
     -- brightness
-    , ("<XF86MonBrightnessUp>",     spawn "xbacklight +10")
-    , ("<XF86MonBrightnessDown>",   spawn "xbacklight -10")
-    , ("S-<XF86MonBrightnessUp>",   spawn "xbacklight +20")
-    , ("S-<XF86MonBrightnessDown>", spawn "xbacklight -20")
-    , ("C-<XF86MonBrightnessUp>",   spawn "xbacklight -set 100")
-    , ("C-<XF86MonBrightnessDown>", spawn "xbacklight -set 0")
+    , ("<XF86MonBrightnessUp>",     safeSpawn "xbacklight" ["+10"])
+    , ("<XF86MonBrightnessDown>",   safeSpawn "xbacklight" ["-10"])
+    , ("S-<XF86MonBrightnessUp>",   safeSpawn "xbacklight" ["+20"])
+    , ("S-<XF86MonBrightnessDown>", safeSpawn "xbacklight" ["-20"])
+    , ("C-<XF86MonBrightnessUp>",   safeSpawn "xbacklight" ["-set", "100"])
+    , ("C-<XF86MonBrightnessDown>", safeSpawn "xbacklight" ["-set", "0"])
 
-    , ("C-S-<F9>", spawn "xset dpms force off && sleep 0.5 && xset dpms force on")
-    , ("<XF86Tools>", spawn "xset dpms force off && sleep 0.5 && xset dpms force on")
+    , ("C-S-<F9>", safeSpawn "xset" ["dpms", "force", "off", "&&", "sleep", "0.5", "&&", "xset", "dpms", "force", "on"])
+    , ("<XF86Tools>", safeSpawn "xset" ["dpms", "force", "off", "&&", "sleep", "0.5", "&&", "xset", "dpms", "force", "on"])
     ]
 
 withNthWorkspace ∷ (String → WindowSet → WindowSet) → Int → X ()

@@ -12,7 +12,7 @@ in xminad.overrideDerivation (attrs: rec {
   runtimeDependencies = [
     nixpkgs.haskellPackages.xmobar
         nixpkgs.pcmanfm-qt
-        nixpkgs.lxqt.qterminal
+        nixpkgs.terminator
         nixpkgs.tmux
         nixpkgs.vim
         nixpkgs.xorg.xbacklight

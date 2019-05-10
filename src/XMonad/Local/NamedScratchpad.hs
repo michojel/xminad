@@ -18,10 +18,10 @@ namedScratchpads =
         , NS "charmap" "charmap" (className =? "Gucharmap") cFloating
         , NS "alarm" "alarm-clock-applet"
             (className =? "Alarm-clock-applet") cFloating
-        , stns "htop" "htop" cTopFloat
-        , stns "calculator" "python" cFloating
-        , stns "guake" "tmux -c 'tmuxinator start guake'" cBottomFloat
-        , stns "man-browser" "tmux -c 'tmuxinator start man-browser'"  cTopFloat
+        , termNS "htop" "htop" cTopFloat
+        , termNS "calculator" "python" cFloating
+        , termNS "guake" "tmux -c 'tmuxinator start guake'" cBottomFloat
+        , termNS "man-browser" "tmux -c 'tmuxinator start man-browser'"  cTopFloat
         , NS "volctl" "pavucontrol" (className =? "pavuctonrol-qt") cFloating
         , NS "tabsoutliner" (browser ++ " Default --app-id=" ++ tabsOutlinerAppID)
            (matchChrome <&&> appName =? tabsOutlinerAppName) cBigFloat
@@ -33,7 +33,9 @@ namedScratchpads =
         cTopFloat = customFloating $ W.RationalRect (1/5) (1/32) (3/5) (1/2)
         cBottomFloat = customFloating $ W.RationalRect (1/5) (6/11) (3/5) (4/11)
 
-        stns ∷ String → String → XMonad.Core.ManageHook → NamedScratchpad
-        stns sname scmd = NS sname
-            (terminal ++ " -c st-" ++ sname ++ " -n st-" ++ sname ++ " " ++ scmd)
-            (appName =? ("st-" ++ sname) <||> className =? ("st-" ++ sname))
+        termNS ∷ String → String → XMonad.Core.ManageHook → NamedScratchpad
+        termNS sname scmd = NS sname
+            (mkTermCmd (Just "named-scratchpad") Nothing
+                (Just $ "named-scratchpad-" ++ sname) (Just $ "Named Scratchpad " ++ sname)
+                (Just scmd))
+            (role =? ("named-scratchpad-" ++ sname))

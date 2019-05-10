@@ -5,6 +5,7 @@ module XMonad.Local.Actions where
 
 import           Control.Monad
 import           Data.Maybe
+import           HSH.ShellEquivs              as SE
 import           System.Posix.Directory
 import           System.Posix.Env
 import           System.Posix.Signals         (Signal, signalProcess)
@@ -12,6 +13,7 @@ import           System.Posix.Signals         (Signal, signalProcess)
 import           XMonad
 import qualified XMonad.Actions.TopicSpace    as TS
 import qualified XMonad.Util.Paste            as Paste
+import qualified XMonad.Util.Run              as Run
 import qualified XMonad.Util.WindowProperties as WP
 
 -- local modules **************************************************************
@@ -29,23 +31,39 @@ spawnExplorer = do
 spawnExplorerIn ∷ String → X ()
 spawnExplorerIn dir = spawn $ Local.explorer ++ " " ++ dir
 
-spawnShell ∷ Maybe String → X()
-spawnShell = spawnShellIn ""
+spawnTerm :: Maybe String -> Maybe String -> Maybe String -> Maybe String
+                          -> Maybe String -> X()
+spawnTerm mprofile mwd mrole mtitle mcmd = do
+    dirs <- liftIO $ maybe (io $ return []) SE.glob mwd
+    mwd' <- io $ return $ if null dirs then Nothing else Just (head dirs)
+    Run.safeSpawn Local.terminal
+        $ Local.mkTermArgs mprofile mwd' mrole mtitle mcmd
 
-spawnShellIn ∷ TS.Dir → Maybe String → X()
-spawnShellIn dir command = do
-    t <- asks (terminal . config)
-    spawn $ cmd' t
-  where
-    -- TODO: escape quotes in the c command
-    run (Just c) = " -e '" ++ c ++ "'"
-    run Nothing  = ""
+spawnShell ∷ X()
+spawnShell = Run.safeSpawnProg Local.terminal
 
-    cmd' t | dir == "" = t ++ run command
-           | otherwise = "cd " ++ dir ++ " && " ++ t ++ run command
+spawnInShell ∷ String → X()
+spawnInShell = spawnTerm Nothing Nothing Nothing Nothing . Just
+
+spawnShellIn ∷ TS.Dir → X()
+spawnShellIn dir = spawnTerm Nothing (Just dir) Nothing Nothing Nothing
+
+spawnInShellIn ∷ TS.Dir → String -> X()
+spawnInShellIn dir cmd = spawnTerm Nothing (Just dir) Nothing Nothing (Just cmd)
 
 spawnTmux ∷ String → X()
-spawnTmux project = spawnShell $ Just ("tmux -c 'tmuxinator " ++ project ++ "'")
+spawnTmux project = spawnInShell $ "tmux -c 'tmuxinator " ++ project ++ "'"
+
+spawnSteamGameInWine :: Int -> X()
+spawnSteamGameInWine gameId = Run.safeSpawn "wine"
+        [ "C:/Program Files (x86)/Steam/Steam.exe"
+        , "steam://rungameid/" ++ show gameId]
+
+spawnSteamGame :: Int -> X()
+spawnSteamGame gameId = Run.safeSpawn "steam" ["steam://rungameid/" ++ show gameId]
+
+openURL :: String -> X()
+openURL url = Run.safeSpawn Local.browser ["-n", url]
 
 killWindowPID ∷ Signal → Window → X()
 killWindowPID s w = do

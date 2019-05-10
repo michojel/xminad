@@ -10,6 +10,7 @@ module XMonad.Local.TopicSpace (
 import qualified Data.Map                  as M
 import           XMonad                    hiding (workspaces)
 import qualified XMonad.Actions.TopicSpace as TS
+import           XMonad.Util.Run
 
 -- local modules **************************************************************
 import           XMonad.Local.Actions
@@ -103,49 +104,54 @@ topicConfig ∷ TS.TopicConfig
 topicConfig = TS.def
     { TS.topicDirs = topicDirs
     , TS.topicActions = M.fromList $
-        [ ("music", spawn "gmpc" >> spawnShellIn "~/Music" (Just "ncmpcpp"))
-        , ("anki", spawn "anki -b ~/Documents/memory/anki -p synchronized")
-        , ("panki", spawn "panki")
-        , ("rhanki", spawn "rhanki")
-        , ("incognito", spawn $ browser ++ " -i")
-        , ("mail", spawn "gmail")
-        , ("wmail", spawn "rhgmail" >> spawn "sapmail")
-        , ("web", spawn browser)
-        , ("wchat", spawn "pidgin" >> spawn "slack" >> spawn "rhchat")
-        , ("work", spawn $ browser ++ " RedHat")
-        , ("firefox", spawn "firefox")
-        , ("opera", spawn "opera")
-        , ("pdf", spawn "atril")
-        , ("chat", spawn "telegram-desktop"
-                >> spawn "whatsapp" >> spawn "wireweb")
-        , ("vbox", spawn "VirtualBox")
-        , ("virt", spawn "virt-manager")
-        , ("gimp", spawn "gimp")
-        , ("ebook", spawn "calibre")
-        , ("video", spawn "smplayer")
-        , ("bank", spawn (browser ++ " -w https://www.mojebanka.cz/InternetBanking/"))
-        , ("p2p", spawn "deluge-gtk")
-        , ("hwdata",
-              spawnShell Nothing >>
-              spawnShellIn "~/fedora-scm/hwdata" Nothing >>
-              spawnShellIn "~/rhel-scm/hwdata" Nothing)
-        , ("hdparm", spawnShell Nothing >>
-              spawnShellIn "~/fedora-scm/hdparm" Nothing >>
-              spawnShellIn "~/rhel-scm/hdparm" Nothing)
-        , ("scripts", spawnShell Nothing >> spawnShell Nothing)
-        , ("ciV", spawn "launch-ciV.sh -m -b")
-        , ("scrum", spawn $ browser ++ " https://bluejeans.com/3024462685/")
-        , ("BG", spawn "steam steam://rungameid/228280" >>
-                spawn (browser ++ " -n http://slovnik.seznam.cz/de-cz/"))
-        , ("gothic", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/65540")
-        , ("morrowind", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/22320")
-        , ("witcher", spawn "wine 'C:/Program Files (x86)/Steam/Steam.exe' steam://rungameid/20900" >>
-                spawn (browser ++ " -n http://slovnik.seznam.cz/de-cz/"))
-        , ("drive", spawnShell Nothing >> spawnExplorerIn "~/gdrive")
-        , ("calendar", spawn "calendar" >> spawn "rhcalendar")
-        , ("mymoney", spawn "mymoney")
-        , ("rmtdesk", spawn $ browser ++ " -o Default --app-id=" ++ remoteDesktopAppID)]
-        ++ map (, spawnShell Nothing >> spawnShell Nothing)
+        [ ("music",     safeSpawnProg "gmpc"
+                     >> spawnInShellIn "~/Music" "ncmpcpp")
+        , ("anki",      unsafeSpawn "anki -b ~/Documents/memory/anki -p synchronized")
+        , ("panki",     safeSpawnProg "panki")
+        , ("rhanki",    safeSpawnProg "rhanki")
+        , ("incognito", safeSpawn browser ["-i"])
+        , ("mail",      safeSpawnProg "gmail")
+        , ("wmail",     safeSpawnProg "rhgmail"
+                     >> safeSpawnProg "sapmail")
+        , ("web",       safeSpawnProg browser)
+        , ("wchat",     safeSpawnProg "pidgin"
+                     >> safeSpawnProg "slack"
+                     >> safeSpawnProg "rhchat")
+        , ("work",      safeSpawn browser ["RedHat"])
+        , ("firefox",   safeSpawnProg "firefox")
+        , ("opera",     safeSpawnProg "opera")
+        , ("pdf",       safeSpawnProg "atril")
+        , ("chat",      safeSpawnProg "telegram-desktop"
+                     >> safeSpawnProg "whatsapp"
+                     >> safeSpawnProg "wireweb")
+        , ("vbox",      safeSpawnProg "VirtualBox")
+        , ("virt",      safeSpawnProg "virt-manager")
+        , ("gimp",      safeSpawnProg "gimp")
+        , ("ebook",     safeSpawnProg "calibre")
+        , ("video",     safeSpawnProg "smplayer")
+        , ("p2p",       safeSpawnProg "deluge-gtk")
+        , ("hwdata",    spawnShell
+                     >> spawnShellIn "~/fedora-scm/hwdata"
+                     >> spawnShellIn "~/rhel-scm/hwdata")
+        , ("hdparm",    spawnShell
+                     >> spawnShellIn "~/fedora-scm/hdparm"
+                     >> spawnShellIn "~/rhel-scm/hdparm")
+        , ("scripts",   spawnShell
+                     >> spawnShell)
+        , ("ciV",       safeSpawn "launch-ciV.sh" ["-m", "-b"])
+        , ("scrum",     openURL "https://bluejeans.com/3024462685/")
+        , ("BG",        safeSpawn "steam" ["steam://rungameid/228280"]
+                     >> openURL "http://slovnik.seznam.cz/de-cz/")
+        , ("gothic",    spawnSteamGameInWine 65540)
+        , ("morrowind", spawnSteamGameInWine 22320)
+        , ("witcher",   spawnSteamGameInWine 20900
+                     >> openURL "http://slovnik.seznam.cz/de-cz/")
+        , ("drive",     spawnShell
+                     >> spawnExplorerIn "~/gdrive")
+        , ("calendar",  safeSpawnProg "calendar"
+                     >> safeSpawnProg "rhcalendar")
+        , ("mymoney",   safeSpawnProg "mymoney")]
+        ++ map (, spawnShell >> spawnShell)
             [ "remote", "devel", "admin" ]
         ++ map (\w -> (w, spawnTmux w)) tmuxProjects
 
