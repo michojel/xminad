@@ -21,7 +21,7 @@ in xminad.overrideDerivation (attrs: rec {
      ];
 
   buildInputs = attrs.buildInputs ++ [makeWrapper imagemagick];
-  configureFlags = attrs.configureFlags ++ ["--datasubdir="];
+  configureFlags = attrs.configureFlags ++ ["--datasubdir=" "--flags" "nixos-user-binary"];
 
   postInstall = ''
     rm $out/bin/checkrc

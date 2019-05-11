@@ -1,5 +1,5 @@
-{ mkDerivation, alsa-mixer, base, containers, dbus, directory , filepath,
-  libmpd, MissingH, mtl, process, regex-compat , regex-posix, shell-escape,
+{ mkDerivation, alsa-mixer, base, containers, cpphs, dbus, directory, filepath,
+  hscolour, libmpd, MissingH, mtl, process, regex-compat , regex-posix, shell-escape,
   stdenv, temporary, text, turtle, unix, utf8-string, X11 , xmonad,
   xmonad-contrib, xmonad-extras
 }:
@@ -7,11 +7,12 @@ mkDerivation {
   pname = "xminad";
   version = "0.15.0.0";
   src = ./.;
-  isLibrary = true;
+  isLibrary = false;
   isExecutable = true;
+  configureFlags = ["--flags" "nixos-user-binary"];
   libraryHaskellDepends = [
-    alsa-mixer base containers dbus directory filepath libmpd MissingH mtl
-    process regex-compat regex-posix shell-escape temporary turtle unix
+    alsa-mixer base containers cpphs dbus directory filepath hscolour libmpd MissingH
+    mtl process regex-compat regex-posix shell-escape temporary turtle unix
     utf8-string xmonad xmonad-contrib xmonad-extras
   ];
   executableHaskellDepends = [

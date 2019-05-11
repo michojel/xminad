@@ -4,10 +4,10 @@ let
 
   inherit (nixpkgs) pkgs;
 
-  f = { mkDerivation, alsa-mixer, base, containers, dbus, directory
-      , filepath, libmpd, MissingH, mtl, process, regex-compat
-      , regex-posix, stack, stdenv, temporary, text, turtle, unix, utf8-string, X11
-      , xmonad, xmonad-contrib, xmonad-extras
+  f = { mkDerivation, alsa-mixer, base, containers, cpphs, dbus, directory
+      , filepath, hscolour, libmpd, MissingH, mtl, process, regex-compat
+      , regex-posix, stack, stdenv, temporary, text, turtle
+      , unix, utf8-string, X11 , xmonad, xmonad-contrib, xmonad-extras
       }:
       mkDerivation {
         pname = "xminad";
@@ -16,9 +16,9 @@ let
         isLibrary = true;
         isExecutable = true;
         libraryHaskellDepends = [
-          alsa-mixer base containers dbus directory filepath libmpd MissingH
-          mtl process regex-compat regex-posix stack temporary turtle unix utf8-string
-          xmonad xmonad-contrib xmonad-extras
+          alsa-mixer base containers cpphs dbus directory filepath libmpd MissingH
+          mtl process regex-compat regex-posix stack temporary
+          turtle unix utf8-string xmonad xmonad-contrib xmonad-extras
         ];
         executableHaskellDepends = [
           base containers dbus directory libmpd MissingH regex-compat

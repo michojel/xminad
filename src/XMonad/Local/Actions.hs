@@ -36,7 +36,7 @@ spawnTerm :: Maybe String -> Maybe FilePath -> Maybe String -> Maybe String
 spawnTerm mprofile mwd mrole mtitle mcmd = do
     dir <- liftIO $ maybe (io $ return Nothing)
                    (fmap (Just . Turtle.encodeString) . Turtle.realpath . Turtle.decodeString)
-	 				mwd
+                    mwd
     Run.safeSpawn Local.terminal
         $ Local.mkTermArgs mprofile dir mrole mtitle mcmd
 
