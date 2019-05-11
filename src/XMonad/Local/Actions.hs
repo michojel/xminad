@@ -5,10 +5,10 @@ module XMonad.Local.Actions where
 
 import           Control.Monad
 import           Data.Maybe
-import           HSH.ShellEquivs              as SE
 import           System.Posix.Directory
 import           System.Posix.Env
 import           System.Posix.Signals         (Signal, signalProcess)
+import qualified Turtle
 
 import           XMonad
 import qualified XMonad.Actions.TopicSpace    as TS
@@ -31,13 +31,14 @@ spawnExplorer = do
 spawnExplorerIn ∷ String → X ()
 spawnExplorerIn dir = spawn $ Local.explorer ++ " " ++ dir
 
-spawnTerm :: Maybe String -> Maybe String -> Maybe String -> Maybe String
+spawnTerm :: Maybe String -> Maybe FilePath -> Maybe String -> Maybe String
                           -> Maybe String -> X()
 spawnTerm mprofile mwd mrole mtitle mcmd = do
-    dirs <- liftIO $ maybe (io $ return []) SE.glob mwd
-    mwd' <- io $ return $ if null dirs then Nothing else Just (head dirs)
+    dir <- liftIO $ maybe (io $ return Nothing)
+                   (fmap (Just . Turtle.encodeString) . Turtle.realpath . Turtle.decodeString)
+	 				mwd
     Run.safeSpawn Local.terminal
-        $ Local.mkTermArgs mprofile mwd' mrole mtitle mcmd
+        $ Local.mkTermArgs mprofile dir mrole mtitle mcmd
 
 spawnShell ∷ X()
 spawnShell = Run.safeSpawnProg Local.terminal

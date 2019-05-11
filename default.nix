@@ -1,6 +1,6 @@
 { nixpkgs     ? import <nixpkgs> {}
 , lib         ? nixpkgs.lib
-, compiler    ? "ghc844"
+, compiler    ? "ghc864"
 , makeWrapper ? nixpkgs.makeWrapper
 , imagemagick ? nixpkgs.imagemagick
 }:

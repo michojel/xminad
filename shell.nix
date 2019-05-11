@@ -6,18 +6,18 @@ let
 
   f = { mkDerivation, alsa-mixer, base, containers, dbus, directory
       , filepath, libmpd, MissingH, mtl, process, regex-compat
-      , regex-posix, stdenv, temporary, text, unix, utf8-string, X11
+      , regex-posix, stack, stdenv, temporary, text, turtle, unix, utf8-string, X11
       , xmonad, xmonad-contrib, xmonad-extras
       }:
       mkDerivation {
         pname = "xminad";
-        version = "0.14.1.3";
+        version = "0.15.0.0";
         src = ./.;
         isLibrary = true;
         isExecutable = true;
         libraryHaskellDepends = [
           alsa-mixer base containers dbus directory filepath libmpd MissingH
-          mtl process regex-compat regex-posix temporary unix utf8-string
+          mtl process regex-compat regex-posix stack temporary turtle unix utf8-string
           xmonad xmonad-contrib xmonad-extras
         ];
         executableHaskellDepends = [
