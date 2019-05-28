@@ -22,7 +22,7 @@ namedScratchpads =
         , termNS "calculator" "python" cFloating
         , termNS "guake" "tmux -c 'tmuxinator start guake'" cBottomFloat
         , termNS "man-browser" "tmux -c 'tmuxinator start man-browser'"  cTopFloat
-        , NS "volctl" "pavucontrol" (className =? "pavuctonrol-qt") cFloating
+        , NS "volctl" "pavucontrol-qt" (className =? "pavucontrol-qt") cFloating
         , NS "tabsoutliner" (browser ++ " Default --app-id=" ++ tabsOutlinerAppID)
            (matchChrome <&&> appName =? tabsOutlinerAppName) cBigFloat
         ]
