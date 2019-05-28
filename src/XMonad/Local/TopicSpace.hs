@@ -90,6 +90,7 @@ homeScoped =
     , "play"
     , "remote"
     , "rmtdesk"
+    , "sap"
     , "scrum"
     , "vbox"
     , "virt"
@@ -150,7 +151,8 @@ topicConfig = TS.def
                      >> spawnExplorerIn "~/gdrive")
         , ("calendar",  safeSpawnProg "calendar"
                      >> safeSpawnProg "rhcalendar")
-        , ("mymoney",   safeSpawnProg "mymoney")]
+        , ("mymoney",   safeSpawnProg "mymoney")
+        , ("sap",       safeSpawn browser ["SAP"])]
         ++ map (, spawnShell >> spawnShell)
             [ "remote", "devel", "admin" ]
         ++ map (\w -> (w, spawnTmux w)) tmuxProjects

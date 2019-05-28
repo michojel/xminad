@@ -116,6 +116,7 @@ shiftManageHook = composeOne (concat
     , [matchChrome <&&> appName =? remoteDesktopAppName -?> doMyShift "rmtdesk"]
 
     , [className =? c                 -?> doMyShift "web"  | c <- myWebBrowsers ]
+    , [className =? "Firefox.SAP"     -?> doMyShift "sap"]
     , [title =? "ncmpcpp"             -?> doMyShift "music" ]
     , [className =? c                 -?> doMyShift "music" | c <- myMusicPlayers ]
     , [className =? c                 -?> doMyShift "video" | c <- myVideoPlayers ]
