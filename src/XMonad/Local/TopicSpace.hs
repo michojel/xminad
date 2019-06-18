@@ -123,6 +123,7 @@ topicConfig = TS.def
         , ("opera",     safeSpawnProg "opera")
         , ("pdf",       safeSpawnProg "atril")
         , ("chat",      safeSpawnProg "telegram-desktop"
+                     >> safeSpawnProg "skype"
                      >> safeSpawnProg "whatsapp"
                      >> safeSpawnProg "wireweb")
         , ("vbox",      safeSpawnProg "VirtualBox")
