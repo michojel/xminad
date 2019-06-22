@@ -76,6 +76,7 @@ homeScoped =
     , "calendar"
     , "chat"
     , "ciV"
+    , "cloud"
     , "earth"
     , "ebook"
     , "gimp"
