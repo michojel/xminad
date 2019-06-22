@@ -142,13 +142,14 @@ shiftManageHook = composeOne (concat
     , [matchChromeApp ["redhat"] app   -?> doMyShift "wmail" | app <- [rhgmailapp, sapmailapp]]
     , [matchChromeApp [] gmailapp -?> doMyShift "mail"]
     , [matchChromeApp [] app           -?> doMyShift "calendar"
-            | app <- [calendarapp, rhcalendarapp]]
-    , [matchChromeApp [] app          -?> doMyShift "docs"
-        | app <- [gdocsapp, gsheetsapp, rhgdocsapp, rhgsheetsapp]]
-    , [matchChromeApp [] app          -?> doMyShift "cloud" | app <- [gdriveapp, rhgdriveapp]]
+            | app <- [gcalendarapp, rhgcalendarapp]]
+    , [matchChromeApp [] app          -?> doMyShift "docs"    | app <- [gdocsapp, gsheetsapp]]
+    , [matchChromeApp ["redhat"] app  -?> doMyShift "rhdocs"  | app <- [rhgdocsapp, rhgsheetsapp]]
+    , [matchChromeApp [] app          -?> doMyShift "cloud"   | app <- [gdriveapp, megaapp]]
+    , [matchChromeApp ["redhat"] app  -?> doMyShift "rhcloud" | app <- [rhgdriveapp]]
     , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
     , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
-    , [matchChromeApp ["redhat"] rhchatapp -?> doMyShift "wchat"]
+    , [matchChromeApp ["redhat"] rhgchatapp   -?> doMyShift "wchat"]
     , [matchChromeApp [] app -?> doMyShift "chat"
             | app <- [whatsapp, wireapp, skypeapp]]
     , [matchChromeApp [] youtubeapp -?> doMyShift "play"]
@@ -163,16 +164,16 @@ shiftManageHook = composeOne (concat
     myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
     myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
 
-    calendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    gcalendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
     duolingoapp = "crx_aiahmijlpehemcpleichkcokhegllfjl"
     gdocsapp = "crx_bojccfnmcnekjgjhcaklmcgofnngpjcl"
     gdriveapp = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
     gmailapp = "crx_pjkljhegncpnkpknbcohdijeoejaedia"
-    -- gmapsapp = "crx_ejidjjhkpiempkbhmpbfngldlkglhimk"
     gmapsapp = "crx_okmglncioejakncpbchjfnoingecodff"
     gsheetsapp = "crx_lcahnhkcfaikkapifpaenbabamhfnecc"
-    rhcalendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
-    rhchatapp = "crx_pommaclcbfghclhalboakcipcmmndhcj"
+    megaapp = "crx_ockmlcfhhimcljikencdeppnoljjjfjk"
+    rhgcalendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    rhgchatapp = "crx_pommaclcbfghclhalboakcipcmmndhcj"
     rhgdriveapp = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
     rhgdocsapp = "crx_gcefppfnjnmndpknenooeofkfcbakpkp"
     rhgmailapp = "crx_nkcknjnfmnmjahcahhhjgakeikoiomof"

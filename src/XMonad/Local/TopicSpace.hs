@@ -81,6 +81,7 @@ homeScoped =
     , "gimp"
     , "gothic"
     , "graphics"
+    , "learn"
     , "incognito"
     , "morrowind"
     , "mail"
@@ -89,6 +90,9 @@ homeScoped =
     , "p2p"
     , "play"
     , "remote"
+    , "rhdocs"
+    , "rhcloud"
+    , "rhchat"
     , "rmtdesk"
     , "sap"
     , "scrum"
@@ -112,6 +116,10 @@ topicConfig = TS.def
         , ("rhanki",    safeSpawnProg "rhanki")
         , ("incognito", safeSpawn browser ["-i"])
         , ("mail",      safeSpawnProg "gmail")
+        , ("docs",      safeSpawnProg "gdocs"
+                     >> safeSpawnProg "gsheets")
+        , ("rhdocs",    safeSpawnProg "rhgdocs"
+                     >> safeSpawnProg "rhgsheets")
         , ("wmail",     safeSpawnProg "rhgmail"
                      >> safeSpawnProg "sapmail")
         , ("web",       safeSpawnProg browser)
@@ -123,7 +131,7 @@ topicConfig = TS.def
         , ("opera",     safeSpawnProg "opera")
         , ("pdf",       safeSpawnProg "atril")
         , ("chat",      safeSpawnProg "telegram-desktop"
-                     >> safeSpawnProg "skype"
+                     >> safeSpawnProg "skypeforlinux"
                      >> safeSpawnProg "whatsapp"
                      >> safeSpawnProg "wireweb")
         , ("vbox",      safeSpawnProg "VirtualBox")
@@ -148,10 +156,13 @@ topicConfig = TS.def
         , ("morrowind", spawnSteamGameInWine 22320)
         , ("witcher",   spawnSteamGameInWine 20900
                      >> openURL "http://slovnik.seznam.cz/de-cz/")
+        , ("cloud",     safeSpawnProg "gdrive"
+                     >> safeSpawnProg "mega")
+        , ("rhcloud",   safeSpawnProg "rhgdrive")
         , ("drive",     spawnShell
                      >> spawnExplorerIn "~/gdrive")
-        , ("calendar",  safeSpawnProg "calendar"
-                     >> safeSpawnProg "rhcalendar")
+        , ("calendar",  safeSpawnProg "gcalendar"
+                     >> safeSpawnProg "rhgcalendar")
         , ("mymoney",   safeSpawnProg "mymoney")
         , ("sap",       safeSpawn browser ["SAP"])]
         ++ map (, spawnShell >> spawnShell)
