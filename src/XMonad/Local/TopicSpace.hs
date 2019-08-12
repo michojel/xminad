@@ -64,6 +64,7 @@ topicDirs = M.fromList $
     , ("scripts"     , "~/wsp/rh/openlmi-scripts")
     , ("tools"       , "~/wsp/rh/openlmi-tools")
     , ("video"       , "~/Videos")
+    , ("v:gscoe"     , "~/wsp/dockerfiles/netextender")
     , ("xminad"      , "~/wsp/my/xminad")
     , ("xmonad"      , "~/wsp/my/xminad")
     ] ++ map (, "~") homeScoped
@@ -165,7 +166,8 @@ topicConfig = TS.def
         , ("calendar",  safeSpawnProg "gcalendar"
                      >> safeSpawnProg "rhgcalendar")
         , ("mymoney",   safeSpawnProg "mymoney")
-        , ("sap",       safeSpawn browser ["SAP"])]
+        , ("sap",       safeSpawn browser ["SAP"])
+        , ("v:gscoe",   spawnTmux     "vpn-gscoe")]
         ++ map (, spawnShell >> spawnShell)
             [ "remote", "devel", "admin" ]
         ++ map (\w -> (w, spawnTmux w)) tmuxProjects

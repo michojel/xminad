@@ -26,6 +26,7 @@ manageHook = composeAll
        [ [checkDock -?> doIgnore]
        , [appName =? "steam.exe" -?> doIgnore]
        , [transience]
+       , [className =? "lxqt-notificationd" -?> doFloat]
        , [className =? c -?> doIgnore | c <- myCIgnores]
        , [(matchChrome <&&> appName =? tabsOutlinerAppName) -?> doTOFloat]
        , [definiteToMaybe $ composeAll [floatManageHook, shiftManageHook]]
