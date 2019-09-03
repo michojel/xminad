@@ -127,7 +127,8 @@ topicConfig = TS.def
         , ("web",       safeSpawnProg browser)
         , ("wchat",     safeSpawnProg "pidgin"
                      >> safeSpawnProg "slack"
-                     >> safeSpawnProg "rhchat")
+                     >> safeSpawnProg "rhchat"
+                     >> safeSpawnProg "rhgmessages")
         , ("work",      safeSpawn browser ["RedHat"])
         , ("firefox",   safeSpawnProg "firefox")
         , ("opera",     safeSpawnProg "opera")

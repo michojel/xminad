@@ -148,6 +148,7 @@ shiftManageHook = composeOne (concat
     , [matchChromeApp ["redhat"] app  -?> doMyShift "rhdocs"  | app <- [rhgdocsapp, rhgsheetsapp]]
     , [matchChromeApp [] app          -?> doMyShift "cloud"   | app <- [gdriveapp, megaapp]]
     , [matchChromeApp ["redhat"] app  -?> doMyShift "rhcloud" | app <- [rhgdriveapp]]
+    , [matchChromeApp ["redhat"] app  -?> doMyShift "wchat"   | app <- [rhgmessagesapp]]
     , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
     , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
     , [matchChromeApp ["redhat"] rhgchatapp   -?> doMyShift "wchat"]
@@ -178,6 +179,7 @@ shiftManageHook = composeOne (concat
     rhgdriveapp = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
     rhgdocsapp = "crx_gcefppfnjnmndpknenooeofkfcbakpkp"
     rhgmailapp = "crx_nkcknjnfmnmjahcahhhjgakeikoiomof"
+    rhgmessagesapp = "crx_kpbdgbekoclglmjckpbanehbpjnlphkf"
     rhgsheetsapp = "crx_albjknpbljlpmmpfjicdohagjcifagdi"
     sapmailapp = "crx_plnbadkpncgbnekpephdpooeafambhak"
     skypeapp = "crx_bjdilgfelnbljgdpngladebaeggachpa"
