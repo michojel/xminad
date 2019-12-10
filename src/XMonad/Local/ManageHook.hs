@@ -143,20 +143,19 @@ shiftManageHook = composeOne (concat
     , [matchChromeApp ["redhat"] app   -?> doMyShift "wmail" | app <- [rhgmailapp, sapmailapp]]
     , [matchChromeApp [] gmailapp -?> doMyShift "mail"]
     , [matchChromeApp [] app           -?> doMyShift "calendar"
-            | app <- [gcalendarapp, rhgcalendarapp]]
+            | app <- [gcalendarapp, rhgcalendarapp, sapcalendarapp]]
     , [matchChromeApp [] app          -?> doMyShift "docs"    | app <- [gdocsapp, gsheetsapp]]
     , [matchChromeApp ["redhat"] app  -?> doMyShift "rhdocs"  | app <- [rhgdocsapp, rhgsheetsapp]]
     , [matchChromeApp [] app          -?> doMyShift "cloud"   | app <- [gdriveapp, megaapp]]
-    , [matchChromeApp ["redhat"] app  -?> doMyShift "rhcloud" | app <- [rhgdriveapp]]
-    , [matchChromeApp ["redhat"] app  -?> doMyShift "wchat"   | app <- [rhgmessagesapp]]
+    , [matchChromeApp ["redhat"] app  -?> doMyShift "rhcloud" | app <- [rhgdriveapp, sapdriveapp]]
+    , [matchChromeApp ["redhat"] app  -?> doMyShift "wchat"   | app <- [rhgmessagesapp, rhgchatapp, sapteams]]
     , [matchSuffixedChrome "nobody"   -?> doMyShift "incognito"]
     , [(matchChrome <&&> title =? "Hangouts") -?> doMyShift "chat"]
-    , [matchChromeApp ["redhat"] rhgchatapp   -?> doMyShift "wchat"]
     , [matchChromeApp [] app -?> doMyShift "chat"
-            | app <- [whatsapp, wireapp, skypeapp]]
-    , [matchChromeApp [] youtubeapp -?> doMyShift "play"]
+            | app <- [whatsapp, wireapp, skypeapp, gmessagesapp]]
+    , [matchChromeApp [] app -?> doMyShift "play" | app <- [youtubeapp, ytmusicapp]]
     , [matchChromeApp [] duolingoapp -?> doMyShift "learn"]
-    , [matchChromeApp [] gmapsapp -?> doMyShift "maps"]
+    , [matchChromeApp [] app -?> doMyShift "maps" | app <- [gmapsapp, mapyapp]]
     , [matchSuffixedChrome "redhat"   -?> doMyShift "work"]
     ])
   where
@@ -166,26 +165,32 @@ shiftManageHook = composeOne (concat
     myMusicPlayers = ["ncmpcpp", "Sonata", "Rhythmbox", "Gmpc"]
     myVideoPlayers = ["MPlayer", "Vlc", "Smplayer"]
 
-    gcalendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
-    duolingoapp = "crx_aiahmijlpehemcpleichkcokhegllfjl"
-    gdocsapp = "crx_bojccfnmcnekjgjhcaklmcgofnngpjcl"
-    gdriveapp = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
-    gmailapp = "crx_pjkljhegncpnkpknbcohdijeoejaedia"
-    gmapsapp = "crx_okmglncioejakncpbchjfnoingecodff"
-    gsheetsapp = "crx_lcahnhkcfaikkapifpaenbabamhfnecc"
-    megaapp = "crx_ockmlcfhhimcljikencdeppnoljjjfjk"
+    duolingoapp    = "crx_aiahmijlpehemcpleichkcokhegllfjl"
+    gcalendarapp   = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
+    gdocsapp       = "crx_bojccfnmcnekjgjhcaklmcgofnngpjcl"
+    gdriveapp      = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
+    gmailapp       = "crx_pjkljhegncpnkpknbcohdijeoejaedia"
+    gmapsapp       = "crx_okmglncioejakncpbchjfnoingecodff"
+    gmessagesapp   = "crx_hpfldicfbfomlpcikngkocigghgafkph"
+    gsheetsapp     = "crx_lcahnhkcfaikkapifpaenbabamhfnecc"
+    mapyapp        = "crx_mnadlckdoclecdmddabnbgjnkfoiddpd"
+    megaapp        = "crx_ockmlcfhhimcljikencdeppnoljjjfjk"
     rhgcalendarapp = "crx_kjbdgfilnfhdoflbpgamdcdgpehopbep"
-    rhgchatapp = "crx_pommaclcbfghclhalboakcipcmmndhcj"
-    rhgdriveapp = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
-    rhgdocsapp = "crx_gcefppfnjnmndpknenooeofkfcbakpkp"
-    rhgmailapp = "crx_nkcknjnfmnmjahcahhhjgakeikoiomof"
+    rhgdocsapp     = "crx_gcefppfnjnmndpknenooeofkfcbakpkp"
+    rhgdriveapp    = "crx_lkdnjjllhbbhgjfojnheoooeabjimbka"
+    rhgchatapp     = "crx_pommaclcbfghclhalboakcipcmmndhcj"
+    rhgmailapp     = "crx_nkcknjnfmnmjahcahhhjgakeikoiomof"
     rhgmessagesapp = "crx_kpbdgbekoclglmjckpbanehbpjnlphkf"
-    rhgsheetsapp = "crx_albjknpbljlpmmpfjicdohagjcifagdi"
-    sapmailapp = "crx_plnbadkpncgbnekpephdpooeafambhak"
-    skypeapp = "crx_bjdilgfelnbljgdpngladebaeggachpa"
-    whatsapp = "crx_hnpfjngllnobngcgfapefoaidbinmjnm"
-    wireapp = "crx_kfhkficiiapojlgcnbkgacfjmpffgoki"
-    youtubeapp = "crx_blpcfgokakmgnkcojhhkbfbldkacnbeo"
+    rhgsheetsapp   = "crx_albjknpbljlpmmpfjicdohagjcifagdi"
+    sapcalendarapp = "crx_oeogacjkgmanlfjadbnhngnpbkibgfhj"
+    sapdriveapp    = "crx_phgkmbchjgnehfpnmbekcoclneeojdma"
+    sapmailapp     = "crx_plnbadkpncgbnekpephdpooeafambhak"
+    sapteams       = "crx_jofcjnlbhnljdeapdjgodjlakohpfnjo"
+    skypeapp       = "crx_bjdilgfelnbljgdpngladebaeggachpa"
+    whatsapp       = "crx_hnpfjngllnobngcgfapefoaidbinmjnm"
+    wireapp        = "crx_kfhkficiiapojlgcnbkgacfjmpffgoki"
+    youtubeapp     = "crx_blpcfgokakmgnkcojhhkbfbldkacnbeo"
+    ytmusicapp     = "crx_eeaafbmfeofhhjpjklgoobllogkjdgap"
 
 doMyShift ∷ WorkspaceId → ManageHook
 doMyShift wsp = do
